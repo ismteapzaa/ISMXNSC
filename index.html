@@ -67,10 +67,8 @@
         }
         .btn:active:not(:disabled) { transform: scale(0.96); }
         .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .btn-gold    { background: linear-gradient(135deg, #d97706, #f59e0b); color: #1a1a00; }
-        .btn-purple  { background: linear-gradient(135deg, #6d28d9, #7c3aed); }
-        .btn-green   { background: linear-gradient(135deg, #047857, #059669); }
-        .btn-gray    { background: rgba(255,255,255,0.1); }
+        .btn-gold   { background: linear-gradient(135deg, #d97706, #f59e0b); color: #1a1a00; }
+        .btn-gray   { background: rgba(255,255,255,0.1); }
 
         /* ════════════════════════════════
            TITLE SCREEN
@@ -103,7 +101,6 @@
         ════════════════════════════════ */
         #seasonScreen {
             background: radial-gradient(ellipse at top, #130a2e 0%, var(--dark) 70%);
-            padding: 20px 16px;
         }
         .page-title {
             font-size: 20px; font-weight: 800; text-align: center;
@@ -126,9 +123,7 @@
             display: flex; justify-content: space-between;
             font-size: 11px; color: var(--muted); margin-bottom: 5px;
         }
-        .cleared-tag {
-            margin-top: 8px; font-size: 12px; color: var(--gold); font-weight: 600;
-        }
+        .cleared-tag { margin-top: 8px; font-size: 12px; color: var(--gold); font-weight: 600; }
         .hero-status-box {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 14px; padding: 14px; margin-top: 8px;
@@ -141,21 +136,18 @@
         ════════════════════════════════ */
         #battleScreen { padding: 0; }
 
-        .bh { /* battle header */
+        .bh {
             padding: 10px 14px; display: flex;
             justify-content: space-between; align-items: center;
             background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border);
         }
-        .season-badge {
-            font-size: 12px; font-weight: 700; padding: 4px 12px;
-            border-radius: 20px;
-        }
+        .season-badge { font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
         .prog-text { font-size: 12px; color: var(--muted); }
 
         .enemy-zone {
             flex: 1; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            padding: 16px; position: relative; min-height: 220px;
+            padding: 16px; position: relative; min-height: 200px;
         }
         .boss-tag {
             background: linear-gradient(135deg, #dc2626, #991b1b);
@@ -163,52 +155,150 @@
             padding: 3px 10px; border-radius: 20px; margin-bottom: 6px;
         }
         .e-sprite {
-            font-size: clamp(60px, 17vw, 85px); line-height: 1;
+            font-size: clamp(56px, 16vw, 80px); line-height: 1;
             animation: floatAnim 2s ease-in-out infinite;
         }
-        .e-sprite.boss { font-size: clamp(75px, 21vw, 105px); }
+        .e-sprite.boss { font-size: clamp(72px, 20vw, 100px); }
         .e-name { font-size: 15px; font-weight: 700; margin: 6px 0 2px; }
         .e-hp-text { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
         .e-hp-wrap { width: 100%; max-width: 260px; }
+        .stun-indicator {
+            font-size: 11px; color: #fbbf24; font-weight: 700;
+            margin-top: 4px; animation: pulse 0.8s ease-in-out infinite;
+        }
 
         .dmg-float {
             position: absolute; font-size: 26px; font-weight: 900;
             pointer-events: none; animation: floatDmg 1.1s ease-out forwards; z-index: 20;
         }
 
-        .blog { /* battle log */
+        /* Drop toast */
+        #dropToast {
+            position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+            background: rgba(15,15,30,0.95); border: 1px solid #fbbf24;
+            border-radius: 14px; padding: 10px 18px; font-size: 13px;
+            color: #fde68a; z-index: 100; display: none;
+            animation: slideDown 0.4s ease; white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(251,191,36,0.3);
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .blog {
             background: rgba(0,0,0,0.35); border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
-            padding: 8px 14px; height: 80px; overflow-y: auto; font-size: 13px;
+            padding: 8px 14px; height: 76px; overflow-y: auto; font-size: 12px;
         }
         .log-p { color: #93c5fd; padding: 1px 0; }
         .log-e { color: #fca5a5; padding: 1px 0; }
         .log-s { color: #c4b5fd; padding: 1px 0; }
         .log-h { color: #6ee7b7; padding: 1px 0; }
+        .log-i { color: #fde68a; padding: 1px 0; }
 
         .hero-panel {
-            background: rgba(0,0,0,0.25); padding: 12px 14px;
+            background: rgba(0,0,0,0.25); padding: 10px 14px 6px;
         }
         .hero-row { display: flex; align-items: center; gap: 10px; }
-        .h-emoji { font-size: 34px; line-height: 1; }
-        .h-bars { flex: 1; }
-        .h-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-        .h-stat { text-align: right; font-size: 11px; color: var(--muted); line-height: 1.8; }
+        .h-emoji  { font-size: 32px; line-height: 1; }
+        .h-bars   { flex: 1; }
+        .h-name   { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+        .h-stat   { text-align: right; font-size: 11px; color: var(--muted); line-height: 1.8; }
 
+        /* Active buffs row */
+        .buff-row {
+            display: flex; flex-wrap: wrap; gap: 4px;
+            padding: 5px 14px 4px; min-height: 24px;
+        }
+        .buff-chip {
+            font-size: 10px; font-weight: 700; padding: 2px 7px;
+            border-radius: 10px; white-space: nowrap;
+        }
+        .buff-atk  { background: rgba(220,38,38,0.25);  color: #fca5a5; border: 1px solid #dc2626; }
+        .buff-def  { background: rgba(59,130,246,0.25); color: #93c5fd; border: 1px solid #3b82f6; }
+        .buff-dmg  { background: rgba(168,85,247,0.25); color: #d8b4fe; border: 1px solid #a855f7; }
+        .buff-imm  { background: rgba(251,191,36,0.2);  color: #fde68a; border: 1px solid #fbbf24; }
+        .buff-stun { background: rgba(251,191,36,0.2);  color: #fde68a; border: 1px solid #fbbf24; }
+
+        /* Skill grid */
         .skill-grid {
             display: grid; grid-template-columns: 1fr 1fr;
-            gap: 8px; padding: 10px 14px 14px;
+            gap: 6px; padding: 6px 14px 4px;
         }
         .sk-btn {
-            padding: 10px 6px; border: none; border-radius: 10px;
+            padding: 9px 6px; border: none; border-radius: 10px;
             cursor: pointer; font-family: inherit; transition: transform .13s, opacity .13s;
             text-align: center;
         }
         .sk-btn:active:not(:disabled) { transform: scale(0.93); }
         .sk-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-        .sk-icon  { font-size: 22px; display: block; margin-bottom: 2px; }
-        .sk-name  { font-size: 13px; font-weight: 700; color: white; display: block; }
-        .sk-desc  { font-size: 10px; color: rgba(255,255,255,0.7); display: block; margin-top: 2px; }
+        .sk-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+        .sk-name { font-size: 12px; font-weight: 700; color: white; display: block; }
+        .sk-desc { font-size: 10px; color: rgba(255,255,255,0.65); display: block; margin-top: 1px; }
+
+        /* Item button */
+        .item-btn-wrap { padding: 4px 14px 10px; }
+        .item-btn {
+            width: 100%; padding: 10px; border: 1px solid #fbbf2466;
+            border-radius: 10px; cursor: pointer; font-family: inherit;
+            background: rgba(251,191,36,0.1); color: #fde68a;
+            font-size: 13px; font-weight: 700; transition: all .15s;
+        }
+        .item-btn:active:not(:disabled) { transform: scale(0.97); background: rgba(251,191,36,0.2); }
+        .item-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* ════════════════════════════════
+           ITEM MODAL
+        ════════════════════════════════ */
+        #itemModal {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.7); justify-content: flex-end;
+            align-items: stretch; flex-direction: column;
+        }
+        #itemModal.open { display: flex; }
+        .modal-box {
+            background: #161628; border-top: 1px solid var(--border);
+            border-radius: 20px 20px 0 0; padding: 0;
+            max-height: 75vh; display: flex; flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to   { transform: translateY(0); }
+        }
+        .modal-head {
+            padding: 16px 16px 12px; display: flex;
+            justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-title { font-size: 16px; font-weight: 800; color: var(--gold); }
+        .modal-close {
+            width: 30px; height: 30px; border: 1px solid var(--border);
+            border-radius: 50%; background: var(--card); color: var(--muted);
+            font-size: 14px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .item-list { overflow-y: auto; padding: 10px 14px 20px; flex: 1; }
+        .item-row {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 12px; margin-bottom: 8px;
+        }
+        .item-emoji { font-size: 28px; line-height: 1; flex-shrink: 0; }
+        .item-info  { flex: 1; min-width: 0; }
+        .item-name  { font-size: 13px; font-weight: 700; }
+        .item-desc  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .item-cnt   { font-size: 11px; color: #a78bfa; margin-top: 2px; }
+        .use-btn {
+            padding: 7px 14px; border: none; border-radius: 8px;
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white; font-size: 12px; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            transition: transform .13s; flex-shrink: 0;
+        }
+        .use-btn:active { transform: scale(0.93); }
+        .empty-bag { text-align: center; padding: 32px 0; color: var(--muted); font-size: 14px; }
 
         /* ════════════════════════════════
            RESULT SCREEN
@@ -230,10 +320,10 @@
             text-align: center; padding: 32px 24px;
             background: radial-gradient(ellipse at center, #1a0a3e 0%, var(--dark) 70%);
         }
-        .clear-stars { font-size: 44px; letter-spacing: 6px; animation: pulse 1.5s ease-in-out infinite; }
+        .clear-stars  { font-size: 44px; letter-spacing: 6px; animation: pulse 1.5s ease-in-out infinite; }
         .clear-trophy { font-size: 70px; margin: 12px 0; animation: floatAnim 2s ease-in-out infinite; }
-        .clear-title { font-size: 30px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
-        .clear-sub { font-size: 15px; color: var(--muted); margin-bottom: 8px; line-height: 1.7; }
+        .clear-title  { font-size: 30px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+        .clear-sub    { font-size: 15px; color: var(--muted); margin-bottom: 8px; line-height: 1.7; }
 
         /* ─── Animations ─── */
         @keyframes floatAnim {
@@ -259,21 +349,24 @@
             50%       { transform: scale(1.08); }
         }
 
-        /* ─── Scrollbar ─── */
-        .blog::-webkit-scrollbar { width: 4px; }
-        .blog::-webkit-scrollbar-track { background: transparent; }
-        .blog::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        /* ─── Scrollbars ─── */
+        .blog::-webkit-scrollbar,
+        .item-list::-webkit-scrollbar { width: 4px; }
+        .blog::-webkit-scrollbar-track,
+        .item-list::-webkit-scrollbar-track { background: transparent; }
+        .blog::-webkit-scrollbar-thumb,
+        .item-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
 
         /* ─── Responsive ─── */
         @media (max-width: 360px) {
-            .skill-grid { gap: 6px; padding: 8px 10px 10px; }
+            .skill-grid { gap: 5px; padding: 5px 10px 4px; }
             .sk-btn { padding: 8px 4px; }
             .sk-icon { font-size: 18px; }
-            .sk-name { font-size: 12px; }
+            .sk-name { font-size: 11px; }
         }
-        @media (min-height: 800px) {
-            .enemy-zone { min-height: 260px; }
-            .blog { height: 100px; }
+        @media (min-height: 750px) {
+            .enemy-zone { min-height: 230px; }
+            .blog { height: 90px; }
         }
     </style>
 </head>
@@ -284,13 +377,13 @@
     <div id="titleScreen" class="screen">
         <div class="title-sword">⚔️</div>
         <div class="title-main">ศึกสามฤดู</div>
-        <div class="title-sub">Turn-Based RPG • 3 Seasons • 24 Enemies</div>
+        <div class="title-sub">Turn-Based RPG • 3 Seasons • 24 Enemies • Item System</div>
         <div class="story-card">
             <strong style="color:var(--gold)">📜 เรื่องราว</strong><br><br>
             ในดินแดนโบราณที่ขับเคลื่อนด้วยพลังสามฤดูกาล... กองทัพปิศาจได้บุกโจมตีทุกแผ่นดิน<br><br>
             <strong style="color:#e2e8f0">นักรบเทพ</strong> — นักสู้ผู้ถูกเลือก ลุกขึ้นต่อต้านความชั่วร้าย<br><br>
             ฝ่าฟัน <strong style="color:var(--spring)">ฤดูใบไม้ผลิ 🌸</strong>, <strong style="color:var(--summer)">ฤดูร้อน 🔥</strong> และ <strong style="color:var(--winter)">ฤดูหนาว ❄️</strong><br>
-            เอาชนะมอนสเตอร์ 21 ตัวและบอส 3 ตัวเพื่อกอบกู้โลก!
+            เก็บไอเทม 7 ชนิด เอาชนะมอนสเตอร์ 21 ตัวและบอส 3 ตัวเพื่อกอบกู้โลก!
         </div>
         <button class="btn btn-gold" onclick="G.goSeasons()">⚔️ เริ่มการผจญภัย</button>
     </div>
@@ -321,6 +414,7 @@
             <div class="e-hp-wrap">
                 <div class="bar-wrap"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
             </div>
+            <div id="stunIndicator" class="stun-indicator" style="display:none">⭐ Stunned!</div>
         </div>
         <div class="blog" id="blog"></div>
         <div class="hero-panel">
@@ -339,7 +433,14 @@
                 </div>
             </div>
         </div>
+        <!-- Active buffs -->
+        <div class="buff-row" id="buffRow"></div>
+        <!-- Skills 2×2 -->
         <div class="skill-grid" id="skillGrid"></div>
+        <!-- Item button -->
+        <div class="item-btn-wrap">
+            <button class="item-btn" id="itemBtnMain" onclick="G.showItems()">🎒 ใช้ไอเทม <span id="itemCount">(0)</span></button>
+        </div>
     </div>
 
     <!-- ═══ RESULT ═══ -->
@@ -364,10 +465,24 @@
         <button class="btn btn-gold" onclick="G.restart()">🔄 เล่นใหม่</button>
     </div>
 
+    <!-- ═══ ITEM MODAL ═══ -->
+    <div id="itemModal" onclick="G.hideItems()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <div class="modal-title">🎒 กระเป๋าไอเทม</div>
+                <button class="modal-close" onclick="G.hideItems()">✕</button>
+            </div>
+            <div class="item-list" id="itemList"></div>
+        </div>
+    </div>
+
+    <!-- Drop toast -->
+    <div id="dropToast"></div>
+
 </div>
 <script>
 /* ════════════════════════════════════════════════
-   DATA
+   GAME DATA
 ════════════════════════════════════════════════ */
 const SEASONS = [
     {
@@ -388,64 +503,113 @@ const SEASONS = [
         id: 1, name: "ฤดูร้อน", emoji: "🔥",
         color: "#f97316", bg: "rgba(249,115,22,0.08)",
         enemies: [
-            { name:"แมงป่องไฟ",      emoji:"🦂", hp:390,  atk:70,  def:12 },
-            { name:"งูทราย",          emoji:"🐍", hp:350,  atk:74,  def:10 },
-            { name:"กิ้งก่าทะเลทราย",emoji:"🦎", hp:410,  atk:80,  def:15 },
-            { name:"พายุทราย",        emoji:"🌪️", hp:470,  atk:84,  def:8  },
-            { name:"ปีศาจไฟ",         emoji:"😈", hp:530,  atk:90,  def:16 },
-            { name:"นกฟีนิกซ์",       emoji:"🦅", hp:570,  atk:96,  def:18 },
-            { name:"มังกรไฟ",         emoji:"🐉", hp:690,  atk:102, def:22 },
-            { name:"จอมมารไฟ",        emoji:"🔥", hp:1350, atk:120, def:25, isBoss:true },
+            { name:"แมงป่องไฟ",       emoji:"🦂", hp:390,  atk:70,  def:12 },
+            { name:"งูทราย",           emoji:"🐍", hp:350,  atk:74,  def:10 },
+            { name:"กิ้งก่าทะเลทราย", emoji:"🦎", hp:410,  atk:80,  def:15 },
+            { name:"พายุทราย",         emoji:"🌪️", hp:470,  atk:84,  def:8  },
+            { name:"ปีศาจไฟ",          emoji:"😈", hp:530,  atk:90,  def:16 },
+            { name:"นกฟีนิกซ์",        emoji:"🦅", hp:570,  atk:96,  def:18 },
+            { name:"มังกรไฟ",          emoji:"🐉", hp:690,  atk:102, def:22 },
+            { name:"จอมมารไฟ",         emoji:"🔥", hp:1350, atk:120, def:25, isBoss:true },
         ]
     },
     {
         id: 2, name: "ฤดูหนาว", emoji: "❄️",
         color: "#38bdf8", bg: "rgba(56,189,248,0.08)",
         enemies: [
-            { name:"หมีขาว",           emoji:"🐻‍❄️", hp:580,  atk:102, def:20 },
-            { name:"หมาป่าน้ำแข็ง",   emoji:"🐺",  hp:540,  atk:110, def:18 },
-            { name:"ผีน้ำแข็ง",        emoji:"👻",  hp:600,  atk:116, def:15 },
-            { name:"มังกรน้ำแข็ง",     emoji:"🐉",  hp:660,  atk:122, def:24 },
-            { name:"ยักษ์น้ำแข็ง",     emoji:"🧊",  hp:760,  atk:128, def:28 },
-            { name:"ปิศาจหิมะ",         emoji:"❄️",  hp:820,  atk:134, def:25 },
-            { name:"เงาแห่งความมืด",   emoji:"🌑",  hp:900,  atk:142, def:30 },
-            { name:"จักรพรรดิน้ำแข็ง", emoji:"👑",  hp:2300, atk:160, def:35, isBoss:true },
+            { name:"หมีขาว",            emoji:"🐻‍❄️", hp:580,  atk:102, def:20 },
+            { name:"หมาป่าน้ำแข็ง",    emoji:"🐺",   hp:540,  atk:110, def:18 },
+            { name:"ผีน้ำแข็ง",         emoji:"👻",   hp:600,  atk:116, def:15 },
+            { name:"มังกรน้ำแข็ง",      emoji:"🐉",   hp:660,  atk:122, def:24 },
+            { name:"ยักษ์น้ำแข็ง",      emoji:"🧊",   hp:760,  atk:128, def:28 },
+            { name:"ปิศาจหิมะ",          emoji:"❄️",   hp:820,  atk:134, def:25 },
+            { name:"เงาแห่งความมืด",    emoji:"🌑",   hp:900,  atk:142, def:30 },
+            { name:"จักรพรรดิน้ำแข็ง",  emoji:"👑",   hp:2300, atk:160, def:35, isBoss:true },
         ]
     }
 ];
 
 const SKILLS = [
-    { name:"โจมตี",      emoji:"⚔️",  mp:0,  type:"atk", mult:1.0, desc:"ฟรี • ×1 ATK",       style:"background:linear-gradient(135deg,#991b1b,#dc2626)" },
-    { name:"พายุดาบ",    emoji:"🌪️", mp:30, type:"atk", mult:2.0, desc:"30 MP • ×2 ATK",      style:"background:linear-gradient(135deg,#5b21b6,#7c3aed)" },
-    { name:"สายฟ้าเทพ",  emoji:"⚡",  mp:55, type:"atk", mult:3.2, desc:"55 MP • ×3 ATK+",    style:"background:linear-gradient(135deg,#1e40af,#2563eb)" },
-    { name:"รักษาพลัง",  emoji:"💚",  mp:40, type:"heal",heal:300, desc:"40 MP • ฟื้น 300 HP", style:"background:linear-gradient(135deg,#065f46,#059669)" },
+    { name:"โจมตี",     emoji:"⚔️", mp:0,  type:"atk",  mult:1.0, desc:"ฟรี • ×1 ATK",      style:"background:linear-gradient(135deg,#991b1b,#dc2626)" },
+    { name:"พายุดาบ",   emoji:"🌪️",mp:30, type:"atk",  mult:2.0, desc:"30 MP • ×2 ATK",     style:"background:linear-gradient(135deg,#5b21b6,#7c3aed)" },
+    { name:"สายฟ้าเทพ", emoji:"⚡", mp:55, type:"atk",  mult:3.2, desc:"55 MP • ×3 ATK+",   style:"background:linear-gradient(135deg,#1e40af,#2563eb)" },
+    { name:"รักษาพลัง", emoji:"💚", mp:40, type:"heal", heal:300, desc:"40 MP • ฟื้น 300 HP",style:"background:linear-gradient(135deg,#065f46,#059669)" },
+];
+
+/* ── 7 Items from the drop table ── */
+const ITEMS = [
+    {
+        id:'healPotion', name:'ยาฟื้นฟูแห่งป่า', emoji:'🧪',
+        desc:'ฟื้น HP 50% ของ MaxHP + ล้างสถานะเสีย',
+        type:'heal',
+        dropRate:0.15, dropFrom:'spring',  // 15% from spring monsters
+    },
+    {
+        id:'powerSerum', name:'เซรั่มพลัง', emoji:'💉',
+        desc:'ATK ×1.2 นาน 3 เทิร์น',
+        type:'buff',
+        dropRate:0.20, dropFrom:'any',     // 20% from all monsters
+    },
+    {
+        id:'ironShield', name:'โล่กำแพงเหล็ก', emoji:'🛡️',
+        desc:'DEF +30 นาน 5 เทิร์น',
+        type:'buff',
+        dropRate:0.10, dropFrom:'winter',  // 10% from winter monsters
+    },
+    {
+        id:'warVaccine', name:'วัคซีนสงคราม', emoji:'☠️',
+        desc:'ดีเมจ ×1.5 + กัน Stun นาน 4 เทิร์น',
+        type:'buff',
+        dropRate:0.05, dropFrom:'boss',    // 5% from boss only
+    },
+    {
+        id:'stunStar', name:'ดาวมึนงง', emoji:'⭐',
+        desc:'Stun ศัตรู 1 เทิร์น (ข้ามเทิร์นโจมตี)',
+        type:'stun',
+        dropRate:0.25, dropFrom:'any',     // 25% from all monsters
+    },
+    {
+        id:'ancientGear', name:'เกราะโบราณ', emoji:'🏺',
+        desc:'ATK +15 ถาวร (ใส่อัตโนมัติ)',
+        type:'equip',
+        dropRate:1.00, dropFrom:'boss',    // 100% from boss (guaranteed)
+    },
+    {
+        id:'energyBomb', name:'ระเบิดพลังงาน', emoji:'💣',
+        desc:'ดีเมจแน่นอน 300 ต่อศัตรู',
+        type:'damage',
+        dropRate:0.30, dropFrom:'any',     // 30% from all monsters
+    },
 ];
 
 /* ════════════════════════════════════════════════
    GAME CONTROLLER
 ════════════════════════════════════════════════ */
 const G = (() => {
-    const HERO_BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, atk:120, def:10 };
+    const HERO_BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, baseAtk:120, atk:120, def:10 };
 
-    let hero, season, eIdx, enemy, unlocked, cleared, defeated, resAction, busy, totalKills, startTime;
+    let hero, season, eIdx, enemy, unlocked, cleared, defeated,
+        resAction, busy, totalKills, startTime, inventory, itemsUsed;
 
     function init() {
-        hero = { ...HERO_BASE };
+        hero = { ...HERO_BASE, buffs: [] };
         season = 0; eIdx = 0; enemy = null;
         unlocked = [true, false, false];
         cleared  = [false, false, false];
         defeated = [0, 0, 0];
         resAction = null; busy = false;
         totalKills = 0; startTime = Date.now();
+        inventory = {};   // { itemId: count }
+        itemsUsed = 0;
     }
 
-    /* ── Screens ── */
+    /* ── Screen helpers ── */
     function show(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
 
-    /* ── Season Select ── */
+    /* ════ SEASON SELECT ════ */
     function goSeasons() {
         renderSeasonCards();
         renderHeroStatus();
@@ -456,11 +620,11 @@ const G = (() => {
         const el = document.getElementById('seasonCards');
         el.innerHTML = '';
         SEASONS.forEach((s, i) => {
-            const ok = unlocked[i];
-            const done = cleared[i];
+            const ok    = unlocked[i];
+            const done  = cleared[i];
             const count = defeated[i];
             const total = s.enemies.length;
-            const card = document.createElement('div');
+            const card  = document.createElement('div');
             card.className = 'season-card' + (ok ? '' : ' locked');
             card.style.borderColor = ok ? s.color + '55' : 'var(--border)';
             card.style.background  = ok ? s.bg : 'rgba(255,255,255,0.02)';
@@ -486,9 +650,11 @@ const G = (() => {
     }
 
     function renderHeroStatus() {
-        const h = hero, el = document.getElementById('heroStatusEl');
-        const hp = Math.max(0,(h.hp/h.maxHp*100)).toFixed(0);
-        const mp = Math.max(0,(h.mp/h.maxMp*100)).toFixed(0);
+        const h  = hero;
+        const el = document.getElementById('heroStatusEl');
+        const hp = Math.max(0, (h.hp / h.maxHp * 100)).toFixed(0);
+        const mp = Math.max(0, (h.mp / h.maxMp * 100)).toFixed(0);
+        const totalItems = Object.values(inventory).reduce((a,b) => a+b, 0);
         el.innerHTML = `
             <div style="display:flex;gap:12px;margin-bottom:8px">
                 <div style="flex:1">
@@ -501,18 +667,24 @@ const G = (() => {
                 </div>
             </div>
             <div style="font-size:12px;color:var(--muted);display:flex;gap:16px">
-                <span>⚔️ ATK ${h.atk}</span><span>🛡️ DEF ${h.def}</span>
+                <span>⚔️ ATK ${h.atk}</span>
+                <span>🛡️ DEF ${h.def}</span>
+                <span>🎒 ไอเทม ${totalItems} ชิ้น</span>
             </div>
         `;
     }
 
-    /* ── Start Season ── */
+    /* ════ START SEASON ════ */
     function startSeason(idx) {
         season = idx;
-        if (eIdx === 0 || cleared[idx]) {
+        if (cleared[idx]) {
+            hero.hp  = hero.maxHp;
+            hero.mp  = hero.maxMp;
+            hero.buffs = [];
+            defeated[idx] = 0;
+        } else if (eIdx === 0) {
             hero.hp = hero.maxHp;
             hero.mp = hero.maxMp;
-            if (cleared[idx]) defeated[idx] = 0;
         }
         eIdx = 0;
         spawnEnemy(0);
@@ -522,50 +694,43 @@ const G = (() => {
 
     function spawnEnemy(idx) {
         const raw = SEASONS[season].enemies[idx];
-        enemy = { ...raw, maxHp: raw.hp, curHp: raw.hp };
-        eIdx = idx;
+        enemy = { ...raw, maxHp: raw.hp, curHp: raw.hp, stunned: false };
+        eIdx  = idx;
     }
 
-    /* ── Render Battle ── */
+    /* ════ RENDER BATTLE ════ */
     function renderBattle() {
-        const s = SEASONS[season], e = enemy, h = hero;
-        const total = s.enemies.length;
+        const s = SEASONS[season], e = enemy;
 
         // Header
         const badge = document.getElementById('bSeasonBadge');
         badge.textContent = `${s.emoji} ${s.name}`;
-        badge.style.cssText = `font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44`;
-        document.getElementById('bProgress').textContent = `${eIdx+1} / ${total}`;
+        badge.style.cssText = `font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;`
+            + `background:${s.color}22;color:${s.color};border:1px solid ${s.color}44`;
+        document.getElementById('bProgress').textContent = `${eIdx+1} / ${s.enemies.length}`;
 
         // Enemy zone bg
         document.getElementById('enemyZone').style.background = s.bg;
-
-        // Enemy
         document.getElementById('bossTag').innerHTML = e.isBoss ? '<div class="boss-tag">⭐ BOSS ⭐</div>' : '';
         const sp = document.getElementById('eSprite');
         sp.textContent = e.emoji;
         sp.className   = 'e-sprite' + (e.isBoss ? ' boss' : '');
-        document.getElementById('eName').textContent = e.name;
+        document.getElementById('eName').textContent     = e.name;
+        document.getElementById('stunIndicator').style.display = 'none';
         updateEHp();
-
-        // Hero
         updateHHp();
-
-        // Skills
+        renderBuffs();
         renderSkills(true);
 
-        // Log
         document.getElementById('blog').innerHTML = '';
         log(`${e.isBoss ? '⭐ BOSS' : '👾'} ${e.name} ปรากฏตัว!`, 's');
-
         busy = false;
     }
 
     function updateEHp() {
-        const e = enemy;
-        const pct = Math.max(0, e.curHp / e.maxHp * 100);
-        document.getElementById('eHpText').textContent = `HP: ${Math.max(0,e.curHp)} / ${e.maxHp}`;
-        document.getElementById('eHpBar').style.width = pct + '%';
+        const pct = Math.max(0, enemy.curHp / enemy.maxHp * 100);
+        document.getElementById('eHpText').textContent = `HP: ${Math.max(0,enemy.curHp)} / ${enemy.maxHp}`;
+        document.getElementById('eHpBar').style.width  = pct + '%';
     }
 
     function updateHHp() {
@@ -578,25 +743,53 @@ const G = (() => {
         document.getElementById('hDef').textContent   = h.def;
     }
 
+    function renderBuffs() {
+        const row  = document.getElementById('buffRow');
+        const cnt  = Object.values(inventory).reduce((a,b) => a+b, 0);
+        document.getElementById('itemCount').textContent = `(${cnt})`;
+        document.getElementById('itemBtnMain').disabled  = busy || cnt === 0;
+
+        if (!hero.buffs || !hero.buffs.length) { row.innerHTML = ''; return; }
+        row.innerHTML = hero.buffs.map(b => {
+            const cls = { atkMult:'buff-atk', defBonus:'buff-def',
+                          dmgMult:'buff-dmg', stunImmune:'buff-imm' }[b.type] || 'buff-def';
+            return `<span class="buff-chip ${cls}">${b.emoji} ${b.label} (${b.turns})</span>`;
+        }).join('');
+    }
+
     function renderSkills(enable) {
         const grid = document.getElementById('skillGrid');
         grid.innerHTML = '';
         SKILLS.forEach((sk, i) => {
-            const canUse = sk.mp <= hero.mp;
+            const can = sk.mp <= hero.mp;
             const btn = document.createElement('button');
-            btn.className = 'sk-btn';
+            btn.className    = 'sk-btn';
             btn.style.cssText = sk.style;
-            btn.disabled = !enable || busy || !canUse;
-            btn.innerHTML = `<span class="sk-icon">${sk.emoji}</span><span class="sk-name">${sk.name}</span><span class="sk-desc">${sk.desc}</span>`;
+            btn.disabled     = !enable || busy || !can;
+            btn.innerHTML    = `<span class="sk-icon">${sk.emoji}</span>`
+                             + `<span class="sk-name">${sk.name}</span>`
+                             + `<span class="sk-desc">${sk.desc}</span>`;
             btn.onclick = () => useSkill(i);
             grid.appendChild(btn);
         });
     }
 
-    function lockSkills() { busy = true; renderSkills(false); }
-    function unlockSkills() { busy = false; renderSkills(true); }
+    function lockSkills()   { busy = true;  renderSkills(false); renderBuffs(); }
+    function unlockSkills() { busy = false; renderSkills(true);  renderBuffs(); }
 
-    /* ── Combat ── */
+    /* ════ BUFF HELPERS ════ */
+    function getAtkMult()  { return hero.buffs.filter(b=>b.type==='atkMult').reduce((a,b)=>a*b.value,1); }
+    function getDmgMult()  { return hero.buffs.filter(b=>b.type==='dmgMult').reduce((a,b)=>a*b.value,1); }
+    function getDefBonus() { return hero.buffs.filter(b=>b.type==='defBonus').reduce((a,b)=>a+b.value,0); }
+    function hasStunImmune() { return hero.buffs.some(b=>b.type==='stunImmune'); }
+
+    function tickBuffs() {
+        hero.buffs = hero.buffs
+            .map(b => ({ ...b, turns: b.turns - 1 }))
+            .filter(b => b.turns > 0);
+    }
+
+    /* ════ COMBAT ════ */
     function useSkill(i) {
         if (busy) return;
         const sk = SKILLS[i], h = hero, e = enemy;
@@ -614,15 +807,15 @@ const G = (() => {
             return;
         }
 
-        // Attack
-        const base = Math.floor(h.atk * sk.mult);
-        const vari = Math.floor(base * 0.15);
-        let dmg = Math.max(5, base + rng(-vari, vari) - e.def);
-        const crit = Math.random() < 0.15;
+        // Attack — apply ATK buff × skill mult × DMG buff
+        const atkVal  = Math.floor(h.atk * getAtkMult() * sk.mult * getDmgMult());
+        const vari    = Math.floor(atkVal * 0.15);
+        let dmg       = Math.max(5, atkVal + rng(-vari, vari) - e.def);
+        const crit    = Math.random() < 0.15;
         if (crit) dmg = Math.floor(dmg * 1.5);
-        e.curHp -= dmg;
+        e.curHp      -= dmg;
 
-        log(`${sk.emoji} ${sk.name} → ดีเมจ ${dmg}${crit?' 💥CRIT!':''}`, 'p');
+        log(`${sk.emoji} ${sk.name} → ดีเมจ ${dmg}${crit ? ' 💥CRIT!' : ''}`, 'p');
         shakeEnemy();
         floatDmg(dmg + (crit ? '!!' : ''), crit ? '#fbbf24' : '#fca5a5');
         updateEHp();
@@ -634,50 +827,206 @@ const G = (() => {
 
     function enemyTurn() {
         const h = hero, e = enemy;
-        const vari = Math.floor(e.atk * 0.2);
-        const dmg = Math.max(5, e.atk + rng(-vari, vari) - h.def);
-        h.hp = Math.max(0, h.hp - dmg);
-        log(`${e.emoji} ${e.name} โจมตี → ดีเมจ ${dmg}`, 'e');
+
+        if (e.stunned) {
+            e.stunned = false;
+            document.getElementById('stunIndicator').style.display = 'none';
+            log(`⭐ ${e.name} ถูก Stun! ข้ามเทิร์น`, 's');
+            tickBuffs();
+            h.mp = Math.min(h.maxMp, h.mp + 18);
+            setTimeout(unlockSkills, 400);
+            return;
+        }
+
+        const vari   = Math.floor(e.atk * 0.2);
+        const defTot = h.def + getDefBonus();
+        const dmg    = Math.max(5, e.atk + rng(-vari, vari) - defTot);
+        h.hp         = Math.max(0, h.hp - dmg);
+        log(`${e.emoji} ${e.name} โจมตี → ดีเมจ ${dmg}${getDefBonus()>0?' (กำแพง!)':''}`, 'e');
         updateHHp();
-        // MP regen
+
         h.mp = Math.min(h.maxMp, h.mp + 18);
+        tickBuffs();
+        renderBuffs();
 
         if (h.hp <= 0) { setTimeout(onHeroDead, 750); return; }
         setTimeout(unlockSkills, 350);
     }
 
+    /* ════ ITEM SYSTEM ════ */
+    function addItem(itemId, qty) {
+        inventory[itemId] = (inventory[itemId] || 0) + qty;
+    }
+
+    function rollDrops(e) {
+        const seasId = season; // 0=spring,1=summer,2=winter
+        const drops  = [];
+
+        ITEMS.forEach(item => {
+            let rate = item.dropRate;
+            // Filter by drop source
+            if (item.dropFrom === 'boss'   && !e.isBoss)        return;
+            if (item.dropFrom === 'spring' && seasId !== 0)     return;
+            if (item.dropFrom === 'winter' && seasId !== 2)     return;
+
+            if (Math.random() < rate) {
+                if (item.type === 'equip') {
+                    // Auto-equip: permanent ATK boost
+                    hero.atk += 15;
+                    updateHHp();
+                    drops.push(`${item.emoji} ${item.name} (ATK+15 ถาวร!)`);
+                } else {
+                    addItem(item.id, 1);
+                    drops.push(`${item.emoji} ${item.name}`);
+                }
+            }
+        });
+
+        if (drops.length) showDropToast(drops);
+    }
+
+    function showDropToast(drops) {
+        const el = document.getElementById('dropToast');
+        el.innerHTML = '🎁 ดรอป: ' + drops.join(' • ');
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    function showItems() {
+        if (busy) return;
+        renderItemList();
+        document.getElementById('itemModal').classList.add('open');
+    }
+
+    function hideItems() {
+        document.getElementById('itemModal').classList.remove('open');
+    }
+
+    function renderItemList() {
+        const list = document.getElementById('itemList');
+        const keys = Object.keys(inventory).filter(k => inventory[k] > 0);
+        if (!keys.length) {
+            list.innerHTML = '<div class="empty-bag">🎒 กระเป๋าว่างเปล่า<br><span style="font-size:12px">กำจัดมอนสเตอร์เพื่อเก็บไอเทม</span></div>';
+            return;
+        }
+        list.innerHTML = keys.map(id => {
+            const it = ITEMS.find(x => x.id === id);
+            if (!it) return '';
+            return `
+                <div class="item-row">
+                    <div class="item-emoji">${it.emoji}</div>
+                    <div class="item-info">
+                        <div class="item-name">${it.name}</div>
+                        <div class="item-desc">${it.desc}</div>
+                        <div class="item-cnt">มีอยู่: ${inventory[id]} ชิ้น</div>
+                    </div>
+                    <button class="use-btn" onclick="G.useItem('${id}')">ใช้</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function useItem(itemId) {
+        const item = ITEMS.find(x => x.id === itemId);
+        if (!item || !inventory[itemId] || inventory[itemId] <= 0) return;
+
+        hideItems();
+        lockSkills();
+        inventory[itemId]--;
+        if (inventory[itemId] <= 0) delete inventory[itemId];
+        itemsUsed++;
+
+        switch (item.type) {
+            case 'heal': {
+                const amt = Math.floor(hero.maxHp * 0.5);
+                hero.hp   = Math.min(hero.maxHp, hero.hp + amt);
+                log(`${item.emoji} ${item.name} → ฟื้น HP +${amt}`, 'i');
+                updateHHp();
+                floatDmg('+'+amt, '#6ee7b7');
+                setTimeout(enemyTurn, 850);
+                break;
+            }
+            case 'buff': {
+                const buffDef = {
+                    powerSerum:  { type:'atkMult',   value:1.2, turns:3, label:'ATK×1.2', emoji:'💉' },
+                    ironShield:  { type:'defBonus',  value:30,  turns:5, label:'DEF+30',  emoji:'🛡️' },
+                    warVaccine1: { type:'dmgMult',   value:1.5, turns:4, label:'DMG×1.5', emoji:'☠️' },
+                    warVaccine2: { type:'stunImmune',value:1,   turns:4, label:'กัน Stun',emoji:'🛡️' },
+                }[itemId] || null;
+
+                if (itemId === 'warVaccine') {
+                    hero.buffs.push({ type:'dmgMult',   value:1.5, turns:4, label:'DMG×1.5', emoji:'☠️' });
+                    hero.buffs.push({ type:'stunImmune',value:1,   turns:4, label:'กัน Stun', emoji:'🛡️' });
+                } else if (itemId === 'powerSerum') {
+                    hero.buffs.push({ type:'atkMult',  value:1.2, turns:3, label:'ATK×1.2', emoji:'💉' });
+                } else if (itemId === 'ironShield') {
+                    hero.buffs.push({ type:'defBonus', value:30,  turns:5, label:'DEF+30',  emoji:'🛡️' });
+                }
+                log(`${item.emoji} ${item.name} → ${item.desc}`, 'i');
+                renderBuffs();
+                setTimeout(enemyTurn, 850);
+                break;
+            }
+            case 'stun': {
+                if (hasStunImmune()) {
+                    // Enemy is immune? In this game only hero can get stun immunity
+                    // Enemy gets stunned regardless
+                }
+                enemy.stunned = true;
+                document.getElementById('stunIndicator').style.display = 'block';
+                log(`${item.emoji} ${item.name} → ศัตรูถูก Stun!`, 'i');
+                setTimeout(enemyTurn, 850);
+                break;
+            }
+            case 'damage': {
+                const dmg = 300;
+                enemy.curHp -= dmg;
+                log(`${item.emoji} ${item.name} → ดีเมจแน่นอน ${dmg}!`, 'i');
+                shakeEnemy();
+                floatDmg(dmg+'', '#fbbf24');
+                updateEHp();
+                if (enemy.curHp <= 0) { setTimeout(onEnemyDead, 800); return; }
+                setTimeout(enemyTurn, 950);
+                break;
+            }
+        }
+    }
+
+    /* ════ ENEMY / HERO DEATH ════ */
     function onEnemyDead() {
-        const s = SEASONS[season];
+        const s      = SEASONS[season];
         const isLast = eIdx >= s.enemies.length - 1;
         totalKills++;
         defeated[season]++;
         hero.mp = Math.min(hero.maxMp, hero.mp + 35);
 
+        // Roll item drops
+        rollDrops(enemy);
+
         if (isLast) {
-            // Boss defeated = season clear
             cleared[season] = true;
             if (season < 2) unlocked[season + 1] = true;
+
             if (season === 2) {
-                setTimeout(showClear, 600);
+                setTimeout(showClear, 800);
             } else {
                 const ns = SEASONS[season + 1];
-                showResult(
+                setTimeout(() => showResult(
                     '🎉',
                     `${s.emoji} ${s.name} ผ่านแล้ว!`,
                     `ยอดเยี่ยม! คุณปราบ ${s.name}สำเร็จ\n${ns.emoji} ${ns.name} ถูกปลดล็อคแล้ว!`,
                     '➡️ ฤดูถัดไป', 'nextSeason'
-                );
+                ), 900);
             }
         } else {
-            // Mid fight heal
             const heal = Math.floor(hero.maxHp * 0.08);
-            hero.hp = Math.min(hero.maxHp, hero.hp + heal);
-            log(`✅ ${enemy.name} พ่ายแพ้! ฟื้นฟู HP +${heal}`, 'h');
+            hero.hp    = Math.min(hero.maxHp, hero.hp + heal);
+            log(`✅ ${enemy.name} พ่ายแพ้! ฟื้น HP +${heal}`, 'h');
             updateHHp();
             setTimeout(() => {
                 spawnEnemy(eIdx + 1);
                 renderBattle();
-            }, 1200);
+            }, 1400);
         }
     }
 
@@ -689,11 +1038,11 @@ const G = (() => {
         );
     }
 
-    /* ── Result ── */
+    /* ════ RESULT SCREEN ════ */
     function showResult(icon, title, sub, btnTxt, action) {
         document.getElementById('resIcon').textContent  = icon;
         document.getElementById('resTitle').textContent = title;
-        document.getElementById('resSub').innerHTML     = sub.replace('\n','<br>');
+        document.getElementById('resSub').innerHTML     = sub.replace('\n', '<br>');
         document.getElementById('resBtn').textContent   = btnTxt;
         resAction = action;
         show('resultScreen');
@@ -701,48 +1050,52 @@ const G = (() => {
 
     function doResult() {
         if (resAction === 'retry') {
-            hero.hp = hero.maxHp; hero.mp = hero.maxMp;
+            hero.hp = hero.maxHp; hero.mp = hero.maxMp; hero.buffs = [];
             defeated[season] = 0;
             spawnEnemy(0);
             show('battleScreen');
             renderBattle();
         } else if (resAction === 'nextSeason') {
-            hero.hp = hero.maxHp; hero.mp = hero.maxMp;
+            hero.hp = hero.maxHp; hero.mp = hero.maxMp; hero.buffs = [];
             goSeasons();
         }
     }
 
-    /* ── Game Clear ── */
+    /* ════ GAME CLEAR ════ */
     function showClear() {
         const secs = Math.floor((Date.now() - startTime) / 1000);
-        const mm = String(Math.floor(secs/60)).padStart(2,'0');
-        const ss = String(secs % 60).padStart(2,'0');
+        const mm   = String(Math.floor(secs / 60)).padStart(2, '0');
+        const ss   = String(secs % 60).padStart(2, '0');
+        const gearBonus = hero.atk - HERO_BASE.baseAtk;
         document.getElementById('clearStats').innerHTML = `
-            <div>⚔️ มอนสเตอร์ที่กำจัด: <strong style="color:var(--gold)">${totalKills} / 24</strong></div>
+            <div>⚔️ มอนสเตอร์กำจัด: <strong style="color:var(--gold)">${totalKills} / 24</strong></div>
             <div>🕐 เวลาที่ใช้: <strong style="color:var(--gold)">${mm}:${ss}</strong></div>
             <div>❤️ HP เหลือ: <strong style="color:#4ade80">${Math.max(0,hero.hp)} / ${hero.maxHp}</strong></div>
+            <div>🏺 เกราะเก็บได้: <strong style="color:#c084fc">ATK +${gearBonus}</strong></div>
+            <div>🎒 ไอเทมใช้ไป: <strong style="color:#fbbf24">${itemsUsed} ชิ้น</strong></div>
         `;
         show('clearScreen');
     }
 
-    /* ── Helpers ── */
+    /* ════ HELPERS ════ */
     function log(txt, cls) {
         const el = document.getElementById('blog');
         const d  = document.createElement('div');
-        d.className = 'log-' + cls;
+        d.className   = 'log-' + cls;
         d.textContent = txt;
         el.appendChild(d);
-        el.scrollTop = el.scrollHeight;
+        el.scrollTop  = el.scrollHeight;
     }
 
     function floatDmg(txt, color) {
         const zone = document.getElementById('enemyZone');
-        const d = document.createElement('div');
-        d.className = 'dmg-float';
-        d.textContent = txt;
-        d.style.color = color;
+        const d    = document.createElement('div');
+        d.className        = 'dmg-float';
+        d.textContent      = txt;
+        d.style.color      = color;
         d.style.textShadow = `0 0 12px ${color}`;
-        d.style.left = '50%'; d.style.top = '55px';
+        d.style.left       = '50%';
+        d.style.top        = '50px';
         zone.appendChild(d);
         setTimeout(() => d.remove(), 1200);
     }
@@ -755,13 +1108,15 @@ const G = (() => {
         setTimeout(() => sp.style.animation = 'floatAnim 2s ease-in-out infinite', 500);
     }
 
-    function rng(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function rng(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     function restart() { init(); show('titleScreen'); }
 
-    /* ── Public ── */
+    /* ── Public API ── */
     init();
-    return { goSeasons, doResult, restart };
+    return { goSeasons, doResult, restart, showItems, hideItems, useItem };
 })();
 </script>
 </body>
