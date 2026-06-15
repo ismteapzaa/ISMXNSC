@@ -408,6 +408,58 @@
             .ah-sprite { font-size:42px !important; }
             .e-sprite { font-size:58px !important; }
         }
+
+        /* ══ LANDSCAPE PHONE ══ */
+        @media (orientation:landscape) and (max-height:500px) {
+            /* Compact global */
+            body { overflow:hidden; }
+            #app { height:100dvh; overflow:hidden; }
+            .screen { min-height:0; height:100dvh; }
+            #battleScreen { height:100dvh; }
+
+            /* Header */
+            .bh { padding:5px 14px; }
+
+            /* Title / Season scroll in landscape */
+            #titleScreen { overflow-y:auto; height:100dvh; justify-content:flex-start; padding:20px 24px; }
+            #seasonScreen { overflow-y:auto; height:100dvh; }
+            .season-inner { padding:16px; }
+            #seasonCards { grid-template-columns:repeat(3,1fr); }
+
+            /* Battle: side-by-side always */
+            .battle-body { flex-direction:row; }
+            .battle-field { flex:1; border-bottom:none; border-right:1px solid var(--border); }
+            .battle-controls { width:270px; flex:none; overflow-y:auto; }
+
+            /* Arena info panels compact */
+            .field-top { padding:5px 8px 3px; gap:5px; }
+            .fi-hero, .fi-enemy { padding:4px 8px; border-radius:8px; }
+            .fi-hname, .fi-ename { font-size:8.5px; margin-bottom:2px; }
+            .fi-br { margin-bottom:2px; }
+            .fi-bar { height:5px; }
+            .fi-stats, .fi-estats { margin-top:2px; gap:2px; }
+            .stat-pill { padding:1px 5px; font-size:9px; }
+            .status-indicator { font-size:8px; padding:1px 5px; }
+
+            /* Sprites */
+            .ah-sprite { font-size:clamp(36px,10vh,54px) !important; }
+            .ah-halo { width:44px; height:10px; }
+            .e-sprite { font-size:clamp(46px,14vh,68px) !important; }
+            .e-sprite.boss { font-size:clamp(58px,18vh,86px) !important; }
+            .e-halo { width:70px; height:14px; }
+            .arena-floor { padding:0 8px 4px; }
+
+            /* Controls compact */
+            .blog { height:52px; font-size:10px; padding:5px 10px; }
+            .bdr { padding:2px 10px; min-height:16px; }
+            .skill-grid { grid-template-columns:1fr 1fr; gap:5px; padding:5px 10px 4px; }
+            .sk-btn { padding:7px 5px 5px; border-radius:8px; }
+            .sk-icon { font-size:16px; margin-bottom:1px; }
+            .sk-name { font-size:9px; }
+            .sk-desc { font-size:8px; margin-top:1px; }
+            .item-btn-wrap { padding:4px 10px 8px; }
+            .item-btn { padding:8px; font-size:11px; }
+        }
     </style>
 </head>
 <body>
