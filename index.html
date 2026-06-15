@@ -119,42 +119,88 @@
         .season-badge { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; }
         .prog-text { font-size:12px; color:var(--muted); }
 
+        /* ── Battle layout ── */
         .battle-body { display:flex; flex-direction:column; flex:1; overflow:hidden; }
-        .battle-left { display:flex; flex-direction:column; flex:1; overflow:hidden; position:relative; }
-        .battle-right { display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; background:rgba(0,0,0,0.3); }
 
-        /* Enemy zone - dramatic */
-        .enemy-zone {
+        /* Field: enemy (top) + VS divider + hero (bottom) */
+        .battle-field {
+            display:flex; flex-direction:column; flex:0 0 48%; overflow:hidden;
+            border-bottom:1px solid var(--border);
+        }
+        .field-enemy {
             flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;
-            padding:20px; position:relative; min-height:190px;
+            padding:8px 16px 4px; position:relative; overflow:hidden;
             transition:background 0.5s ease;
         }
         .boss-tag {
             background:linear-gradient(135deg,#7f1d1d,#dc2626); color:white;
-            font-size:11px; font-weight:800; padding:4px 14px; border-radius:20px;
-            margin-bottom:8px; letter-spacing:2px;
+            font-size:11px; font-weight:800; padding:3px 12px; border-radius:20px;
+            margin-bottom:4px; letter-spacing:2px;
             box-shadow:0 0 16px rgba(220,38,38,0.5);
         }
+        .fe-hp-row {
+            display:flex; justify-content:space-between; align-items:baseline;
+            width:100%; max-width:300px; margin-bottom:4px;
+        }
+        .fe-name   { font-size:clamp(13px,2.5vw,17px); font-weight:800; }
+        .fe-hp-text{ font-size:10px; color:var(--muted); }
+        .fe-hp-bar { width:100%; max-width:300px; margin-bottom:6px; }
         .e-sprite {
-            font-size:clamp(68px,16vw,100px); line-height:1;
+            font-size:clamp(58px,13vw,90px); line-height:1;
             animation:floatAnim 2.5s ease-in-out infinite;
             filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));
         }
-        .e-sprite.boss { font-size:clamp(86px,20vw,128px); }
+        .e-sprite.boss { font-size:clamp(74px,17vw,116px); }
         .e-halo {
-            width:110px; height:28px; border-radius:50%; margin-top:10px; flex-shrink:0;
+            width:100px; height:22px; border-radius:50%; margin-top:6px; flex-shrink:0;
             background:radial-gradient(ellipse, rgba(255,255,255,0.22) 0%, transparent 70%);
             box-shadow:0 0 24px rgba(255,255,255,0.1);
         }
-        .e-name   { font-size:clamp(15px,2.5vw,20px); font-weight:800; margin:10px 0 3px; }
-        .e-hp-text { font-size:clamp(11px,1.5vw,13px); color:var(--muted); margin-bottom:8px; }
-        .e-hp-wrap { width:100%; max-width:280px; }
         .status-indicator {
-            font-size:11px; font-weight:700; margin-top:6px; padding:3px 10px;
+            font-size:10px; font-weight:700; margin-top:4px; padding:2px 8px;
             border-radius:20px; animation:pulse 0.9s ease-in-out infinite;
         }
         .si-stun { color:#fbbf24; background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.3); }
         .si-weak { color:#86efac; background:rgba(134,239,172,0.1); border:1px solid rgba(134,239,172,0.3); }
+
+        .field-vs {
+            display:flex; align-items:center; gap:10px; padding:3px 20px; flex-shrink:0;
+        }
+        .vs-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent); }
+        .vs-txt { font-size:10px; font-weight:900; color:rgba(255,255,255,0.25); letter-spacing:3px; }
+
+        .field-hero {
+            display:flex; align-items:center; gap:12px; padding:8px 16px 10px;
+            background:rgba(0,0,0,0.35); border-top:1px solid var(--border); flex-shrink:0;
+        }
+        .fh-char-wrap { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+        .fh-sprite {
+            font-size:clamp(38px,8vw,56px); line-height:1;
+            animation:floatAnim 3s ease-in-out infinite;
+            filter:drop-shadow(0 0 12px rgba(99,102,241,0.5));
+        }
+        .fh-halo {
+            width:60px; height:14px; border-radius:50%;
+            background:radial-gradient(ellipse, rgba(99,102,241,0.35) 0%, transparent 70%);
+            box-shadow:0 0 14px rgba(99,102,241,0.3); margin-top:4px;
+        }
+        .fh-info { flex:1; min-width:0; }
+        .fh-name { font-size:clamp(11px,1.8vw,14px); font-weight:800; color:var(--text); margin-bottom:5px; }
+        .fhb-row { display:flex; align-items:center; gap:7px; margin-bottom:4px; }
+        .fhb-icon { font-size:10px; flex-shrink:0; width:14px; }
+        .fhb-val  { font-size:10px; color:var(--muted); flex-shrink:0; min-width:64px; text-align:right; font-weight:600; }
+        .fh-stats { display:flex; gap:6px; margin-top:5px; }
+        .stat-pill {
+            background:rgba(255,255,255,0.06); border:1px solid var(--border);
+            border-radius:8px; padding:3px 9px; font-size:11px; font-weight:700;
+            display:flex; gap:4px; align-items:center;
+        }
+
+        /* Controls panel */
+        .battle-controls {
+            flex:1; display:flex; flex-direction:column; overflow-y:auto; min-height:0;
+            background:rgba(0,0,0,0.25);
+        }
 
         .dmg-float {
             position:absolute; font-size:clamp(24px,5vw,32px); font-weight:900; pointer-events:none;
@@ -183,27 +229,6 @@
         .log-i { color:#fde68a; padding:1px 0; }
         .log-d { color:#fb923c; padding:1px 0; }
 
-        /* Hero panel */
-        .hero-panel {
-            background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border);
-            padding:12px 16px; flex-shrink:0;
-        }
-        .hero-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-        .h-avatar {
-            font-size:clamp(30px,5vw,40px); line-height:1; flex-shrink:0;
-            filter:drop-shadow(0 0 8px rgba(59,130,246,0.4));
-        }
-        .h-info { flex:1; min-width:0; }
-        .h-name { font-size:clamp(13px,2vw,16px); font-weight:800; margin-bottom:6px; color:var(--text); }
-        .hb-row { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
-        .hb-icon { font-size:11px; flex-shrink:0; width:16px; }
-        .hb-val  { font-size:10px; color:var(--muted); flex-shrink:0; min-width:68px; text-align:right; font-weight:600; }
-        .h-stats { display:flex; gap:8px; margin-top:8px; }
-        .stat-box {
-            background:rgba(255,255,255,0.06); border:1px solid var(--border);
-            border-radius:8px; padding:4px 10px; font-size:12px; font-weight:700;
-            display:flex; gap:5px; align-items:center; flex:1; justify-content:center;
-        }
 
         /* Buff / Debuff rows */
         .bdr { display:flex; flex-wrap:wrap; gap:4px; padding:4px 16px; min-height:24px; flex-shrink:0; }
@@ -335,29 +360,31 @@
         /* ══ TABLET 768px+ ══ */
         @media(min-width:768px) {
             #seasonCards { grid-template-columns:repeat(3,1fr); }
+            /* side-by-side: field left, controls right */
             .battle-body { flex-direction:row; }
-            .battle-left { border-right:1px solid var(--border); }
-            .battle-right { width:380px; }
-            .enemy-zone { min-height:280px; }
-            .blog { height:130px; border-bottom:none; }
-            .e-sprite { font-size:clamp(90px,12vw,140px) !important; }
-            .e-sprite.boss { font-size:clamp(110px,15vw,180px) !important; }
-            .e-halo { width:140px; height:35px; }
+            .battle-field {
+                flex:1; border-bottom:none; border-right:1px solid var(--border);
+            }
+            .battle-controls { width:380px; flex:none; border-top:none; }
+            .field-enemy { padding:14px 20px 8px; }
+            .e-sprite { font-size:clamp(80px,10vw,130px) !important; }
+            .e-sprite.boss { font-size:clamp(100px,13vw,170px) !important; }
+            .e-halo { width:130px; height:32px; }
+            .blog { height:120px; }
             .skill-grid { gap:10px; padding:10px 18px 8px; }
-            .hero-panel { padding:14px 20px; }
             .bdr { padding:5px 20px; }
             .item-btn-wrap { padding:8px 20px 16px; }
         }
 
         /* ══ DESKTOP 1200px+ ══ */
         @media(min-width:1200px) {
-            .battle-right { width:460px; }
+            .battle-controls { width:460px; }
             .skill-grid { grid-template-columns:1fr 1fr 1fr 1fr; }
             .sk-btn { padding:14px 10px 12px; }
             .sk-icon { font-size:26px; }
             .sk-name { font-size:12px; }
             .sk-desc { font-size:10px; }
-            .blog { height:150px; font-size:12.5px; }
+            .blog { height:140px; font-size:12.5px; }
         }
 
         /* ══ SMALL PHONE ══ */
@@ -366,6 +393,7 @@
             .sk-btn { padding:9px 5px; }
             .sk-icon { font-size:18px; }
             .sk-name { font-size:10px; }
+            .fh-sprite { font-size:32px; }
         }
     </style>
 </head>
@@ -408,44 +436,54 @@
             <div id="bProgress" class="prog-text"></div>
         </div>
         <div class="battle-body">
-            <div class="battle-left">
-                <div class="enemy-zone" id="enemyZone">
+            <!-- FIELD: enemy top / VS / hero bottom -->
+            <div class="battle-field">
+                <div class="field-enemy" id="enemyZone">
                     <div id="bossTag"></div>
-                    <div id="eSprite" class="e-sprite"></div>
-                    <div class="e-halo" id="eHalo"></div>
-                    <div id="eName" class="e-name"></div>
-                    <div id="eHpText" class="e-hp-text"></div>
-                    <div class="e-hp-wrap">
+                    <div class="fe-hp-row">
+                        <span id="eName" class="fe-name"></span>
+                        <span id="eHpText" class="fe-hp-text"></span>
+                    </div>
+                    <div class="fe-hp-bar">
                         <div class="bar-wrap"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
                     </div>
+                    <div id="eSprite" class="e-sprite"></div>
+                    <div class="e-halo" id="eHalo"></div>
                     <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
                     <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
                 </div>
-                <div class="blog" id="blog"></div>
-            </div>
-            <div class="battle-right">
-                <div class="hero-panel">
-                    <div class="hero-top">
-                        <div class="h-avatar">🛡️</div>
-                        <div class="h-info">
-                            <div class="h-name">อัศวินสีขาว</div>
-                            <div class="hb-row">
-                                <span class="hb-icon">❤️</span>
-                                <div class="bar-wrap" style="flex:1"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
-                                <span class="hb-val" id="hHpTxt"></span>
-                            </div>
-                            <div class="hb-row">
-                                <span class="hb-icon">💧</span>
-                                <div class="bar-wrap" style="flex:1"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
-                                <span class="hb-val" id="hMpTxt"></span>
-                            </div>
+                <div class="field-vs">
+                    <div class="vs-line"></div>
+                    <div class="vs-txt">VS</div>
+                    <div class="vs-line"></div>
+                </div>
+                <div class="field-hero">
+                    <div class="fh-char-wrap">
+                        <div class="fh-sprite">🛡️</div>
+                        <div class="fh-halo"></div>
+                    </div>
+                    <div class="fh-info">
+                        <div class="fh-name">อัศวินสีขาว</div>
+                        <div class="fhb-row">
+                            <span class="fhb-icon">❤️</span>
+                            <div class="bar-wrap" style="flex:1"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
+                            <span class="fhb-val" id="hHpTxt"></span>
+                        </div>
+                        <div class="fhb-row">
+                            <span class="fhb-icon">💧</span>
+                            <div class="bar-wrap" style="flex:1"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
+                            <span class="fhb-val" id="hMpTxt"></span>
+                        </div>
+                        <div class="fh-stats">
+                            <div class="stat-pill">⚔️ <span id="hAtk"></span></div>
+                            <div class="stat-pill">🛡️ <span id="hDef"></span></div>
                         </div>
                     </div>
-                    <div class="h-stats">
-                        <div class="stat-box">⚔️ <span id="hAtk"></span></div>
-                        <div class="stat-box">🛡️ <span id="hDef"></span></div>
-                    </div>
                 </div>
+            </div>
+            <!-- CONTROLS: log + buffs/debuffs + skills + items -->
+            <div class="battle-controls">
+                <div class="blog" id="blog"></div>
                 <div class="bdr" id="buffRow"></div>
                 <div class="bdr" id="debuffRow"></div>
                 <div class="skill-grid" id="skillGrid"></div>
