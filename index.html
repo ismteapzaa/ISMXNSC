@@ -13,8 +13,8 @@
             --text: #e2e8f0; --muted: #94a3b8;
         }
         body { font-family:'Segoe UI',Tahoma,sans-serif; background:var(--dark); color:var(--text);
-               min-height:100vh; display:flex; justify-content:center; align-items:flex-start; overflow-x:hidden; }
-        #app { width:100%; max-width:480px; min-height:100vh; position:relative; }
+               min-height:100vh; overflow-x:hidden; }
+        #app { width:100%; min-height:100vh; position:relative; }
         .screen { display:none; width:100%; min-height:100vh; flex-direction:column; }
         .screen.active { display:flex; }
 
@@ -32,31 +32,35 @@
         .btn-gold { background:linear-gradient(135deg,#d97706,#f59e0b); color:#1a1a00; }
         .btn-gray { background:rgba(255,255,255,0.1); }
 
-        /* TITLE */
-        #titleScreen { justify-content:center; align-items:center; text-align:center; padding:24px;
+        /* ── TITLE ── */
+        #titleScreen { justify-content:center; align-items:center; text-align:center; padding:32px 24px;
                        background:radial-gradient(ellipse at center,#1a0a3e 0%,var(--dark) 70%); }
-        .title-sword { font-size:clamp(60px,18vw,90px); animation:floatAnim 3s ease-in-out infinite; line-height:1; }
-        .title-main  { font-size:clamp(28px,8vw,42px); font-weight:900;
+        .title-content { max-width:640px; width:100%; }
+        .title-sword { font-size:clamp(60px,12vw,110px); animation:floatAnim 3s ease-in-out infinite; line-height:1; }
+        .title-main  { font-size:clamp(28px,6vw,56px); font-weight:900;
                        background:linear-gradient(135deg,var(--gold),#f97316);
                        -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
                        margin:12px 0 4px; }
-        .title-sub   { font-size:13px; color:var(--muted); margin-bottom:32px; }
+        .title-sub   { font-size:clamp(12px,1.8vw,15px); color:var(--muted); margin-bottom:32px; }
         .story-card  { background:var(--card); border:1px solid var(--border); border-radius:16px;
-                       padding:18px; margin-bottom:28px; font-size:14px; line-height:1.8;
+                       padding:18px; margin-bottom:28px; font-size:clamp(13px,1.6vw,15px); line-height:1.8;
                        color:#cbd5e1; text-align:left; }
 
-        /* SEASON */
+        /* ── SEASON ── */
         #seasonScreen { background:radial-gradient(ellipse at top,#130a2e 0%,var(--dark) 70%); }
-        .page-title  { font-size:20px; font-weight:800; text-align:center; color:var(--gold); margin-bottom:20px; }
+        .season-inner { max-width:1100px; margin:0 auto; padding:20px 24px; flex:1; overflow-y:auto; width:100%; }
+        .page-title  { font-size:clamp(18px,3vw,26px); font-weight:800; text-align:center; color:var(--gold); margin-bottom:20px; }
+        #seasonCards { display:grid; grid-template-columns:1fr; gap:14px; margin-bottom:16px; }
         .season-card { background:var(--card); border:1px solid var(--border); border-radius:16px;
-                       padding:18px; margin-bottom:14px; cursor:pointer;
-                       transition:transform .15s,background .15s; position:relative; overflow:hidden; }
+                       padding:18px; cursor:pointer;
+                       transition:transform .15s,background .15s,box-shadow .15s; position:relative; overflow:hidden; }
+        .season-card:hover:not(.locked) { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
         .season-card:active:not(.locked) { transform:scale(0.98); }
         .season-card.locked { opacity:0.45; cursor:not-allowed; }
         .sc-head  { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-        .sc-emoji { font-size:36px; line-height:1; }
-        .sc-name  { font-size:17px; font-weight:700; }
-        .sc-info  { font-size:12px; color:var(--muted); margin-top:2px; }
+        .sc-emoji { font-size:clamp(32px,5vw,48px); line-height:1; }
+        .sc-name  { font-size:clamp(15px,2.5vw,20px); font-weight:700; }
+        .sc-info  { font-size:clamp(11px,1.5vw,13px); color:var(--muted); margin-top:2px; }
         .sc-lock  { position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:22px; }
         .progress-row { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:5px; }
         .cleared-tag { margin-top:8px; font-size:12px; color:var(--gold); font-weight:600; }
@@ -64,22 +68,26 @@
         .hs-title { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:10px; }
         .bar-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
 
-        /* BATTLE */
-        #battleScreen { padding:0; }
-        .bh { padding:10px 14px; display:flex; justify-content:space-between; align-items:center;
-              background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); }
+        /* ── BATTLE ── */
+        #battleScreen { padding:0; overflow:hidden; height:100vh; }
+        .bh { padding:10px 16px; display:flex; justify-content:space-between; align-items:center;
+              background:rgba(0,0,0,0.4); border-bottom:1px solid var(--border); flex-shrink:0; }
         .season-badge { font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; }
         .prog-text { font-size:12px; color:var(--muted); }
 
+        .battle-body { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+        .battle-left { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+        .battle-right { display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; }
+
         .enemy-zone { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;
-                      padding:16px; position:relative; min-height:200px; }
+                      padding:16px; position:relative; min-height:180px; }
         .boss-tag { background:linear-gradient(135deg,#dc2626,#991b1b); color:white; font-size:11px;
                     font-weight:700; padding:3px 10px; border-radius:20px; margin-bottom:6px; }
-        .e-sprite { font-size:clamp(56px,16vw,80px); line-height:1; animation:floatAnim 2s ease-in-out infinite; }
-        .e-sprite.boss { font-size:clamp(72px,20vw,100px); }
-        .e-name   { font-size:15px; font-weight:700; margin:6px 0 2px; }
-        .e-hp-text { font-size:12px; color:var(--muted); margin-bottom:6px; }
-        .e-hp-wrap { width:100%; max-width:260px; }
+        .e-sprite { font-size:clamp(56px,12vw,90px); line-height:1; animation:floatAnim 2s ease-in-out infinite; }
+        .e-sprite.boss { font-size:clamp(72px,15vw,110px); }
+        .e-name   { font-size:clamp(14px,2.5vw,20px); font-weight:700; margin:6px 0 2px; }
+        .e-hp-text { font-size:clamp(11px,1.5vw,14px); color:var(--muted); margin-bottom:6px; }
+        .e-hp-wrap { width:100%; max-width:320px; }
         .status-indicator { font-size:11px; font-weight:700; margin-top:4px; animation:pulse 0.8s ease-in-out infinite; }
         .si-stun { color:#fbbf24; }
         .si-weak { color:#86efac; }
@@ -94,8 +102,7 @@
                      box-shadow:0 4px 20px rgba(251,191,36,0.3); }
 
         .blog { background:rgba(0,0,0,0.35); border-top:1px solid var(--border);
-                border-bottom:1px solid var(--border);
-                padding:8px 14px; height:76px; overflow-y:auto; font-size:12px; }
+                padding:8px 14px; height:80px; overflow-y:auto; font-size:12px; flex-shrink:0; }
         .log-p { color:#93c5fd; padding:1px 0; }
         .log-e { color:#fca5a5; padding:1px 0; }
         .log-s { color:#c4b5fd; padding:1px 0; }
@@ -103,15 +110,14 @@
         .log-i { color:#fde68a; padding:1px 0; }
         .log-d { color:#fb923c; padding:1px 0; }
 
-        .hero-panel { background:rgba(0,0,0,0.25); padding:10px 14px 6px; }
+        .hero-panel { background:rgba(0,0,0,0.25); padding:10px 14px 6px; flex-shrink:0; }
         .hero-row { display:flex; align-items:center; gap:10px; }
-        .h-emoji  { font-size:32px; line-height:1; }
+        .h-emoji  { font-size:clamp(28px,4vw,40px); line-height:1; }
         .h-bars   { flex:1; }
-        .h-name   { font-size:13px; font-weight:700; margin-bottom:3px; }
-        .h-stat   { text-align:right; font-size:11px; color:var(--muted); line-height:1.8; }
+        .h-name   { font-size:clamp(12px,1.8vw,16px); font-weight:700; margin-bottom:3px; }
+        .h-stat   { text-align:right; font-size:clamp(10px,1.4vw,13px); color:var(--muted); line-height:1.8; }
 
-        /* Buff + Debuff rows */
-        .bdr { display:flex; flex-wrap:wrap; gap:4px; padding:4px 14px; min-height:22px; }
+        .bdr { display:flex; flex-wrap:wrap; gap:4px; padding:4px 14px; min-height:22px; flex-shrink:0; }
         .chip { font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; white-space:nowrap; }
         .c-atk  { background:rgba(220,38,38,0.25);   color:#fca5a5; border:1px solid #dc2626; }
         .c-def  { background:rgba(59,130,246,0.25);  color:#93c5fd; border:1px solid #3b82f6; }
@@ -125,28 +131,31 @@
         .c-stun { background:rgba(251,191,36,0.2);   color:#fde68a; border:1px solid #d97706; }
         .c-mp   { background:rgba(99,102,241,0.2);   color:#a5b4fc; border:1px solid #6366f1; }
 
-        .skill-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:6px 14px 4px; }
+        .skill-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:6px 14px 4px; flex-shrink:0; }
         .sk-btn { padding:9px 6px; border:none; border-radius:10px; cursor:pointer; font-family:inherit;
                   transition:transform .13s,opacity .13s; text-align:center; }
+        .sk-btn:hover:not(:disabled) { filter:brightness(1.15); }
         .sk-btn:active:not(:disabled) { transform:scale(0.93); }
         .sk-btn:disabled { opacity:0.35; cursor:not-allowed; }
         .sk-icon { font-size:20px; display:block; margin-bottom:2px; }
         .sk-name { font-size:12px; font-weight:700; color:white; display:block; }
         .sk-desc { font-size:10px; color:rgba(255,255,255,0.65); display:block; margin-top:1px; }
 
-        .item-btn-wrap { padding:4px 14px 10px; }
+        .item-btn-wrap { padding:4px 14px 10px; flex-shrink:0; }
         .item-btn { width:100%; padding:10px; border:1px solid #fbbf2466; border-radius:10px; cursor:pointer;
                     font-family:inherit; background:rgba(251,191,36,0.1); color:#fde68a;
                     font-size:13px; font-weight:700; transition:all .15s; }
-        .item-btn:active:not(:disabled) { transform:scale(0.97); background:rgba(251,191,36,0.2); }
+        .item-btn:hover:not(:disabled) { background:rgba(251,191,36,0.18); }
+        .item-btn:active:not(:disabled) { transform:scale(0.97); }
         .item-btn:disabled { opacity:0.35; cursor:not-allowed; }
 
-        /* ITEM MODAL */
+        /* ── ITEM MODAL ── */
         #itemModal { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7);
                      justify-content:flex-end; align-items:stretch; flex-direction:column; }
         #itemModal.open { display:flex; }
         .modal-box  { background:#161628; border-top:1px solid var(--border); border-radius:20px 20px 0 0;
-                      max-height:75vh; display:flex; flex-direction:column; animation:slideUp 0.3s ease; }
+                      max-height:75vh; display:flex; flex-direction:column; animation:slideUp 0.3s ease;
+                      max-width:600px; margin:0 auto; width:100%; }
         .modal-head { padding:16px 16px 12px; display:flex; justify-content:space-between; align-items:center;
                       border-bottom:1px solid var(--border); }
         .modal-title { font-size:16px; font-weight:800; color:var(--gold); }
@@ -168,20 +177,22 @@
         .use-btn:active { transform:scale(0.93); }
         .empty-bag  { text-align:center; padding:32px 0; color:var(--muted); font-size:14px; }
 
-        /* RESULT */
+        /* ── RESULT ── */
         #resultScreen { justify-content:center; align-items:center; text-align:center; padding:32px 24px;
                         background:radial-gradient(ellipse at center,#1a0a3e 0%,var(--dark) 70%); }
-        .res-icon  { font-size:80px; margin-bottom:16px; animation:bounceIn .5s ease; }
-        .res-title { font-size:28px; font-weight:900; margin-bottom:6px; }
-        .res-sub   { font-size:14px; color:var(--muted); margin-bottom:32px; line-height:1.7; }
+        .result-content { max-width:480px; width:100%; }
+        .res-icon  { font-size:clamp(64px,12vw,96px); margin-bottom:16px; animation:bounceIn .5s ease; }
+        .res-title { font-size:clamp(24px,5vw,34px); font-weight:900; margin-bottom:6px; }
+        .res-sub   { font-size:clamp(13px,2vw,16px); color:var(--muted); margin-bottom:32px; line-height:1.7; }
 
-        /* CLEAR */
+        /* ── CLEAR ── */
         #clearScreen { justify-content:center; align-items:center; text-align:center; padding:32px 24px;
                        background:radial-gradient(ellipse at center,#1a0a3e 0%,var(--dark) 70%); }
+        .clear-content { max-width:500px; width:100%; }
         .clear-stars  { font-size:44px; letter-spacing:6px; animation:pulse 1.5s ease-in-out infinite; }
-        .clear-trophy { font-size:70px; margin:12px 0; animation:floatAnim 2s ease-in-out infinite; }
-        .clear-title  { font-size:30px; font-weight:900; color:var(--gold); margin-bottom:6px; }
-        .clear-sub    { font-size:15px; color:var(--muted); margin-bottom:8px; line-height:1.7; }
+        .clear-trophy { font-size:clamp(56px,10vw,84px); margin:12px 0; animation:floatAnim 2s ease-in-out infinite; }
+        .clear-title  { font-size:clamp(26px,5vw,36px); font-weight:900; color:var(--gold); margin-bottom:6px; }
+        .clear-sub    { font-size:clamp(13px,2vw,16px); color:var(--muted); margin-bottom:8px; line-height:1.7; }
 
         @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes floatDmg  { 0%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)} 100%{opacity:0;transform:translateX(-50%) translateY(-65px) scale(0.7)} }
@@ -195,8 +206,45 @@
         .blog::-webkit-scrollbar-track,.item-list::-webkit-scrollbar-track { background:transparent; }
         .blog::-webkit-scrollbar-thumb,.item-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.2); border-radius:4px; }
 
-        @media(max-width:360px){ .skill-grid{gap:5px;padding:5px 10px 4px} .sk-btn{padding:8px 4px} .sk-icon{font-size:18px} .sk-name{font-size:11px} }
-        @media(min-height:750px){ .enemy-zone{min-height:230px} .blog{height:90px} }
+        /* ── TABLET 768px+ ── */
+        @media(min-width:768px) {
+          #seasonCards { grid-template-columns:repeat(3,1fr); }
+
+          .battle-body { flex-direction:row; }
+          .battle-left { border-right:1px solid var(--border); }
+          .battle-right { width:380px; }
+          .enemy-zone { min-height:260px; }
+          .blog { height:130px; border-bottom:none; font-size:13px; }
+
+          .e-sprite { font-size:clamp(80px,10vw,130px) !important; }
+          .e-sprite.boss { font-size:clamp(100px,13vw,170px) !important; }
+
+          .bh { padding:12px 20px; }
+          .hero-panel { padding:14px 18px 8px; }
+          .bdr { padding:6px 18px; }
+          .skill-grid { padding:8px 18px 6px; gap:8px; }
+          .item-btn-wrap { padding:6px 18px 14px; }
+        }
+
+        /* ── DESKTOP 1200px+ ── */
+        @media(min-width:1200px) {
+          .battle-right { width:460px; }
+          .skill-grid { grid-template-columns:1fr 1fr 1fr 1fr; }
+          .sk-icon { font-size:22px; }
+          .sk-name { font-size:13px; }
+          .sk-desc { font-size:11px; }
+          .sk-btn { padding:12px 8px; }
+          .blog { height:160px; }
+          .h-name { font-size:15px; }
+        }
+
+        /* ── SMALL PHONE ── */
+        @media(max-width:360px) {
+          .skill-grid{gap:5px;padding:5px 10px 4px}
+          .sk-btn{padding:8px 4px}
+          .sk-icon{font-size:18px}
+          .sk-name{font-size:11px}
+        }
     </style>
 </head>
 <body>
@@ -204,22 +252,24 @@
 
     <!-- TITLE -->
     <div id="titleScreen" class="screen">
-        <div class="title-sword">🛡️</div>
-        <div class="title-main">ศึกสามฤดู</div>
-        <div class="title-sub">Immune System RPG • 3 Seasons • 24 Enemies</div>
-        <div class="story-card">
-            <strong style="color:var(--gold)">📜 เรื่องราว</strong><br><br>
-            ในร่างกายที่กำลังถูกรุกราน... กองทัพเชื้อโรคแพร่กระจายทุกส่วน<br><br>
-            <strong style="color:#e2e8f0">อัศวินสีขาว</strong> — แมคโครฟาจในชุดเกราะเมมเบรน ลุกขึ้นสู้เพื่อปกป้องร่างกาย<br><br>
-            ฝ่าฟัน <strong style="color:var(--spring)">🌸 ฤดูใบไม้ผลิ</strong>, <strong style="color:var(--summer)">🔥 ฤดูร้อน</strong> และ <strong style="color:var(--winter)">❄️ ฤดูหนาว</strong><br>
-            ศัตรูมีสกิลพิเศษ! ใช้สกิลภูมิคุ้มกันและไอเทมให้ถูกจังหวะ
+        <div class="title-content">
+            <div class="title-sword">🛡️</div>
+            <div class="title-main">ศึกสามฤดู</div>
+            <div class="title-sub">Immune System RPG • 3 Seasons • 24 Enemies</div>
+            <div class="story-card">
+                <strong style="color:var(--gold)">📜 เรื่องราว</strong><br><br>
+                ในร่างกายที่กำลังถูกรุกราน... กองทัพเชื้อโรคแพร่กระจายทุกส่วน<br><br>
+                <strong style="color:#e2e8f0">อัศวินสีขาว</strong> — แมคโครฟาจในชุดเกราะเมมเบรน ลุกขึ้นสู้เพื่อปกป้องร่างกาย<br><br>
+                ฝ่าฟัน <strong style="color:var(--spring)">🌸 ฤดูใบไม้ผลิ</strong>, <strong style="color:var(--summer)">🔥 ฤดูร้อน</strong> และ <strong style="color:var(--winter)">❄️ ฤดูหนาว</strong><br>
+                ศัตรูมีสกิลพิเศษ! ใช้สกิลภูมิคุ้มกันและไอเทมให้ถูกจังหวะ
+            </div>
+            <button class="btn btn-gold" onclick="G.goSeasons()">⚔️ เริ่มการผจญภัย</button>
         </div>
-        <button class="btn btn-gold" onclick="G.goSeasons()">⚔️ เริ่มการผจญภัย</button>
     </div>
 
     <!-- SEASON SELECT -->
     <div id="seasonScreen" class="screen">
-        <div style="padding:20px 16px;flex:1;overflow-y:auto;">
+        <div class="season-inner">
             <div class="page-title">🗺️ เลือกฤดูกาล</div>
             <div id="seasonCards"></div>
             <div class="hero-status-box">
@@ -235,59 +285,69 @@
             <div id="bSeasonBadge" class="season-badge"></div>
             <div id="bProgress" class="prog-text"></div>
         </div>
-        <div class="enemy-zone" id="enemyZone">
-            <div id="bossTag"></div>
-            <div id="eSprite" class="e-sprite"></div>
-            <div id="eName" class="e-name"></div>
-            <div id="eHpText" class="e-hp-text"></div>
-            <div class="e-hp-wrap">
-                <div class="bar-wrap"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
-            </div>
-            <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
-            <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
-        </div>
-        <div class="blog" id="blog"></div>
-        <div class="hero-panel">
-            <div class="hero-row">
-                <div class="h-emoji">🛡️</div>
-                <div class="h-bars">
-                    <div class="h-name">อัศวินสีขาว</div>
-                    <div class="bar-label"><span>❤️ HP</span><span id="hHpTxt"></span></div>
-                    <div class="bar-wrap" style="margin:3px 0 5px"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
-                    <div class="bar-label"><span>💧 MP</span><span id="hMpTxt"></span></div>
-                    <div class="bar-wrap" style="margin-top:3px"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
+        <div class="battle-body">
+            <div class="battle-left">
+                <div class="enemy-zone" id="enemyZone">
+                    <div id="bossTag"></div>
+                    <div id="eSprite" class="e-sprite"></div>
+                    <div id="eName" class="e-name"></div>
+                    <div id="eHpText" class="e-hp-text"></div>
+                    <div class="e-hp-wrap">
+                        <div class="bar-wrap"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
+                    </div>
+                    <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
+                    <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
                 </div>
-                <div class="h-stat">
-                    <div>⚔️ <span id="hAtk"></span></div>
-                    <div>🛡️ <span id="hDef"></span></div>
+                <div class="blog" id="blog"></div>
+            </div>
+            <div class="battle-right">
+                <div class="hero-panel">
+                    <div class="hero-row">
+                        <div class="h-emoji">🛡️</div>
+                        <div class="h-bars">
+                            <div class="h-name">อัศวินสีขาว</div>
+                            <div class="bar-label"><span>❤️ HP</span><span id="hHpTxt"></span></div>
+                            <div class="bar-wrap" style="margin:3px 0 5px"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
+                            <div class="bar-label"><span>💧 MP</span><span id="hMpTxt"></span></div>
+                            <div class="bar-wrap" style="margin-top:3px"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
+                        </div>
+                        <div class="h-stat">
+                            <div>⚔️ <span id="hAtk"></span></div>
+                            <div>🛡️ <span id="hDef"></span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bdr" id="buffRow"></div>
+                <div class="bdr" id="debuffRow"></div>
+                <div class="skill-grid" id="skillGrid"></div>
+                <div class="item-btn-wrap">
+                    <button class="item-btn" id="itemBtnMain" onclick="G.showItems()">🎒 ใช้ไอเทม <span id="itemCount">(0)</span></button>
                 </div>
             </div>
-        </div>
-        <div class="bdr" id="buffRow"></div>
-        <div class="bdr" id="debuffRow"></div>
-        <div class="skill-grid" id="skillGrid"></div>
-        <div class="item-btn-wrap">
-            <button class="item-btn" id="itemBtnMain" onclick="G.showItems()">🎒 ใช้ไอเทม <span id="itemCount">(0)</span></button>
         </div>
     </div>
 
     <!-- RESULT -->
     <div id="resultScreen" class="screen">
-        <div id="resIcon" class="res-icon"></div>
-        <div id="resTitle" class="res-title"></div>
-        <div id="resSub" class="res-sub"></div>
-        <button id="resBtn" class="btn btn-gold" onclick="G.doResult()"></button>
-        <button class="btn btn-gray" style="margin-top:10px" onclick="G.goSeasons()">🗺️ กลับแผนที่</button>
+        <div class="result-content">
+            <div id="resIcon" class="res-icon"></div>
+            <div id="resTitle" class="res-title"></div>
+            <div id="resSub" class="res-sub"></div>
+            <button id="resBtn" class="btn btn-gold" onclick="G.doResult()"></button>
+            <button class="btn btn-gray" style="margin-top:10px" onclick="G.goSeasons()">🗺️ กลับแผนที่</button>
+        </div>
     </div>
 
     <!-- CLEAR -->
     <div id="clearScreen" class="screen">
-        <div class="clear-stars">⭐⭐⭐</div>
-        <div class="clear-trophy">🏆</div>
-        <div class="clear-title">คุณชนะ!</div>
-        <div class="clear-sub">อัศวินสีขาวพิทักษ์ร่างกายจากเชื้อโรคสำเร็จแล้ว!<br>ระบบภูมิคุ้มกันแข็งแกร่งกว่าเดิม</div>
-        <div id="clearStats" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0 24px;width:100%;max-width:360px;font-size:14px;line-height:2;"></div>
-        <button class="btn btn-gold" onclick="G.restart()">🔄 เล่นใหม่</button>
+        <div class="clear-content">
+            <div class="clear-stars">⭐⭐⭐</div>
+            <div class="clear-trophy">🏆</div>
+            <div class="clear-title">คุณชนะ!</div>
+            <div class="clear-sub">อัศวินสีขาวพิทักษ์ร่างกายจากเชื้อโรคสำเร็จแล้ว!<br>ระบบภูมิคุ้มกันแข็งแกร่งกว่าเดิม</div>
+            <div id="clearStats" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0 24px;width:100%;font-size:14px;line-height:2;text-align:left;"></div>
+            <button class="btn btn-gold" onclick="G.restart()">🔄 เล่นใหม่</button>
+        </div>
     </div>
 
     <!-- ITEM MODAL -->
@@ -451,7 +511,7 @@ const G = (() => {
   function startSeason(idx) {
     season = idx;
     if(cleared[idx]) { hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; defeated[idx]=0; }
-    else if(eIdx===0) { hero.hp=hero.maxHp; hero.mp=hero.maxMp; }
+    else { hero.hp=hero.maxHp; hero.mp=hero.maxMp; }
     eIdx=0; spawnEnemy(0); show('battleScreen'); renderBattle();
   }
 
@@ -549,9 +609,7 @@ const G = (() => {
   }
 
   function tickDebuffs() {
-    heroDebuffs = heroDebuffs.map(d=>d.n>0?{...d,n:d.n-1}:d).filter(d=>d.n>0||d.n===0&&false);
-    // mp_drain debuffs are single-use (n=0), already consumed, remove them
-    heroDebuffs = heroDebuffs.filter(d=>d.n>0);
+    heroDebuffs = heroDebuffs.map(d=>d.n>0?{...d,n:d.n-1}:d).filter(d=>d.n>0);
     renderDebuffs();
   }
 
@@ -572,7 +630,6 @@ const G = (() => {
       hero.mp = Math.max(0, hero.mp-db.v);
       log(`🌑 ดูดพลัง → MP -${db.v}`,'d'); updateHHp(); return;
     }
-    // Check if already have same debuff — refresh
     const ex = heroDebuffs.find(d=>d.t===db.t);
     if(ex){ ex.n=Math.max(ex.n,db.n); ex.v=Math.max(ex.v,db.v); }
     else heroDebuffs.push({...db});
@@ -593,10 +650,8 @@ const G = (() => {
     if(sk.mp>h.mp){ log('💧 MP ไม่พอ!','s'); return; }
     lockSkills();
 
-    // Apply DoT at start of hero action
     if(!applyDoT()){ setTimeout(onHeroDead,750); return; }
 
-    // Stun check
     if(isHeroStunned()){
       heroDebuffs = heroDebuffs.filter(d=>d.t!=='stun');
       log('💫 คุณถูก Stun! ข้ามเทิร์น','d');
@@ -650,7 +705,6 @@ const G = (() => {
       setTimeout(unlockSkills,400); return;
     }
 
-    // Decide: special skill (ch%) or normal attack
     const sp = e.sp;
     const useSpecial = sp && Math.random()<sp.ch;
 
@@ -666,7 +720,6 @@ const G = (() => {
       updateHHp();
     }
 
-    // Tick buffs and enemy ATK buff
     if(e.atkBuffTurns>0){ e.atkBuffTurns--; if(e.atkBuffTurns<=0) e.atkBuff=0; }
     tickEnemyWeak(); tickBuffs(); tickDebuffs();
     h.mp=Math.min(h.maxMp,h.mp+18);
@@ -687,15 +740,13 @@ const G = (() => {
         h.hp=Math.max(0,h.hp-dmg);
         addDebuff(sp.db);
         log(`${sp.e} ${e.name} ใช้ [${sp.name}] → ${dmg} + ${DBF_LBL[sp.db.t]||sp.db.t}!`,'d');
-        updateHHp();
-        break;
+        updateHHp(); break;
       }
       case 'power': {
         const dmg = Math.max(5,Math.floor(atkTotal*sp.pm+rng(-15,15))-defTot);
         h.hp=Math.max(0,h.hp-dmg);
         log(`${sp.e} ${e.name} ใช้ [${sp.name}] → ดีเมจ ${dmg}! 💥`,'d');
-        updateHHp();
-        break;
+        updateHHp(); break;
       }
       case 'double': {
         let total=0;
@@ -704,8 +755,7 @@ const G = (() => {
           total+=d; h.hp=Math.max(0,h.hp-d);
         }
         log(`${sp.e} ${e.name} ใช้ [${sp.name}] → โจมตี 2 ครั้ง รวม ${total}!`,'d');
-        updateHHp();
-        break;
+        updateHHp(); break;
       }
       case 'triple': {
         let total=0;
@@ -714,26 +764,21 @@ const G = (() => {
           total+=d; h.hp=Math.max(0,h.hp-d);
         }
         log(`${sp.e} ${e.name} ใช้ [${sp.name}] → โจมตี 3 ครั้ง รวม ${total}!`,'d');
-        updateHHp();
-        break;
+        updateHHp(); break;
       }
       case 'selfheal': {
         const healAmt=Math.floor(e.maxHp*sp.hp);
         e.curHp=Math.min(e.maxHp,e.curHp+healAmt);
         log(`${sp.e} ${e.name} ใช้ [${sp.name}] → ฟื้น HP +${healAmt}!`,'d');
         updateEHp();
-        // Still do small attack
         const dmg=Math.max(3,Math.floor(atkTotal*0.5+rng(-5,5))-defTot);
-        h.hp=Math.max(0,h.hp-dmg); updateHHp();
-        break;
+        h.hp=Math.max(0,h.hp-dmg); updateHHp(); break;
       }
       case 'selfbuff': {
         e.atkBuff=(sp.ab||0); e.atkBuffTurns=(sp.bt||2);
         log(`${sp.e} ${e.name} ใช้ [${sp.name}] → ATK+${sp.ab} (${sp.bt} เทิร์น)!`,'d');
-        // Small attack
         const dmg=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-5,5))-defTot);
-        h.hp=Math.max(0,h.hp-dmg); updateHHp();
-        break;
+        h.hp=Math.max(0,h.hp-dmg); updateHHp(); break;
       }
     }
   }
