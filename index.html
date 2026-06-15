@@ -122,84 +122,98 @@
         /* ── Battle layout ── */
         .battle-body { display:flex; flex-direction:column; flex:1; overflow:hidden; }
 
-        /* Field: enemy (top) + VS divider + hero (bottom) */
+        /* ── Arena: hero LEFT vs enemy RIGHT ── */
         .battle-field {
-            display:flex; flex-direction:column; flex:0 0 48%; overflow:hidden;
-            border-bottom:1px solid var(--border);
+            position:relative; flex:0 0 54%; display:flex; flex-direction:column; overflow:hidden;
+            border-bottom:1px solid var(--border); transition:background 0.5s;
         }
-        .field-enemy {
-            flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;
-            padding:8px 16px 4px; position:relative; overflow:hidden;
-            transition:background 0.5s ease;
+        /* Hex grid overlay */
+        .battle-field::before {
+            content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='70'%3E%3Cpolygon points='20,1 39,10 39,29 20,38 1,29 1,10' fill='none' stroke='rgba(56%2C189%2C248%2C0.06)' stroke-width='0.8'/%3E%3Cpolygon points='20,35 39,44 39,63 20,72 1,63 1,44' fill='none' stroke='rgba(56%2C189%2C248%2C0.06)' stroke-width='0.8'/%3E%3C/svg%3E");
+            background-size:40px 70px;
+        }
+
+        /* Top info panels */
+        .field-top {
+            display:flex; gap:6px; padding:8px 10px 4px;
+            position:relative; z-index:1; flex-shrink:0;
+        }
+        .fi-hero {
+            flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(99,102,241,0.25);
+            border-radius:10px; padding:6px 9px; backdrop-filter:blur(8px);
+        }
+        .fi-enemy {
+            flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(220,38,38,0.25);
+            border-radius:10px; padding:6px 9px; backdrop-filter:blur(8px); text-align:right;
+        }
+        .fi-hname  { font-size:10px; font-weight:800; color:#c7d2fe; margin-bottom:4px; }
+        .fi-ename  { font-size:10px; font-weight:800; color:#fca5a5; margin-bottom:4px; }
+        .fi-br { display:flex; align-items:center; gap:4px; margin-bottom:3px; }
+        .fi-enemy .fi-br { flex-direction:row-reverse; }
+        .fi-bar { flex:1; height:7px; }
+        .fi-val { font-size:9px; color:var(--muted); min-width:42px; font-weight:600; }
+        .fi-hero  .fi-val { text-align:right; }
+        .fi-enemy .fi-val { text-align:left; }
+        .fi-stats  { display:flex; gap:3px; margin-top:4px; }
+        .fi-estats { display:flex; gap:3px; margin-top:4px; justify-content:flex-end; flex-wrap:wrap; }
+        .stat-pill {
+            background:rgba(255,255,255,0.07); border:1px solid var(--border);
+            border-radius:6px; padding:2px 6px; font-size:10px; font-weight:700;
+            display:flex; gap:3px; align-items:center;
         }
         .boss-tag {
             background:linear-gradient(135deg,#7f1d1d,#dc2626); color:white;
-            font-size:11px; font-weight:800; padding:3px 12px; border-radius:20px;
-            margin-bottom:4px; letter-spacing:2px;
-            box-shadow:0 0 16px rgba(220,38,38,0.5);
-        }
-        .fe-hp-row {
-            display:flex; justify-content:space-between; align-items:baseline;
-            width:100%; max-width:300px; margin-bottom:4px;
-        }
-        .fe-name   { font-size:clamp(13px,2.5vw,17px); font-weight:800; }
-        .fe-hp-text{ font-size:10px; color:var(--muted); }
-        .fe-hp-bar { width:100%; max-width:300px; margin-bottom:6px; }
-        .e-sprite {
-            font-size:clamp(58px,13vw,90px); line-height:1;
-            animation:floatAnim 2.5s ease-in-out infinite;
-            filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));
-        }
-        .e-sprite.boss { font-size:clamp(74px,17vw,116px); }
-        .e-halo {
-            width:100px; height:22px; border-radius:50%; margin-top:6px; flex-shrink:0;
-            background:radial-gradient(ellipse, rgba(255,255,255,0.22) 0%, transparent 70%);
-            box-shadow:0 0 24px rgba(255,255,255,0.1);
+            font-size:9px; font-weight:800; padding:2px 8px; border-radius:20px;
+            letter-spacing:2px; box-shadow:0 0 12px rgba(220,38,38,0.5);
+            display:inline-block; margin-bottom:3px;
         }
         .status-indicator {
-            font-size:10px; font-weight:700; margin-top:4px; padding:2px 8px;
-            border-radius:20px; animation:pulse 0.9s ease-in-out infinite;
+            font-size:9px; font-weight:700; padding:2px 6px;
+            border-radius:20px; animation:pulse 0.9s ease-in-out infinite; display:inline-block;
         }
         .si-stun { color:#fbbf24; background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.3); }
         .si-weak { color:#86efac; background:rgba(134,239,172,0.1); border:1px solid rgba(134,239,172,0.3); }
 
-        .field-vs {
-            display:flex; align-items:center; gap:10px; padding:3px 20px; flex-shrink:0;
+        /* Arena floor — hero left + enemy right */
+        .arena-floor {
+            flex:1; display:flex; align-items:flex-end; justify-content:space-between;
+            padding:0 10px 6px; position:relative; z-index:1; overflow:hidden;
         }
-        .vs-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent); }
-        .vs-txt { font-size:10px; font-weight:900; color:rgba(255,255,255,0.25); letter-spacing:3px; }
+        .arena-floor::after {
+            content:''; position:absolute; bottom:18px; left:5%; right:5%; height:1px;
+            background:linear-gradient(90deg,rgba(99,102,241,0.12),rgba(56,189,248,0.18),rgba(99,102,241,0.12));
+            box-shadow:0 0 6px rgba(56,189,248,0.08);
+        }
+        .arena-left  { display:flex; flex-direction:column; align-items:center; z-index:1; }
+        .arena-right { display:flex; flex-direction:column; align-items:center; z-index:1; }
 
-        .field-hero {
-            display:flex; align-items:center; gap:12px; padding:8px 16px 10px;
-            background:rgba(0,0,0,0.35); border-top:1px solid var(--border); flex-shrink:0;
-        }
-        .fh-char-wrap { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
-        .fh-sprite {
-            font-size:clamp(38px,8vw,56px); line-height:1;
+        .ah-sprite {
+            font-size:clamp(50px,11vw,72px); line-height:1;
             animation:floatAnim 3s ease-in-out infinite;
-            filter:drop-shadow(0 0 12px rgba(99,102,241,0.5));
+            filter:drop-shadow(0 0 16px rgba(99,102,241,0.55));
         }
-        .fh-halo {
-            width:60px; height:14px; border-radius:50%;
-            background:radial-gradient(ellipse, rgba(99,102,241,0.35) 0%, transparent 70%);
-            box-shadow:0 0 14px rgba(99,102,241,0.3); margin-top:4px;
+        .ah-halo {
+            width:58px; height:12px; border-radius:50%; margin-top:3px;
+            background:radial-gradient(ellipse,rgba(99,102,241,0.35) 0%,transparent 70%);
+            box-shadow:0 0 12px rgba(99,102,241,0.3);
         }
-        .fh-info { flex:1; min-width:0; }
-        .fh-name { font-size:clamp(11px,1.8vw,14px); font-weight:800; color:var(--text); margin-bottom:5px; }
-        .fhb-row { display:flex; align-items:center; gap:7px; margin-bottom:4px; }
-        .fhb-icon { font-size:10px; flex-shrink:0; width:14px; }
-        .fhb-val  { font-size:10px; color:var(--muted); flex-shrink:0; min-width:64px; text-align:right; font-weight:600; }
-        .fh-stats { display:flex; gap:6px; margin-top:5px; }
-        .stat-pill {
-            background:rgba(255,255,255,0.06); border:1px solid var(--border);
-            border-radius:8px; padding:3px 9px; font-size:11px; font-weight:700;
-            display:flex; gap:4px; align-items:center;
+        .e-sprite {
+            font-size:clamp(70px,18vw,115px); line-height:1;
+            animation:floatAnim 2.5s ease-in-out infinite;
+            filter:drop-shadow(0 8px 24px rgba(0,0,0,0.65));
+        }
+        .e-sprite.boss { font-size:clamp(88px,22vw,145px); }
+        .e-halo {
+            width:100px; height:22px; border-radius:50%; margin-top:5px; flex-shrink:0;
+            background:radial-gradient(ellipse,rgba(255,255,255,0.22) 0%,transparent 70%);
+            box-shadow:0 0 24px rgba(255,255,255,0.1);
         }
 
         /* Controls panel */
         .battle-controls {
             flex:1; display:flex; flex-direction:column; overflow-y:auto; min-height:0;
-            background:rgba(0,0,0,0.25);
+            background:rgba(0,0,0,0.28);
         }
 
         .dmg-float {
@@ -346,7 +360,7 @@
         }
 
         @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-        @keyframes floatDmg  { 0%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)} 100%{opacity:0;transform:translateX(-50%) translateY(-70px) scale(0.6)} }
+        @keyframes floatDmg  { 0%{opacity:1;transform:translateX(-50%) translateY(0) scale(1.1)} 100%{opacity:0;transform:translateX(-50%) translateY(-80px) scale(0.55)} }
         @keyframes shake     { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} }
         @keyframes bounceIn  { 0%{transform:scale(0.3);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
         @keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:0.7} }
@@ -360,17 +374,15 @@
         /* ══ TABLET 768px+ ══ */
         @media(min-width:768px) {
             #seasonCards { grid-template-columns:repeat(3,1fr); }
-            /* side-by-side: field left, controls right */
             .battle-body { flex-direction:row; }
-            .battle-field {
-                flex:1; border-bottom:none; border-right:1px solid var(--border);
-            }
-            .battle-controls { width:380px; flex:none; border-top:none; }
-            .field-enemy { padding:14px 20px 8px; }
-            .e-sprite { font-size:clamp(80px,10vw,130px) !important; }
-            .e-sprite.boss { font-size:clamp(100px,13vw,170px) !important; }
-            .e-halo { width:130px; height:32px; }
-            .blog { height:120px; }
+            .battle-field { flex:1; border-bottom:none; border-right:1px solid var(--border); }
+            .battle-controls { width:380px; flex:none; }
+            .e-sprite { font-size:clamp(90px,11vw,150px) !important; }
+            .e-sprite.boss { font-size:clamp(110px,14vw,190px) !important; }
+            .e-halo { width:130px; height:30px; }
+            .ah-sprite { font-size:clamp(60px,8vw,90px) !important; }
+            .ah-halo { width:70px; height:16px; }
+            .blog { height:110px; }
             .skill-grid { gap:10px; padding:10px 18px 8px; }
             .bdr { padding:5px 20px; }
             .item-btn-wrap { padding:8px 20px 16px; }
@@ -384,7 +396,7 @@
             .sk-icon { font-size:26px; }
             .sk-name { font-size:12px; }
             .sk-desc { font-size:10px; }
-            .blog { height:140px; font-size:12.5px; }
+            .blog { height:130px; font-size:12.5px; }
         }
 
         /* ══ SMALL PHONE ══ */
@@ -393,7 +405,8 @@
             .sk-btn { padding:9px 5px; }
             .sk-icon { font-size:18px; }
             .sk-name { font-size:10px; }
-            .fh-sprite { font-size:32px; }
+            .ah-sprite { font-size:42px !important; }
+            .e-sprite { font-size:58px !important; }
         }
     </style>
 </head>
@@ -436,48 +449,49 @@
             <div id="bProgress" class="prog-text"></div>
         </div>
         <div class="battle-body">
-            <!-- FIELD: enemy top / VS / hero bottom -->
-            <div class="battle-field">
-                <div class="field-enemy" id="enemyZone">
-                    <div id="bossTag"></div>
-                    <div class="fe-hp-row">
-                        <span id="eName" class="fe-name"></span>
-                        <span id="eHpText" class="fe-hp-text"></span>
-                    </div>
-                    <div class="fe-hp-bar">
-                        <div class="bar-wrap"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
-                    </div>
-                    <div id="eSprite" class="e-sprite"></div>
-                    <div class="e-halo" id="eHalo"></div>
-                    <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
-                    <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
-                </div>
-                <div class="field-vs">
-                    <div class="vs-line"></div>
-                    <div class="vs-txt">VS</div>
-                    <div class="vs-line"></div>
-                </div>
-                <div class="field-hero">
-                    <div class="fh-char-wrap">
-                        <div class="fh-sprite">🛡️</div>
-                        <div class="fh-halo"></div>
-                    </div>
-                    <div class="fh-info">
-                        <div class="fh-name">อัศวินสีขาว</div>
-                        <div class="fhb-row">
-                            <span class="fhb-icon">❤️</span>
-                            <div class="bar-wrap" style="flex:1"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
-                            <span class="fhb-val" id="hHpTxt"></span>
+            <!-- ARENA: hero left vs enemy right -->
+            <div class="battle-field" id="enemyZone">
+                <!-- Stat panels top -->
+                <div class="field-top">
+                    <div class="fi-hero">
+                        <div class="fi-hname">🛡️ อัศวินสีขาว</div>
+                        <div class="fi-br">
+                            <span style="font-size:9px;flex-shrink:0">❤️</span>
+                            <div class="bar-wrap fi-bar"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
+                            <span class="fi-val" id="hHpTxt"></span>
                         </div>
-                        <div class="fhb-row">
-                            <span class="fhb-icon">💧</span>
-                            <div class="bar-wrap" style="flex:1"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
-                            <span class="fhb-val" id="hMpTxt"></span>
+                        <div class="fi-br">
+                            <span style="font-size:9px;flex-shrink:0">💧</span>
+                            <div class="bar-wrap fi-bar"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
+                            <span class="fi-val" id="hMpTxt"></span>
                         </div>
-                        <div class="fh-stats">
+                        <div class="fi-stats">
                             <div class="stat-pill">⚔️ <span id="hAtk"></span></div>
                             <div class="stat-pill">🛡️ <span id="hDef"></span></div>
                         </div>
+                    </div>
+                    <div class="fi-enemy">
+                        <div id="bossTag"></div>
+                        <div class="fi-ename" id="eName"></div>
+                        <div class="fi-br">
+                            <div class="bar-wrap fi-bar"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
+                            <span class="fi-val" id="eHpText"></span>
+                        </div>
+                        <div class="fi-estats">
+                            <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
+                            <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Characters on arena floor -->
+                <div class="arena-floor">
+                    <div class="arena-left">
+                        <div class="ah-sprite">🛡️</div>
+                        <div class="ah-halo"></div>
+                    </div>
+                    <div class="arena-right">
+                        <div id="eSprite" class="e-sprite"></div>
+                        <div class="e-halo" id="eHalo"></div>
                     </div>
                 </div>
             </div>
@@ -1009,7 +1023,7 @@ const G = (() => {
 
   /* ─── Helpers ─── */
   function log(txt,cls){ const el=document.getElementById('blog'); const d=document.createElement('div'); d.className='log-'+cls; d.textContent=txt; el.appendChild(d); el.scrollTop=el.scrollHeight; }
-  function floatDmg(txt,color){ const zone=document.getElementById('enemyZone'); const d=document.createElement('div'); d.className='dmg-float'; d.textContent=txt; d.style.color=color; d.style.textShadow=`0 0 16px ${color},0 2px 4px rgba(0,0,0,0.8)`; d.style.left='50%'; d.style.top='60px'; zone.appendChild(d); setTimeout(()=>d.remove(),1300); }
+  function floatDmg(txt,color){ const zone=document.getElementById('enemyZone'); const d=document.createElement('div'); d.className='dmg-float'; d.textContent=txt; d.style.color=color; d.style.textShadow=`0 0 16px ${color},0 2px 4px rgba(0,0,0,0.8)`; d.style.left=txt.startsWith('+')?'25%':'68%'; d.style.top='52%'; zone.appendChild(d); setTimeout(()=>d.remove(),1300); }
   function shakeEnemy(){ const sp=document.getElementById('eSprite'); sp.style.animation='none'; void sp.offsetWidth; sp.style.animation='shake 0.4s ease'; setTimeout(()=>sp.style.animation='floatAnim 2.5s ease-in-out infinite',500); }
   function rng(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
   function restart(){ init(); show('titleScreen'); }
