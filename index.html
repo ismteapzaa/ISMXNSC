@@ -377,13 +377,13 @@
     <div id="titleScreen" class="screen">
         <div class="title-sword">⚔️</div>
         <div class="title-main">ศึกสามฤดู</div>
-        <div class="title-sub">Turn-Based RPG • 3 Seasons • 24 Enemies • Item System</div>
+        <div class="title-sub">Immune System RPG • 3 Seasons • 24 Enemies • Item System</div>
         <div class="story-card">
             <strong style="color:var(--gold)">📜 เรื่องราว</strong><br><br>
-            ในดินแดนโบราณที่ขับเคลื่อนด้วยพลังสามฤดูกาล... กองทัพปิศาจได้บุกโจมตีทุกแผ่นดิน<br><br>
-            <strong style="color:#e2e8f0">นักรบเทพ</strong> — นักสู้ผู้ถูกเลือก ลุกขึ้นต่อต้านความชั่วร้าย<br><br>
+            ในร่างกายที่กำลังถูกรุกราน... กองทัพเชื้อโรคทั้งไวรัสและแบคทีเรียแพร่กระจายไปทุกส่วน<br><br>
+            <strong style="color:#e2e8f0">อัศวินสีขาว</strong> — แมคโครฟาจในชุดเกราะเมมเบรน ตัวแทนแห่งระบบภูมิคุ้มกัน ลุกขึ้นต่อสู้เพื่อปกป้องร่างกาย<br><br>
             ฝ่าฟัน <strong style="color:var(--spring)">ฤดูใบไม้ผลิ 🌸</strong>, <strong style="color:var(--summer)">ฤดูร้อน 🔥</strong> และ <strong style="color:var(--winter)">ฤดูหนาว ❄️</strong><br>
-            เก็บไอเทม 7 ชนิด เอาชนะมอนสเตอร์ 21 ตัวและบอส 3 ตัวเพื่อกอบกู้โลก!
+            ใช้สกิลภูมิคุ้มกัน 4 ชนิด เอาชนะศัตรู 24 ตัวเพื่อพิทักษ์ร่างกาย!
         </div>
         <button class="btn btn-gold" onclick="G.goSeasons()">⚔️ เริ่มการผจญภัย</button>
     </div>
@@ -415,13 +415,14 @@
                 <div class="bar-wrap"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
             </div>
             <div id="stunIndicator" class="stun-indicator" style="display:none">⭐ Stunned!</div>
+            <div id="weakIndicator" class="stun-indicator" style="display:none;color:#86efac"></div>
         </div>
         <div class="blog" id="blog"></div>
         <div class="hero-panel">
             <div class="hero-row">
-                <div class="h-emoji">⚔️</div>
+                <div class="h-emoji">🛡️</div>
                 <div class="h-bars">
-                    <div class="h-name">นักรบเทพ</div>
+                    <div class="h-name">อัศวินสีขาว (แมคโครฟาจ)</div>
                     <div class="bar-label"><span>❤️ HP</span><span id="hHpTxt"></span></div>
                     <div class="bar-wrap" style="margin:3px 0 5px"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
                     <div class="bar-label"><span>💧 MP</span><span id="hMpTxt"></span></div>
@@ -458,8 +459,8 @@
         <div class="clear-trophy">🏆</div>
         <div class="clear-title">คุณชนะ!</div>
         <div class="clear-sub">
-            นักรบเทพกอบกู้ดินแดนสามฤดูสำเร็จแล้ว!<br>
-            ความชั่วร้ายถูกขับไล่ออกไปตลอดกาล
+            อัศวินสีขาวพิทักษ์ร่างกายจากเชื้อโรคสำเร็จแล้ว!<br>
+            ระบบภูมิคุ้มกันแข็งแกร่งกว่าเดิม
         </div>
         <div id="clearStats" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0 24px;width:100%;max-width:360px;font-size:14px;line-height:2;"></div>
         <button class="btn btn-gold" onclick="G.restart()">🔄 เล่นใหม่</button>
@@ -530,10 +531,26 @@ const SEASONS = [
 ];
 
 const SKILLS = [
-    { name:"โจมตี",     emoji:"⚔️", mp:0,  type:"atk",  mult:1.0, desc:"ฟรี • ×1 ATK",      style:"background:linear-gradient(135deg,#991b1b,#dc2626)" },
-    { name:"พายุดาบ",   emoji:"🌪️",mp:30, type:"atk",  mult:2.0, desc:"30 MP • ×2 ATK",     style:"background:linear-gradient(135deg,#5b21b6,#7c3aed)" },
-    { name:"สายฟ้าเทพ", emoji:"⚡", mp:55, type:"atk",  mult:3.2, desc:"55 MP • ×3 ATK+",   style:"background:linear-gradient(135deg,#1e40af,#2563eb)" },
-    { name:"รักษาพลัง", emoji:"💚", mp:40, type:"heal", heal:300, desc:"40 MP • ฟื้น 300 HP",style:"background:linear-gradient(135deg,#065f46,#059669)" },
+    {
+        name:"เซลล์ตรวจจับ", emoji:"🔬", mp:0,  type:"scan",  mult:1.0,
+        desc:"ฟรี • โจมตี+เปิดจุดอ่อน DEF-8",
+        style:"background:linear-gradient(135deg,#065f46,#059669)"
+    },
+    {
+        name:"ดาบแอนติบอดี", emoji:"⚔️", mp:30, type:"pierce", mult:2.2,
+        desc:"30 MP • ×2.2 ทะลุเกราะ 60%",
+        style:"background:linear-gradient(135deg,#1e40af,#2563eb)"
+    },
+    {
+        name:"ผ้าคลุมเม็ดเลือด", emoji:"🌀", mp:55, type:"drain", mult:3.0,
+        desc:"55 MP • ×3 ATK+ดูด HP 25%",
+        style:"background:linear-gradient(135deg,#5b21b6,#7c3aed)"
+    },
+    {
+        name:"บาเรียภูมิคุ้มกัน", emoji:"🛡️", mp:40, type:"barrier", heal:150,
+        desc:"40 MP • ฟื้น 150+DEF+40 (4T)",
+        style:"background:linear-gradient(135deg,#1e3a8a,#3b82f6)"
+    },
 ];
 
 /* ── 7 Items from the drop table ── */
@@ -694,7 +711,7 @@ const G = (() => {
 
     function spawnEnemy(idx) {
         const raw = SEASONS[season].enemies[idx];
-        enemy = { ...raw, maxHp: raw.hp, curHp: raw.hp, stunned: false };
+        enemy = { ...raw, maxHp: raw.hp, curHp: raw.hp, stunned: false, weakDef: 0, weakTurns: 0 };
         eIdx  = idx;
     }
 
@@ -717,6 +734,7 @@ const G = (() => {
         sp.className   = 'e-sprite' + (e.isBoss ? ' boss' : '');
         document.getElementById('eName').textContent     = e.name;
         document.getElementById('stunIndicator').style.display = 'none';
+        document.getElementById('weakIndicator').style.display = 'none';
         updateEHp();
         updateHHp();
         renderBuffs();
@@ -797,25 +815,49 @@ const G = (() => {
         lockSkills();
         h.mp -= sk.mp;
 
-        if (sk.type === 'heal') {
-            const amt = sk.heal;
-            h.hp = Math.min(h.maxHp, h.hp + amt);
-            log(`💚 รักษาพลัง ฟื้นฟู HP +${amt}`, 'h');
+        /* ── บาเรียภูมิคุ้มกัน: ฟื้น HP + DEF buff ── */
+        if (sk.type === 'barrier') {
+            h.hp = Math.min(h.maxHp, h.hp + sk.heal);
+            hero.buffs.push({ type:'defBonus', value:40, turns:4, label:'DEF+40', emoji:'🛡️' });
+            log(`🛡️ บาเรียภูมิคุ้มกัน → ฟื้น HP +${sk.heal} + DEF +40 (4 เทิร์น)`, 'h');
             updateHHp();
-            floatDmg('+'+amt, '#6ee7b7');
+            floatDmg('+'+sk.heal, '#6ee7b7');
+            renderBuffs();
             setTimeout(enemyTurn, 850);
             return;
         }
 
-        // Attack — apply ATK buff × skill mult × DMG buff
-        const atkVal  = Math.floor(h.atk * getAtkMult() * sk.mult * getDmgMult());
-        const vari    = Math.floor(atkVal * 0.15);
-        let dmg       = Math.max(5, atkVal + rng(-vari, vari) - e.def);
-        const crit    = Math.random() < 0.15;
-        if (crit) dmg = Math.floor(dmg * 1.5);
-        e.curHp      -= dmg;
+        /* ── Attack skills ── */
+        const atkVal = Math.floor(h.atk * getAtkMult() * sk.mult * getDmgMult());
+        const vari   = Math.floor(atkVal * 0.15);
+        const weak   = e.weakDef || 0;
 
-        log(`${sk.emoji} ${sk.name} → ดีเมจ ${dmg}${crit ? ' 💥CRIT!' : ''}`, 'p');
+        // ดาบแอนติบอดี: ทะลุเกราะ 60% (จ่ายแค่ 40% ของ def)
+        const effectiveDef = sk.type === 'pierce'
+            ? Math.max(0, Math.floor(e.def * 0.4) - weak)
+            : Math.max(0, e.def - weak);
+
+        let dmg  = Math.max(5, atkVal + rng(-vari, vari) - effectiveDef);
+        const crit = Math.random() < 0.15;
+        if (crit) dmg = Math.floor(dmg * 1.5);
+        e.curHp -= dmg;
+
+        if (sk.type === 'scan') {
+            /* เซลล์ตรวจจับ: โจมตี + เปิดจุดอ่อน */
+            e.weakDef   = weak + 8;
+            e.weakTurns = 3;
+            updateWeakIndicator();
+            log(`🔬 เซลล์ตรวจจับ → ดีเมจ ${dmg}${crit?' 💥CRIT!':''} ┊ จุดอ่อน DEF-8 (3T)`, 'p');
+        } else if (sk.type === 'pierce') {
+            log(`⚔️ ดาบแอนติบอดี → ดีเมจ ${dmg}${crit?' 💥CRIT!':''} ┊ ทะลุเกราะ 60%`, 'p');
+        } else if (sk.type === 'drain') {
+            /* ผ้าคลุมเม็ดเลือด: ดูด HP 25% ของดีเมจ */
+            const drain = Math.floor(dmg * 0.25);
+            h.hp = Math.min(h.maxHp, h.hp + drain);
+            setTimeout(() => floatDmg('+'+drain, '#6ee7b7'), 300);
+            log(`🌀 ผ้าคลุมเม็ดเลือด → ดีเมจ ${dmg}${crit?' 💥CRIT!':''} ┊ ดูด HP +${drain}`, 'p');
+        }
+
         shakeEnemy();
         floatDmg(dmg + (crit ? '!!' : ''), crit ? '#fbbf24' : '#fca5a5');
         updateEHp();
@@ -825,6 +867,16 @@ const G = (() => {
         setTimeout(enemyTurn, 950);
     }
 
+    function updateWeakIndicator() {
+        const el = document.getElementById('weakIndicator');
+        if (enemy.weakTurns > 0) {
+            el.style.display = 'block';
+            el.textContent   = `🎯 จุดอ่อน -${enemy.weakDef} DEF (${enemy.weakTurns}T)`;
+        } else {
+            el.style.display = 'none';
+        }
+    }
+
     function enemyTurn() {
         const h = hero, e = enemy;
 
@@ -832,6 +884,7 @@ const G = (() => {
             e.stunned = false;
             document.getElementById('stunIndicator').style.display = 'none';
             log(`⭐ ${e.name} ถูก Stun! ข้ามเทิร์น`, 's');
+            tickEnemyWeak();
             tickBuffs();
             h.mp = Math.min(h.maxMp, h.mp + 18);
             setTimeout(unlockSkills, 400);
@@ -842,15 +895,25 @@ const G = (() => {
         const defTot = h.def + getDefBonus();
         const dmg    = Math.max(5, e.atk + rng(-vari, vari) - defTot);
         h.hp         = Math.max(0, h.hp - dmg);
-        log(`${e.emoji} ${e.name} โจมตี → ดีเมจ ${dmg}${getDefBonus()>0?' (กำแพง!)':''}`, 'e');
+        const shielded = getDefBonus() > 0 ? ' 🛡️บาเรีย!' : '';
+        log(`${e.emoji} ${e.name} โจมตี → ดีเมจ ${dmg}${shielded}`, 'e');
         updateHHp();
 
         h.mp = Math.min(h.maxMp, h.mp + 18);
+        tickEnemyWeak();
         tickBuffs();
         renderBuffs();
 
         if (h.hp <= 0) { setTimeout(onHeroDead, 750); return; }
         setTimeout(unlockSkills, 350);
+    }
+
+    function tickEnemyWeak() {
+        if (enemy.weakTurns > 0) {
+            enemy.weakTurns--;
+            if (enemy.weakTurns <= 0) { enemy.weakDef = 0; }
+            updateWeakIndicator();
+        }
     }
 
     /* ════ ITEM SYSTEM ════ */
@@ -1068,10 +1131,10 @@ const G = (() => {
         const ss   = String(secs % 60).padStart(2, '0');
         const gearBonus = hero.atk - HERO_BASE.baseAtk;
         document.getElementById('clearStats').innerHTML = `
-            <div>⚔️ มอนสเตอร์กำจัด: <strong style="color:var(--gold)">${totalKills} / 24</strong></div>
+            <div>⚔️ ศัตรูกำจัด: <strong style="color:var(--gold)">${totalKills} / 24</strong></div>
             <div>🕐 เวลาที่ใช้: <strong style="color:var(--gold)">${mm}:${ss}</strong></div>
             <div>❤️ HP เหลือ: <strong style="color:#4ade80">${Math.max(0,hero.hp)} / ${hero.maxHp}</strong></div>
-            <div>🏺 เกราะเก็บได้: <strong style="color:#c084fc">ATK +${gearBonus}</strong></div>
+            <div>🏺 เกราะโบราณ: <strong style="color:#c084fc">ATK +${gearBonus}</strong></div>
             <div>🎒 ไอเทมใช้ไป: <strong style="color:#fbbf24">${itemsUsed} ชิ้น</strong></div>
         `;
         show('clearScreen');
