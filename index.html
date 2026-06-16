@@ -119,19 +119,16 @@
         .season-badge { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; }
         .prog-text { font-size:12px; color:var(--muted); }
 
-        /* ── Battle layout ── */
-        .battle-body { display:flex; flex-direction:column; flex:1; overflow:hidden; }
-
-        /* ── Arena: hero LEFT vs enemy RIGHT ── */
-        .battle-field {
-            position:relative; flex:0 0 54%; display:flex; flex-direction:column; overflow:hidden;
-            border-bottom:1px solid var(--border); transition:background 0.5s;
+        /* ── Battle: full-screen hex arena + skill bar at bottom ── */
+        .battle-arena {
+            flex:1; position:relative; display:flex; flex-direction:column; overflow:hidden;
+            transition:background 0.5s;
         }
-        /* Hex grid overlay */
-        .battle-field::before {
+        /* Larger, more visible hex grid */
+        .battle-arena::before {
             content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='70'%3E%3Cpolygon points='20,1 39,10 39,29 20,38 1,29 1,10' fill='none' stroke='rgba(56%2C189%2C248%2C0.06)' stroke-width='0.8'/%3E%3Cpolygon points='20,35 39,44 39,63 20,72 1,63 1,44' fill='none' stroke='rgba(56%2C189%2C248%2C0.06)' stroke-width='0.8'/%3E%3C/svg%3E");
-            background-size:40px 70px;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpolygon points='30,2 58,16 58,45 30,59 2,45 2,16' fill='none' stroke='rgba(56%2C189%2C248%2C0.13)' stroke-width='1'/%3E%3Cpolygon points='30,55 58,69 58,98 30,112 2,98 2,69' fill='none' stroke='rgba(56%2C189%2C248%2C0.13)' stroke-width='1'/%3E%3C/svg%3E");
+            background-size:60px 104px;
         }
 
         /* Top info panels */
@@ -175,46 +172,69 @@
         .si-stun { color:#fbbf24; background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.3); }
         .si-weak { color:#86efac; background:rgba(134,239,172,0.1); border:1px solid rgba(134,239,172,0.3); }
 
-        /* Arena floor — hero left + enemy right */
+        /* Arena floor — hero left vs enemy right */
         .arena-floor {
             flex:1; display:flex; align-items:flex-end; justify-content:space-between;
-            padding:0 10px 6px; position:relative; z-index:1; overflow:hidden;
+            padding:0 20px 16px; position:relative; z-index:1; overflow:hidden;
         }
         .arena-floor::after {
-            content:''; position:absolute; bottom:18px; left:5%; right:5%; height:1px;
-            background:linear-gradient(90deg,rgba(99,102,241,0.12),rgba(56,189,248,0.18),rgba(99,102,241,0.12));
-            box-shadow:0 0 6px rgba(56,189,248,0.08);
+            content:''; position:absolute; bottom:26px; left:8%; right:8%; height:2px;
+            background:linear-gradient(90deg,transparent,rgba(56,189,248,0.2),rgba(99,102,241,0.25),rgba(56,189,248,0.2),transparent);
+            box-shadow:0 0 10px rgba(56,189,248,0.12), 0 0 20px rgba(99,102,241,0.08);
+            border-radius:2px;
         }
         .arena-left  { display:flex; flex-direction:column; align-items:center; z-index:1; }
         .arena-right { display:flex; flex-direction:column; align-items:center; z-index:1; }
 
         .ah-sprite {
-            font-size:clamp(50px,11vw,72px); line-height:1;
+            font-size:clamp(54px,12vw,80px); line-height:1;
             animation:floatAnim 3s ease-in-out infinite;
-            filter:drop-shadow(0 0 16px rgba(99,102,241,0.55));
+            filter:drop-shadow(0 0 20px rgba(99,102,241,0.6));
         }
         .ah-halo {
-            width:58px; height:12px; border-radius:50%; margin-top:3px;
-            background:radial-gradient(ellipse,rgba(99,102,241,0.35) 0%,transparent 70%);
-            box-shadow:0 0 12px rgba(99,102,241,0.3);
+            width:68px; height:14px; border-radius:50%; margin-top:4px;
+            background:radial-gradient(ellipse,rgba(99,102,241,0.4) 0%,transparent 70%);
+            box-shadow:0 0 14px rgba(99,102,241,0.35);
         }
         .e-sprite {
-            font-size:clamp(70px,18vw,115px); line-height:1;
+            font-size:clamp(80px,20vw,130px); line-height:1;
             animation:floatAnim 2.5s ease-in-out infinite;
-            filter:drop-shadow(0 8px 24px rgba(0,0,0,0.65));
+            filter:drop-shadow(0 8px 28px rgba(0,0,0,0.7));
         }
-        .e-sprite.boss { font-size:clamp(88px,22vw,145px); }
+        .e-sprite.boss { font-size:clamp(100px,25vw,165px); }
         .e-halo {
-            width:100px; height:22px; border-radius:50%; margin-top:5px; flex-shrink:0;
+            width:110px; height:24px; border-radius:50%; margin-top:6px; flex-shrink:0;
             background:radial-gradient(ellipse,rgba(255,255,255,0.22) 0%,transparent 70%);
-            box-shadow:0 0 24px rgba(255,255,255,0.1);
+            box-shadow:0 0 28px rgba(255,255,255,0.12);
         }
 
-        /* Controls panel */
-        .battle-controls {
-            flex:1; display:flex; flex-direction:column; overflow-y:auto; min-height:0;
-            background:rgba(0,0,0,0.28);
+        /* Log + buffs overlaid at bottom of arena */
+        .arena-log {
+            flex-shrink:0; background:rgba(0,0,0,0.62);
+            border-top:1px solid var(--border); backdrop-filter:blur(10px);
+            position:relative; z-index:2;
         }
+
+        /* ── Skill bar — fixed at very bottom ── */
+        .skill-bar {
+            flex-shrink:0; display:flex; align-items:center; justify-content:center;
+            gap:6px; padding:10px 14px 14px;
+            background:rgba(0,0,0,0.82); border-top:1px solid rgba(255,255,255,0.08);
+            backdrop-filter:blur(18px); position:relative; z-index:10;
+        }
+        .skill-bar-sep { width:1px; height:50px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+        .item-circle-btn {
+            width:58px; height:58px; border-radius:50%; flex-shrink:0;
+            border:2px solid rgba(245,166,35,0.45);
+            background:radial-gradient(circle at 40% 35%, rgba(30,20,0,0.95), rgba(6,6,26,0.98));
+            color:var(--gold); display:flex; flex-direction:column; align-items:center; justify-content:center;
+            cursor:pointer; font-family:inherit; transition:transform .15s, box-shadow .2s;
+            box-shadow:0 0 14px rgba(245,166,35,0.12); padding:0;
+        }
+        .item-circle-btn:hover:not(:disabled) { transform:scale(1.1); box-shadow:0 0 22px rgba(245,166,35,0.28); }
+        .item-circle-btn:active:not(:disabled) { transform:scale(0.88); }
+        .item-circle-btn:disabled { opacity:0.3; cursor:not-allowed; }
+        .icb-count { font-size:9px; font-weight:800; margin-top:1px; }
 
         .dmg-float {
             position:absolute; font-size:clamp(24px,5vw,32px); font-weight:900; pointer-events:none;
@@ -259,10 +279,10 @@
         .c-stun { background:rgba(217,119,6,0.15);  color:#fde68a; border:1px solid rgba(217,119,6,0.4); }
         .c-mp   { background:rgba(99,102,241,0.15); color:#a5b4fc; border:1px solid rgba(99,102,241,0.4); }
 
-        /* ── Skill circles ── */
+        /* ── Skill circles (inside skill-bar) ── */
         .skill-grid {
-            display:flex; flex-direction:row; justify-content:center; align-items:flex-start;
-            gap:10px; padding:8px 12px 6px; flex-shrink:0;
+            display:flex; flex-direction:row; align-items:flex-start;
+            gap:12px;
         }
         .sk-wrap { display:flex; flex-direction:column; align-items:center; gap:5px; }
         .sk-btn {
@@ -297,14 +317,6 @@
         .sk-name { display:none; }
         .sk-desc { display:none; }
 
-        .item-btn-wrap { padding:6px 16px 12px; flex-shrink:0; }
-        .item-btn {
-            width:100%; padding:11px; border:1px solid rgba(245,166,35,0.3); border-radius:10px;
-            cursor:pointer; font-family:inherit; background:rgba(245,166,35,0.08);
-            color:var(--gold); font-size:13px; font-weight:700; transition:all .2s;
-        }
-        .item-btn:hover:not(:disabled) { background:rgba(245,166,35,0.16); box-shadow:0 0 16px rgba(245,166,35,0.2); }
-        .item-btn:disabled { opacity:0.3; cursor:not-allowed; }
 
         /* ══ ITEM MODAL ══ */
         #itemModal {
@@ -392,92 +404,87 @@
         /* ══ TABLET 768px+ ══ */
         @media(min-width:768px) {
             #seasonCards { grid-template-columns:repeat(3,1fr); }
-            .battle-body { flex-direction:row; }
-            .battle-field { flex:1; border-bottom:none; border-right:1px solid var(--border); }
-            .battle-controls { width:380px; flex:none; }
-            .e-sprite { font-size:clamp(90px,11vw,150px) !important; }
-            .e-sprite.boss { font-size:clamp(110px,14vw,190px) !important; }
-            .e-halo { width:130px; height:30px; }
-            .ah-sprite { font-size:clamp(60px,8vw,90px) !important; }
-            .ah-halo { width:70px; height:16px; }
-            .blog { height:110px; }
-            .skill-grid { gap:14px; padding:10px 18px 8px; }
-            .sk-btn { width:68px; height:68px; }
-            .sk-icon { font-size:28px; }
-            .sk-lbl { font-size:10px; max-width:72px; }
-            .bdr { padding:5px 20px; }
-            .item-btn-wrap { padding:8px 20px 16px; }
+            .e-sprite { font-size:clamp(100px,13vw,170px) !important; }
+            .e-sprite.boss { font-size:clamp(130px,17vw,210px) !important; }
+            .e-halo { width:150px; height:34px; }
+            .ah-sprite { font-size:clamp(70px,9vw,110px) !important; }
+            .ah-halo { width:80px; height:18px; }
+            .blog { height:90px; font-size:12px; }
+            .skill-grid { gap:20px; }
+            .sk-btn { width:72px; height:72px; }
+            .sk-icon { font-size:30px; }
+            .sk-lbl { font-size:10px; max-width:76px; }
+            .skill-bar { gap:12px; padding:12px 24px 16px; }
+            .item-circle-btn { width:64px; height:64px; }
+            .field-top { padding:10px 14px 6px; gap:10px; }
         }
 
         /* ══ DESKTOP 1200px+ ══ */
         @media(min-width:1200px) {
-            .battle-controls { width:460px; }
-            .sk-btn { width:72px; height:72px; }
-            .sk-icon { font-size:30px; }
-            .sk-lbl { font-size:10px; max-width:76px; }
-            .skill-grid { gap:16px; padding:12px 20px 8px; }
-            .blog { height:130px; font-size:12.5px; }
+            .sk-btn { width:78px; height:78px; }
+            .sk-icon { font-size:32px; }
+            .sk-lbl { font-size:11px; max-width:82px; }
+            .skill-grid { gap:24px; }
+            .skill-bar { padding:14px 32px 18px; gap:18px; }
+            .item-circle-btn { width:70px; height:70px; }
+            .blog { height:100px; font-size:12.5px; }
         }
 
         /* ══ SMALL PHONE ══ */
         @media(max-width:360px) {
-            .skill-grid { gap:7px; padding:6px 8px 4px; }
             .sk-btn { width:52px; height:52px; }
             .sk-icon { font-size:22px; }
             .sk-lbl { font-size:8px; max-width:56px; }
-            .ah-sprite { font-size:42px !important; }
-            .e-sprite { font-size:58px !important; }
+            .skill-grid { gap:8px; }
+            .skill-bar { gap:8px; padding:8px 10px 12px; }
+            .item-circle-btn { width:50px; height:50px; }
+            .ah-sprite { font-size:46px !important; }
+            .e-sprite { font-size:66px !important; }
         }
 
         /* ══ LANDSCAPE PHONE ══ */
         @media (orientation:landscape) and (max-height:500px) {
-            /* Compact global */
             body { overflow:hidden; }
             #app { height:100dvh; overflow:hidden; }
             .screen { min-height:0; height:100dvh; }
             #battleScreen { height:100dvh; }
-
-            /* Header */
-            .bh { padding:5px 14px; }
-
-            /* Title / Season scroll in landscape */
             #titleScreen { overflow-y:auto; height:100dvh; justify-content:flex-start; padding:20px 24px; }
             #seasonScreen { overflow-y:auto; height:100dvh; }
             .season-inner { padding:16px; }
             #seasonCards { grid-template-columns:repeat(3,1fr); }
 
-            /* Battle: side-by-side always */
-            .battle-body { flex-direction:row; }
-            .battle-field { flex:1; border-bottom:none; border-right:1px solid var(--border); }
-            .battle-controls { width:270px; flex:none; overflow-y:auto; }
+            .bh { padding:4px 14px; }
 
             /* Arena info panels compact */
-            .field-top { padding:5px 8px 3px; gap:5px; }
-            .fi-hero, .fi-enemy { padding:4px 8px; border-radius:8px; }
-            .fi-hname, .fi-ename { font-size:8.5px; margin-bottom:2px; }
+            .field-top { padding:4px 8px 2px; gap:5px; }
+            .fi-hero, .fi-enemy { padding:4px 7px; border-radius:8px; }
+            .fi-hname, .fi-ename { font-size:8px; margin-bottom:2px; }
             .fi-br { margin-bottom:2px; }
             .fi-bar { height:5px; }
             .fi-stats, .fi-estats { margin-top:2px; gap:2px; }
             .stat-pill { padding:1px 5px; font-size:9px; }
             .status-indicator { font-size:8px; padding:1px 5px; }
 
-            /* Sprites */
-            .ah-sprite { font-size:clamp(36px,10vh,54px) !important; }
-            .ah-halo { width:44px; height:10px; }
-            .e-sprite { font-size:clamp(46px,14vh,68px) !important; }
-            .e-sprite.boss { font-size:clamp(58px,18vh,86px) !important; }
-            .e-halo { width:70px; height:14px; }
-            .arena-floor { padding:0 8px 4px; }
+            /* Sprites compact */
+            .ah-sprite { font-size:clamp(32px,9vh,48px) !important; }
+            .ah-halo { width:40px; height:9px; }
+            .e-sprite { font-size:clamp(42px,13vh,62px) !important; }
+            .e-sprite.boss { font-size:clamp(52px,16vh,78px) !important; }
+            .e-halo { width:64px; height:13px; }
+            .arena-floor { padding:0 12px 6px; }
 
-            /* Controls compact */
-            .blog { height:52px; font-size:10px; padding:5px 10px; }
-            .bdr { padding:2px 10px; min-height:16px; }
-            .skill-grid { gap:7px; padding:5px 8px 4px; }
-            .sk-btn { width:48px !important; height:48px !important; }
-            .sk-icon { font-size:20px !important; }
-            .sk-lbl { font-size:8px; max-width:52px; }
-            .item-btn-wrap { padding:4px 10px 8px; }
-            .item-btn { padding:8px; font-size:11px; }
+            /* Log compact */
+            .blog { height:40px; font-size:10px; padding:4px 10px; }
+            .bdr { padding:2px 10px; min-height:14px; }
+
+            /* Skill bar compact */
+            .skill-bar { padding:6px 12px 8px; gap:6px; }
+            .skill-grid { gap:8px; }
+            .sk-btn { width:44px !important; height:44px !important; }
+            .sk-icon { font-size:18px !important; }
+            .sk-lbl { font-size:7.5px; max-width:48px; }
+            .item-circle-btn { width:44px !important; height:44px !important; }
+            .skill-bar-sep { height:38px; }
         }
     </style>
 </head>
@@ -519,63 +526,66 @@
             <div id="bSeasonBadge" class="season-badge"></div>
             <div id="bProgress" class="prog-text"></div>
         </div>
-        <div class="battle-body">
-            <!-- ARENA: hero left vs enemy right -->
-            <div class="battle-field" id="enemyZone">
-                <!-- Stat panels top -->
-                <div class="field-top">
-                    <div class="fi-hero">
-                        <div class="fi-hname">🛡️ อัศวินสีขาว</div>
-                        <div class="fi-br">
-                            <span style="font-size:9px;flex-shrink:0">❤️</span>
-                            <div class="bar-wrap fi-bar"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
-                            <span class="fi-val" id="hHpTxt"></span>
-                        </div>
-                        <div class="fi-br">
-                            <span style="font-size:9px;flex-shrink:0">💧</span>
-                            <div class="bar-wrap fi-bar"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
-                            <span class="fi-val" id="hMpTxt"></span>
-                        </div>
-                        <div class="fi-stats">
-                            <div class="stat-pill">⚔️ <span id="hAtk"></span></div>
-                            <div class="stat-pill">🛡️ <span id="hDef"></span></div>
-                        </div>
+        <!-- HEX ARENA fills screen -->
+        <div class="battle-arena" id="enemyZone">
+            <!-- HP/stat overlays top -->
+            <div class="field-top">
+                <div class="fi-hero">
+                    <div class="fi-hname">🛡️ อัศวินสีขาว</div>
+                    <div class="fi-br">
+                        <span style="font-size:9px;flex-shrink:0">❤️</span>
+                        <div class="bar-wrap fi-bar"><div class="bar-fill hp-bar" id="hHpBar"></div></div>
+                        <span class="fi-val" id="hHpTxt"></span>
                     </div>
-                    <div class="fi-enemy">
-                        <div id="bossTag"></div>
-                        <div class="fi-ename" id="eName"></div>
-                        <div class="fi-br">
-                            <div class="bar-wrap fi-bar"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
-                            <span class="fi-val" id="eHpText"></span>
-                        </div>
-                        <div class="fi-estats">
-                            <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
-                            <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
-                        </div>
+                    <div class="fi-br">
+                        <span style="font-size:9px;flex-shrink:0">💧</span>
+                        <div class="bar-wrap fi-bar"><div class="bar-fill mp-bar" id="hMpBar"></div></div>
+                        <span class="fi-val" id="hMpTxt"></span>
+                    </div>
+                    <div class="fi-stats">
+                        <div class="stat-pill">⚔️ <span id="hAtk"></span></div>
+                        <div class="stat-pill">🛡️ <span id="hDef"></span></div>
                     </div>
                 </div>
-                <!-- Characters on arena floor -->
-                <div class="arena-floor">
-                    <div class="arena-left">
-                        <div class="ah-sprite">🛡️</div>
-                        <div class="ah-halo"></div>
+                <div class="fi-enemy">
+                    <div id="bossTag"></div>
+                    <div class="fi-ename" id="eName"></div>
+                    <div class="fi-br">
+                        <div class="bar-wrap fi-bar"><div class="bar-fill ehp-bar" id="eHpBar" style="width:100%"></div></div>
+                        <span class="fi-val" id="eHpText"></span>
                     </div>
-                    <div class="arena-right">
-                        <div id="eSprite" class="e-sprite"></div>
-                        <div class="e-halo" id="eHalo"></div>
+                    <div class="fi-estats">
+                        <div id="stunIndicator" class="status-indicator si-stun" style="display:none">⭐ Stunned!</div>
+                        <div id="weakIndicator" class="status-indicator si-weak" style="display:none"></div>
                     </div>
                 </div>
             </div>
-            <!-- CONTROLS: log + buffs/debuffs + skills + items -->
-            <div class="battle-controls">
+            <!-- Characters on hex floor -->
+            <div class="arena-floor">
+                <div class="arena-left">
+                    <div class="ah-sprite">🛡️</div>
+                    <div class="ah-halo"></div>
+                </div>
+                <div class="arena-right">
+                    <div id="eSprite" class="e-sprite"></div>
+                    <div class="e-halo" id="eHalo"></div>
+                </div>
+            </div>
+            <!-- Log + buffs at bottom of arena -->
+            <div class="arena-log">
                 <div class="blog" id="blog"></div>
                 <div class="bdr" id="buffRow"></div>
                 <div class="bdr" id="debuffRow"></div>
-                <div class="skill-grid" id="skillGrid"></div>
-                <div class="item-btn-wrap">
-                    <button class="item-btn" id="itemBtnMain" onclick="G.showItems()">🎒 ไอเทม <span id="itemCount">(0)</span></button>
-                </div>
             </div>
+        </div>
+        <!-- SKILL BAR at very bottom edge -->
+        <div class="skill-bar">
+            <div class="skill-grid" id="skillGrid"></div>
+            <div class="skill-bar-sep"></div>
+            <button class="item-circle-btn" id="itemBtnMain" onclick="G.showItems()">
+                <span style="font-size:20px;line-height:1">🎒</span>
+                <span class="icb-count" id="itemCount">0</span>
+            </button>
         </div>
     </div>
 
@@ -843,7 +853,7 @@ const G = (() => {
 
   function renderBuffs() {
     const cnt = Object.values(inventory).reduce((a,b)=>a+b,0);
-    document.getElementById('itemCount').textContent = `(${cnt})`;
+    document.getElementById('itemCount').textContent = cnt>0?cnt:'';
     document.getElementById('itemBtnMain').disabled = busy||cnt===0;
     document.getElementById('buffRow').innerHTML = (hero.buffs||[]).map(b=>
       `<span class="chip ${BUFF_CSS[b.type]||'c-def'}">${b.emoji} ${b.label} (${b.turns})</span>`).join('');
