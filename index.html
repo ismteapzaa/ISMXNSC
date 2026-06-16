@@ -108,7 +108,7 @@
         .bar-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px; }
 
         /* ══ BATTLE ══ */
-        #battleScreen { padding:0; overflow:hidden; height:100vh; }
+        #battleScreen { padding:0; overflow:hidden; height:100vh; position:relative; }
         .bh {
             padding:10px 16px; display:flex; justify-content:space-between; align-items:center;
             background:rgba(0,0,0,0.6); border-bottom:1px solid var(--border);
@@ -176,7 +176,7 @@
         /* Arena floor — hero left vs enemy right */
         .arena-floor {
             flex:1; display:flex; align-items:flex-end; justify-content:space-around;
-            padding:0 18% 130px; position:relative; z-index:1; overflow:hidden;
+            padding:0 18% 240px; position:relative; z-index:1; overflow:hidden;
         }
         .arena-floor::after { content:''; display:none; }
         .arena-left  { display:flex; flex-direction:column; align-items:center; z-index:1; }
@@ -211,10 +211,9 @@
 
         /* ── Skill bar — fixed at very bottom ── */
         .skill-bar {
-            flex-shrink:0; display:flex; align-items:center; justify-content:center;
-            gap:6px; padding:10px 14px 14px;
-            background:rgba(0,0,0,0.82); border-top:1px solid rgba(255,255,255,0.08);
-            backdrop-filter:blur(18px); position:relative; z-index:10;
+            position:absolute; bottom:16px; left:16px; z-index:10;
+            display:flex; align-items:center; gap:8px;
+            background:transparent; padding:0;
         }
         .skill-bar-sep { width:1px; height:50px; background:rgba(255,255,255,0.08); flex-shrink:0; }
         .item-circle-btn {
@@ -407,7 +406,7 @@
             .sk-btn { width:72px; height:72px; }
             .sk-icon { font-size:30px; }
             .sk-lbl { font-size:10px; max-width:76px; }
-            .skill-bar { gap:12px; padding:12px 24px 16px; }
+            .skill-bar { gap:8px; }
             .item-circle-btn { width:64px; height:64px; }
             .field-top { padding:10px 14px 6px; gap:10px; }
         }
@@ -418,7 +417,7 @@
             .sk-icon { font-size:32px; }
             .sk-lbl { font-size:11px; max-width:82px; }
             .skill-grid { gap:24px; }
-            .skill-bar { padding:14px 32px 18px; gap:18px; }
+            .skill-bar { gap:10px; }
             .item-circle-btn { width:70px; height:70px; }
             .blog { height:100px; font-size:12.5px; }
         }
@@ -429,7 +428,7 @@
             .sk-icon { font-size:22px; }
             .sk-lbl { font-size:8px; max-width:56px; }
             .skill-grid { gap:8px; }
-            .skill-bar { gap:8px; padding:8px 10px 12px; }
+            .skill-bar { gap:6px; }
             .item-circle-btn { width:50px; height:50px; }
             .ah-sprite { font-size:46px !important; }
             .e-sprite { font-size:66px !important; }
@@ -471,7 +470,7 @@
             .bdr { padding:2px 10px; min-height:14px; }
 
             /* Skill bar compact */
-            .skill-bar { padding:6px 12px 8px; gap:6px; }
+            .skill-bar { gap:6px; bottom:10px; left:10px; }
             .skill-grid { gap:8px; }
             .sk-btn { width:44px !important; height:44px !important; }
             .sk-icon { font-size:18px !important; }
@@ -574,7 +573,6 @@
         <!-- SKILL BAR at very bottom edge -->
         <div class="skill-bar">
             <div class="skill-grid" id="skillGrid"></div>
-            <div class="skill-bar-sep"></div>
             <button class="item-circle-btn" id="itemBtnMain" onclick="G.showItems()">
                 <span style="font-size:20px;line-height:1">🎒</span>
                 <span class="icb-count" id="itemCount">0</span>
