@@ -47,34 +47,76 @@
 
         /* ══ TITLE ══ */
         #titleScreen {
-            justify-content:center; align-items:center; text-align:center; padding:32px 24px;
-            background:radial-gradient(ellipse at center, #1a0a4e 0%, var(--dark) 65%);
-            position:relative; overflow:hidden;
+            padding:0; overflow:hidden; position:relative;
+            background:linear-gradient(180deg,#1a6fa8 0%,#3d9ed4 18%,#7ac8f0 38%,#a8e08a 62%,#58b84a 78%,#3a7a30 100%);
+            justify-content:flex-start; align-items:flex-start;
         }
-        #titleScreen::before {
-            content:''; position:absolute; inset:0; pointer-events:none;
-            background:
-                radial-gradient(circle at 20% 80%, rgba(245,166,35,0.06) 0%, transparent 40%),
-                radial-gradient(circle at 80% 10%, rgba(139,92,246,0.08) 0%, transparent 40%);
+        /* Scene elements */
+        .ts-scene { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+        .ts-ground {
+            position:absolute; bottom:0; left:0; right:0; height:22%;
+            background:linear-gradient(180deg,#65bf55 0%,#4a9a3c 55%,#357028 100%);
         }
-        .title-content { max-width:640px; width:100%; position:relative; z-index:1; }
-        .title-sword {
-            font-size:clamp(70px,14vw,120px); line-height:1;
+        .ts-cloud {
+            position:absolute; animation:floatAnim 4s ease-in-out infinite;
+            opacity:0.88; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.12));
+        }
+        .ts-tree-el {
+            position:absolute; bottom:0; left:2%;
+            font-size:clamp(90px,19vw,170px); line-height:1;
+            filter:drop-shadow(4px 0 10px rgba(0,60,0,0.3)); z-index:1;
+        }
+        .ts-hero-el {
+            position:absolute; bottom:0; right:3%;
+            font-size:clamp(100px,21vw,190px); line-height:1;
             animation:floatAnim 3s ease-in-out infinite;
-            filter:drop-shadow(0 0 24px rgba(245,166,35,0.6));
+            filter:drop-shadow(0 0 28px rgba(99,102,241,0.55)); z-index:2;
         }
-        .title-main {
-            font-size:clamp(30px,7vw,58px); font-weight:900; letter-spacing:-1px;
-            background:linear-gradient(135deg,#f5a623,#ffd700,#f97316);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-            margin:12px 0 4px; text-shadow:none;
+        .ts-virus-el {
+            position:absolute; animation:floatAnim 2s ease-in-out infinite;
+            filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3)); z-index:1;
         }
-        .title-sub { font-size:clamp(11px,1.8vw,14px); color:var(--muted); margin-bottom:32px; letter-spacing:2px; text-transform:uppercase; }
-        .story-card {
-            background:rgba(255,255,255,0.03); border:1px solid rgba(245,166,35,0.2);
-            border-radius:16px; padding:20px; margin-bottom:28px;
-            font-size:clamp(13px,1.6vw,15px); line-height:1.9; color:#c0cce8; text-align:left;
-            backdrop-filter:blur(10px);
+        /* Content overlay */
+        .ts-content {
+            position:relative; z-index:10; width:100%;
+            display:flex; flex-direction:column; align-items:center;
+            padding:clamp(14px,3vh,30px) 20px 16px;
+        }
+        .ts-titles {
+            text-align:center; margin-bottom:clamp(10px,2.5vh,20px);
+        }
+        .ts-en-title {
+            font-size:clamp(24px,7vw,56px); font-weight:900; letter-spacing:3px;
+            color:#fff; line-height:1.05;
+            text-shadow:2px 3px 12px rgba(0,0,0,0.7), 0 0 30px rgba(0,0,0,0.4);
+            -webkit-text-stroke:0.5px rgba(0,0,0,0.2);
+        }
+        .ts-en-sub {
+            font-size:clamp(10px,2.2vw,17px); font-weight:700; color:#fde68a;
+            letter-spacing:2px; margin:3px 0;
+            text-shadow:1px 2px 8px rgba(0,0,0,0.6);
+        }
+        .ts-th-title {
+            font-size:clamp(9px,1.7vw,13px); color:rgba(255,255,255,0.92);
+            font-weight:600; letter-spacing:0.3px;
+            text-shadow:1px 1px 6px rgba(0,0,0,0.6);
+        }
+        .ts-menu { display:flex; flex-direction:column; gap:8px; width:100%; max-width:340px; }
+        .ts-btn {
+            display:flex; align-items:center; gap:12px;
+            background:rgba(6,6,20,0.62); border:1px solid rgba(255,255,255,0.18);
+            border-radius:14px; padding:11px 16px; cursor:pointer;
+            font-family:inherit; font-size:clamp(14px,3vw,17px); font-weight:700; color:white;
+            backdrop-filter:blur(12px); transition:transform .18s, background .18s; text-align:left;
+            box-shadow:0 4px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.09);
+            width:100%; letter-spacing:0.3px;
+        }
+        .ts-btn:hover { transform:translateX(5px); background:rgba(6,6,20,0.82); }
+        .ts-btn:active { transform:scale(0.97); }
+        .ts-btn-dot {
+            width:32px; height:32px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center;
+            font-size:14px; font-weight:900; color:#fff;
         }
 
         /* ══ SEASON SELECT ══ */
@@ -493,18 +535,43 @@
 
     <!-- TITLE -->
     <div id="titleScreen" class="screen">
-        <div class="title-content">
-            <div class="title-sword">🛡️</div>
-            <div class="title-main">ศึกสามฤดู</div>
-            <div class="title-sub">Immune System RPG &nbsp;•&nbsp; 3 Seasons &nbsp;•&nbsp; 24 Enemies</div>
-            <div class="story-card">
-                <strong style="color:var(--gold)">📜 เรื่องราว</strong><br><br>
-                ในร่างกายที่กำลังถูกรุกราน... กองทัพเชื้อโรคแพร่กระจายทุกส่วน<br><br>
-                <strong style="color:var(--text)">อัศวินสีขาว</strong> — แมคโครฟาจในชุดเกราะเมมเบรน ลุกขึ้นสู้เพื่อปกป้องร่างกาย<br><br>
-                ฝ่าฟัน <strong style="color:var(--spring)">🌸 ฤดูใบไม้ผลิ</strong>, <strong style="color:var(--summer)">🔥 ฤดูร้อน</strong> และ <strong style="color:var(--winter)">❄️ ฤดูหนาว</strong><br>
-                ศัตรูมีสกิลพิเศษ! ใช้สกิลภูมิคุ้มกันและไอเทมให้ถูกจังหวะ
+        <!-- Scene background -->
+        <div class="ts-scene">
+            <div class="ts-ground"></div>
+            <div class="ts-cloud" style="top:5%;left:6%;font-size:clamp(44px,9vw,72px);animation-delay:0s">☁️</div>
+            <div class="ts-cloud" style="top:3%;right:8%;font-size:clamp(36px,7vw,56px);animation-delay:1.4s">☁️</div>
+            <div class="ts-cloud" style="top:11%;left:38%;font-size:clamp(28px,5vw,44px);animation-delay:0.7s">☁️</div>
+            <div class="ts-tree-el">🌳</div>
+            <div class="ts-virus-el" style="bottom:18%;right:24%;font-size:clamp(34px,7vw,54px);animation-delay:0.3s">🦠</div>
+            <div class="ts-virus-el" style="bottom:22%;right:38%;font-size:clamp(26px,5vw,40px);animation-delay:1s">🦠</div>
+            <div class="ts-virus-el" style="bottom:14%;left:22%;font-size:clamp(22px,4vw,34px);animation-delay:0.6s">🦠</div>
+            <div class="ts-hero-el">🛡️</div>
+        </div>
+        <!-- Content -->
+        <div class="ts-content">
+            <div class="ts-titles">
+                <div class="ts-en-title">IMMUNE TURN</div>
+                <div class="ts-en-sub">THE TALE OF THREE SEASONS</div>
+                <div class="ts-th-title">อัศวินภูมิคุ้มกัน: ตำนานแท็กติกแห่งสามฤดูกาล</div>
             </div>
-            <button class="btn btn-gold" onclick="G.goSeasons()">⚔️ เริ่มการผจญภัย</button>
+            <div class="ts-menu">
+                <button class="ts-btn" onclick="G.goSeasons()">
+                    <span class="ts-btn-dot" style="background:#22c55e;box-shadow:0 0 10px #22c55e88">▶</span>
+                    <span>เริ่มต้นการเดินทาง</span>
+                </button>
+                <button class="ts-btn" onclick="G.showHeroLab()">
+                    <span class="ts-btn-dot" style="background:#8b5cf6;box-shadow:0 0 10px #8b5cf688">🧪</span>
+                    <span>ห้องทดลองภูมิคุ้มกัน</span>
+                </button>
+                <button class="ts-btn" onclick="G.showEncyclopedia()">
+                    <span class="ts-btn-dot" style="background:#f97316;box-shadow:0 0 10px #f9731688">📖</span>
+                    <span>สารานุกรมโรคระบาด</span>
+                </button>
+                <button class="ts-btn" style="opacity:0.6;cursor:default">
+                    <span class="ts-btn-dot" style="background:#6b7280">⚙️</span>
+                    <span>ตั้งค่าระบบ</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1119,8 +1186,21 @@ const G = (() => {
   function rng(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
   function restart(){ init(); show('titleScreen'); }
 
+  function showHeroLab() {
+    const h=hero;
+    const items=Object.values(inventory).reduce((a,b)=>a+b,0);
+    alert(`🛡️ อัศวินสีขาว\n\n❤️ HP: ${h.hp}/${h.maxHp}\n💧 MP: ${h.mp}/${h.maxMp}\n⚔️ ATK: ${h.atk}  🛡 DEF: ${h.def}\n🎒 ไอเทม: ${items} ชิ้น\n\nสกิล:\n🔬 เซลล์ตรวจจับ (ฟรี)\n⚔️ ดาบแอนติบอดี (30MP)\n🌀 ผ้าคลุมเม็ดเลือด (55MP)\n🛡️ บาเรียภูมิคุ้มกัน (40MP)`);
+  }
+  function showEncyclopedia() {
+    const lines = SEASONS.map(s =>
+      `${s.emoji} ${s.name}:\n`+s.enemies.map(e=>`  ${e.emoji} ${e.name} HP:${e.maxHp||e.hp} ATK:${e.atk}${e.isBoss?' ⭐BOSS':''}`).join('\n')
+    ).join('\n\n');
+    alert('📖 สารานุกรมโรคระบาด\n\n'+lines);
+  }
+
   init();
-  return { goSeasons, doResult, restart, showItems, hideItems, useItem };
+  show('titleScreen');
+  return { goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, showEncyclopedia };
 })();
 </script>
 </body>
