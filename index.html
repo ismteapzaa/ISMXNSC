@@ -626,24 +626,24 @@
 <script>
 /* ══════════════ DATA ══════════════ */
 const SEASONS = [
-  { id:0, name:"ฤดูใบไม้ผลิ", emoji:"🌸", color:"#f472b6", bg:"rgba(244,114,182,0.08)",
+  { id:0, name:"ฤดูฝน", emoji:"🌧️", color:"#06b6d4", bg:"rgba(6,182,212,0.08)",
     enemies:[
-      { name:"ต้นไม้ปีศาจ",  emoji:"🌳", hp:200,  atk:30,  def:5,
-        sp:{name:"ใบพิษ",       e:"🍃", ch:0.3, type:'debuff', db:{t:'poison',v:15,n:3}, pm:0.7} },
-      { name:"กระต่ายป่า",    emoji:"🐰", hp:170,  atk:38,  def:3,
-        sp:{name:"กระโดด×2",   e:"⚡", ch:0.3, type:'double', pm:0.65} },
-      { name:"ผีเสื้อพิษ",    emoji:"🦋", hp:190,  atk:34,  def:4,
-        sp:{name:"ฝุ่นพิษ",    e:"💨", ch:0.3, type:'debuff', db:{t:'atk_down',v:0.15,n:2}, pm:0.55} },
-      { name:"หมีป่า",        emoji:"🐻", hp:310,  atk:50,  def:10,
-        sp:{name:"บุกกระแทก",  e:"💪", ch:0.3, type:'power',  pm:1.9} },
-      { name:"งูเขียว",       emoji:"🐍", hp:250,  atk:46,  def:7,
-        sp:{name:"กัดพิษ",     e:"🩸", ch:0.3, type:'debuff', db:{t:'bleed',v:20,n:2}, pm:0.7} },
-      { name:"นกอินทรี",      emoji:"🦅", hp:280,  atk:54,  def:8,
-        sp:{name:"กรงเล็บ",    e:"🌪️",ch:0.3, type:'debuff', db:{t:'def_down',v:15,n:3}, pm:0.8} },
-      { name:"มังกรใบไม้",    emoji:"🐲", hp:430,  atk:60,  def:14,
-        sp:{name:"ป่าพิษ",     e:"🌿", ch:0.3, type:'debuff', db:{t:'poison',v:28,n:3}, pm:0.8} },
-      { name:"เจ้าป่าใบไม้",  emoji:"👹", hp:900,  atk:82,  def:18, isBoss:true,
-        sp:{name:"พายุต้นไม้", e:"🌲", ch:0.4, type:'triple', pm:0.45} },
+      { name:"กีกี้ราซาอกนิ้ว",         emoji:"☁️", hp:220,  atk:28,  def:12,
+        sp:{name:"ดูดซับน้ำ",             e:"💧", ch:0.3, type:'selfbuff', ab:18, bt:2, pm:0.5} },
+      { name:"กีกี้ตาแดงโลหิต",          emoji:"👁️", hp:200,  atk:30,  def:14,
+        sp:{name:"น้ำตาพิษ",              e:"😿", ch:0.3, type:'debuff', db:{t:'poison',v:12,n:3}, pm:0.6} },
+      { name:"กีกี้ทิชชู่เปียกบุกใส",   emoji:"🤧", hp:220,  atk:32,  def:14,
+        sp:{name:"น้ำมูกพ่ง",             e:"💦", ch:0.3, type:'debuff', db:{t:'def_down',v:15,n:2}, pm:0.7} },
+      { name:"ยุงลาย",                   emoji:"🦟", hp:240,  atk:35,  def:8,
+        sp:{name:"ดูดเลือด",              e:"🩸", ch:0.3, type:'debuff', db:{t:'bleed',v:18,n:2}, pm:0.65} },
+      { name:"กีกี้อุทกภัยปฏิกูล",      emoji:"🌊", hp:290,  atk:40,  def:12,
+        sp:{name:"คลื่นน้ำสกปรก",         e:"🌊", ch:0.3, type:'debuff', db:{t:'def_down',v:20,n:3}, pm:0.8} },
+      { name:"เชื้อราน้ำ",               emoji:"🍄", hp:350,  atk:46,  def:10,
+        sp:{name:"สปอร์พิษ",              e:"🍄", ch:0.3, type:'debuff', db:{t:'poison',v:20,n:3}, pm:0.6} },
+      { name:"แมงกะพรุนพิษ",             emoji:"🪼", hp:420,  atk:52,  def:14,
+        sp:{name:"สัมผัสพิษ",             e:"⚡", ch:0.3, type:'double', pm:0.65} },
+      { name:"กีกี้หอยทากหนาปวดหัว",    emoji:"🐌", hp:950,  atk:88,  def:26, isBoss:true,
+        sp:{name:"รอยเมือกพยาธิ",         e:"🐌", ch:0.4, type:'debuff', db:{t:'poison',v:28,n:4}, pm:0.5} },
     ]
   },
   { id:1, name:"ฤดูร้อน", emoji:"🔥", color:"#f97316", bg:"rgba(249,115,22,0.08)",
@@ -719,7 +719,7 @@ const G = (() => {
   function init() {
     hero = { ...BASE, buffs:[] };
     season=0; eIdx=0; enemy=null;
-    unlocked=[true,false,false]; cleared=[false,false,false]; defeated=[0,0,0];
+    unlocked=[true,true,true];  cleared=[false,false,false]; defeated=[0,0,0];
     resAction=null; busy=false; totalKills=0; startTime=Date.now();
     inventory={}; itemsUsed=0; heroDebuffs=[];
   }
