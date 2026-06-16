@@ -175,16 +175,11 @@
 
         /* Arena floor — hero left vs enemy right */
         .arena-floor {
-            flex:1; display:flex; align-items:flex-end; justify-content:space-between;
-            padding:0 20px 16px; position:relative; z-index:1; overflow:hidden;
-            background:linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%);
+            flex:1; display:flex; align-items:flex-end; justify-content:space-around;
+            padding:0 18% 6%; position:relative; z-index:1; overflow:hidden;
+            background:linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 50%);
         }
-        .arena-floor::after {
-            content:''; position:absolute; bottom:26px; left:8%; right:8%; height:2px;
-            background:linear-gradient(90deg,transparent,rgba(56,189,248,0.2),rgba(99,102,241,0.25),rgba(56,189,248,0.2),transparent);
-            box-shadow:0 0 10px rgba(56,189,248,0.12), 0 0 20px rgba(99,102,241,0.08);
-            border-radius:2px;
-        }
+        .arena-floor::after { content:''; display:none; }
         .arena-left  { display:flex; flex-direction:column; align-items:center; z-index:1; }
         .arena-right { display:flex; flex-direction:column; align-items:center; z-index:1; }
 
@@ -473,7 +468,7 @@
             .e-sprite { font-size:clamp(42px,13vh,62px) !important; }
             .e-sprite.boss { font-size:clamp(52px,16vh,78px) !important; }
             .e-halo { width:64px; height:13px; }
-            .arena-floor { padding:0 12px 6px; }
+            .arena-floor { padding:0 8% 4%; }
 
             /* Log compact */
             .blog { height:40px; font-size:10px; padding:4px 10px; }
