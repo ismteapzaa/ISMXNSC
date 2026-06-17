@@ -306,12 +306,12 @@
 
 
         /* ══ ITEM MODAL ══ */
-        #itemModal {
+        #itemModal, #heroModal, #encyclopediaModal {
             display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75);
             justify-content:flex-end; align-items:stretch; flex-direction:column;
             backdrop-filter:blur(4px);
         }
-        #itemModal.open { display:flex; }
+        #itemModal.open, #heroModal.open, #encyclopediaModal.open { display:flex; }
         .modal-box {
             background:#0e0e2a; border-top:1px solid rgba(245,166,35,0.2);
             border-radius:22px 22px 0 0; max-height:75vh; display:flex;
@@ -609,6 +609,28 @@
                 <button class="modal-close" onclick="G.hideItems()">✕</button>
             </div>
             <div class="item-list" id="itemList"></div>
+        </div>
+    </div>
+
+    <!-- HERO LAB MODAL -->
+    <div id="heroModal" onclick="G.hideHeroLab()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <div class="modal-title">🛡️ ห้องทดลองภูมิคุ้มกัน</div>
+                <button class="modal-close" onclick="G.hideHeroLab()">✕</button>
+            </div>
+            <div class="item-list" id="heroModalContent"></div>
+        </div>
+    </div>
+
+    <!-- ENCYCLOPEDIA MODAL -->
+    <div id="encyclopediaModal" onclick="G.hideEncyclopedia()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <div class="modal-title">📖 สารานุกรมโรคระบาด</div>
+                <button class="modal-close" onclick="G.hideEncyclopedia()">✕</button>
+            </div>
+            <div class="item-list" id="encyclopediaContent"></div>
         </div>
     </div>
 
@@ -1006,7 +1028,7 @@ const G = (() => {
       case 'power':{ const d=Math.max(5,Math.floor(atkTotal*sp.pm+rng(-15,15))-defTot); h.hp=Math.max(0,h.hp-d); log(`${sp.e} ${e.name} [${sp.name}] → ${d}! 💥`,'d'); updateHHp(); break; }
       case 'double':{ let t=0; for(let j=0;j<2;j++){ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-8,8))-defTot); t+=d; h.hp=Math.max(0,h.hp-d); } log(`${sp.e} ${e.name} [${sp.name}] → 2 ครั้ง รวม ${t}!`,'d'); updateHHp(); break; }
       case 'triple':{ let t=0; for(let j=0;j<3;j++){ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-8,8))-defTot); t+=d; h.hp=Math.max(0,h.hp-d); } log(`${sp.e} ${e.name} [${sp.name}] → 3 ครั้ง รวม ${t}!`,'d'); updateHHp(); break; }
-      case 'selfheal':{ const ha=Math.floor(e.maxHp*sp.hp); e.curHp=Math.min(e.maxHp,e.curHp+ha); log(`${sp.e} ${e.name} [${sp.name}] → ฟื้น +${ha}!`,'d'); updateEHp(); const d=Math.max(3,Math.floor(atkTotal*0.5+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); updateHHp(); break; }
+      case 'selfheal':{ const ha=Math.floor(e.maxHp*sp.hp); e.curHp=Math.min(e.maxHp,e.curHp+ha); log(`${sp.e} ${e.name} [${sp.name}] → ฟื้น +${ha}!`,'d'); updateEHp(); floatDmg('+'+ha,'#6ee7b7','enemy'); const d=Math.max(3,Math.floor(atkTotal*0.5+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); updateHHp(); break; }
       case 'selfbuff':{ e.atkBuff=(sp.ab||0); e.atkBuffTurns=(sp.bt||2); log(`${sp.e} ${e.name} [${sp.name}] → ATK+${sp.ab} (${sp.bt}T)!`,'d'); const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); updateHHp(); break; }
     }
   }
@@ -1079,7 +1101,7 @@ const G = (() => {
       case 'heal':{ const amt=Math.floor(hero.maxHp*0.5); hero.hp=Math.min(hero.maxHp,hero.hp+amt); heroDebuffs=heroDebuffs.filter(d=>!['poison','burn','bleed'].includes(d.t)); log(`${item.emoji} ${item.name} → HP+${amt} + ล้างสถานะ`,'i'); updateHHp(); floatDmg('+'+amt,'#6ee7b7'); renderDebuffs(); setTimeout(enemyTurn,850); break; }
       case 'buff':{ if(itemId==='warVaccine'){ hero.buffs.push({type:'dmgMult',value:1.5,turns:4,label:'DMG×1.5',emoji:'☠️'}); hero.buffs.push({type:'stunImmune',value:1,turns:4,label:'กัน Stun',emoji:'🛡️'}); } else if(itemId==='powerSerum'){ hero.buffs.push({type:'atkMult',value:1.2,turns:3,label:'ATK×1.2',emoji:'💉'}); } else if(itemId==='ironShield'){ hero.buffs.push({type:'defBonus',value:30,turns:5,label:'DEF+30',emoji:'🛡️'}); } log(`${item.emoji} ${item.name} → ${item.desc}`,'i'); renderBuffs(); setTimeout(enemyTurn,850); break; }
       case 'stun':{ enemy.stunned=true; document.getElementById('stunIndicator').style.display='block'; log(`${item.emoji} ดาวมึนงง → ศัตรูถูก Stun!`,'i'); setTimeout(enemyTurn,850); break; }
-      case 'damage':{ const dmg=300; enemy.curHp-=dmg; log(`${item.emoji} ระเบิด → ${dmg}!`,'i'); shakeEnemy(); floatDmg(dmg+'','#fbbf24'); updateEHp(); if(enemy.curHp<=0){setTimeout(onEnemyDead,800);return;} setTimeout(enemyTurn,950); break; }
+      case 'damage':{ const dmg=300; enemy.curHp-=dmg; log(`${item.emoji} ระเบิด → ${dmg}!`,'i'); heroAttackAnim(); shakeEnemy(); floatDmg(dmg+'','#fbbf24'); updateEHp(); if(enemy.curHp<=0){setTimeout(onEnemyDead,800);return;} setTimeout(enemyTurn,950); break; }
     }
   }
 
@@ -1109,11 +1131,11 @@ const G = (() => {
 
   /* ─── Helpers ─── */
   function log(txt,cls){ const el=document.getElementById('blog'); const d=document.createElement('div'); d.className='log-'+cls; d.textContent=txt; el.appendChild(d); el.scrollTop=el.scrollHeight; }
-  function floatDmg(txt,color){
+  function floatDmg(txt,color,side){
     const zone=document.getElementById('enemyZone');
     const d=document.createElement('div'); d.className='dmg-float'; d.textContent=txt;
     d.style.color=color; d.style.textShadow=`0 0 16px ${color},0 2px 4px rgba(0,0,0,0.8)`;
-    if(txt.startsWith('+')){
+    if(txt.startsWith('+') && side!=='enemy'){
       d.style.left='25%'; d.style.top='50%';
     } else {
       const sp=document.getElementById('eSprite');
@@ -1133,20 +1155,37 @@ const G = (() => {
   function restart(){ init(); show('titleScreen'); }
 
   function showHeroLab() {
-    const h=hero;
-    const items=Object.values(inventory).reduce((a,b)=>a+b,0);
-    alert(`🛡️ อัศวินสีขาว\n\n❤️ HP: ${h.hp}/${h.maxHp}\n💧 MP: ${h.mp}/${h.maxMp}\n⚔️ ATK: ${h.atk}  🛡 DEF: ${h.def}\n🎒 ไอเทม: ${items} ชิ้น\n\nสกิล:\n🔬 เซลล์ตรวจจับ (ฟรี)\n⚔️ ดาบแอนติบอดี (30MP)\n🌀 ผ้าคลุมเม็ดเลือด (55MP)\n🛡️ บาเรียภูมิคุ้มกัน (40MP)`);
+    const h=hero, items=Object.values(inventory).reduce((a,b)=>a+b,0);
+    const stat=(emoji,lbl,val,max,col)=>`<div style="flex:1;min-width:90px;background:rgba(255,255,255,0.05);border-radius:12px;padding:12px 8px;text-align:center"><div style="font-size:10px;color:#64748b;margin-bottom:4px">${emoji} ${lbl}</div><div style="font-size:17px;font-weight:800;color:${col}">${val}${max!=null?`<span style='font-size:11px;color:#475569'>/${max}</span>`:''}</div></div>`;
+    document.getElementById('heroModalContent').innerHTML=`
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        ${stat('❤️','HP',h.hp,h.maxHp,'#f87171')}
+        ${stat('💧','MP',h.mp,h.maxMp,'#60a5fa')}
+        ${stat('⚔️','ATK',h.atk,null,'#fb923c')}
+        ${stat('🛡','DEF',h.def,null,'#34d399')}
+      </div>
+      <div style="font-size:11px;color:#475569;font-weight:700;letter-spacing:1px;margin-bottom:8px">สกิล</div>
+      ${SKILLS.map(sk=>`<div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px 14px;margin-bottom:7px"><span style="font-size:26px;line-height:1">${sk.emoji}</span><div><div style="font-weight:700;color:#e2e8f0;font-size:13px">${sk.name}</div><div style="font-size:11px;color:#94a3b8;margin-top:2px">${sk.desc}</div></div></div>`).join('')}
+      <div style="font-size:11px;color:#475569;font-weight:700;letter-spacing:1px;margin:12px 0 6px">ไอเทมในกระเป๋า: ${items} ชิ้น</div>
+    `;
+    document.getElementById('heroModal').classList.add('open');
   }
+  function hideHeroLab(){ document.getElementById('heroModal').classList.remove('open'); }
+
   function showEncyclopedia() {
-    const lines = SEASONS.map(s =>
-      `${s.emoji} ${s.name}:\n`+s.enemies.map(e=>`  ${e.emoji} ${e.name} HP:${e.maxHp||e.hp} ATK:${e.atk}${e.isBoss?' ⭐BOSS':''}`).join('\n')
-    ).join('\n\n');
-    alert('📖 สารานุกรมโรคระบาด\n\n'+lines);
+    document.getElementById('encyclopediaContent').innerHTML=SEASONS.map(s=>`
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:${s.color};margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid ${s.color}30">${s.emoji} ${s.name}</div>
+        ${s.enemies.map(e=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:4px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.06)"><span style="font-size:22px">${e.emoji}</span><div style="flex:1"><div style="font-size:13px;font-weight:700;color:#e2e8f0">${e.name}${e.isBoss?' ⭐':''}</div><div style="font-size:11px;color:#64748b;margin-top:2px">HP ${e.maxHp||e.hp} · ATK ${e.atk} · DEF ${e.def}</div></div>${e.isBoss?`<div style="font-size:10px;font-weight:700;color:#fbbf24;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);border-radius:6px;padding:2px 6px">BOSS</div>`:''}</div>`).join('')}
+      </div>
+    `).join('');
+    document.getElementById('encyclopediaModal').classList.add('open');
   }
+  function hideEncyclopedia(){ document.getElementById('encyclopediaModal').classList.remove('open'); }
 
   init();
   show('titleScreen');
-  return { goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, showEncyclopedia };
+  return { goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia };
 })();
 </script>
 </body>
