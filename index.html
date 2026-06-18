@@ -1030,6 +1030,7 @@ const G = (() => {
       const dmg=Math.max(5,atkTotal+rng(-vari,vari)-defTot);
       h.hp=Math.max(0,h.hp-dmg);
       log(`${e.emoji} ${e.name} โจมตี → ${dmg}${getDefBonus()>0?' 🛡️':''}`, 'e');
+      floatDmg('-'+dmg,'#fca5a5','hero');
       setTimeout(shakeHero,250); updateHHp();
     }
     if(e.atkBuffTurns>0){ e.atkBuffTurns--; if(e.atkBuffTurns<=0) e.atkBuff=0; }
@@ -1043,12 +1044,12 @@ const G = (() => {
     const h=hero, e=enemy;
     const atkTotal=e.atk+(e.atkBuff||0), defTot=Math.max(0,h.def+getDefBonus()-getDefDown());
     switch(sp.type){
-      case 'debuff':{ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-10,10))-defTot); h.hp=Math.max(0,h.hp-d); addDebuff(sp.db); log(`${sp.e} ${e.name} [${sp.name}] → ${d} + ${DBF_LBL[sp.db.t]||sp.db.t}!`,'d'); updateHHp(); break; }
-      case 'power':{ const d=Math.max(5,Math.floor(atkTotal*sp.pm+rng(-15,15))-defTot); h.hp=Math.max(0,h.hp-d); log(`${sp.e} ${e.name} [${sp.name}] → ${d}! 💥`,'d'); updateHHp(); break; }
-      case 'double':{ let t=0; for(let j=0;j<2;j++){ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-8,8))-defTot); t+=d; h.hp=Math.max(0,h.hp-d); } log(`${sp.e} ${e.name} [${sp.name}] → 2 ครั้ง รวม ${t}!`,'d'); updateHHp(); break; }
-      case 'triple':{ let t=0; for(let j=0;j<3;j++){ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-8,8))-defTot); t+=d; h.hp=Math.max(0,h.hp-d); } log(`${sp.e} ${e.name} [${sp.name}] → 3 ครั้ง รวม ${t}!`,'d'); updateHHp(); break; }
-      case 'selfheal':{ const ha=Math.floor(e.maxHp*sp.hp); e.curHp=Math.min(e.maxHp,e.curHp+ha); log(`${sp.e} ${e.name} [${sp.name}] → ฟื้น +${ha}!`,'d'); updateEHp(); floatDmg('+'+ha,'#6ee7b7','enemy'); const d=Math.max(3,Math.floor(atkTotal*0.5+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); updateHHp(); break; }
-      case 'selfbuff':{ e.atkBuff=(sp.ab||0); e.atkBuffTurns=(sp.bt||2); log(`${sp.e} ${e.name} [${sp.name}] → ATK+${sp.ab} (${sp.bt}T)!`,'d'); const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); updateHHp(); break; }
+      case 'debuff':{ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-10,10))-defTot); h.hp=Math.max(0,h.hp-d); addDebuff(sp.db); log(`${sp.e} ${e.name} [${sp.name}] → ${d} + ${DBF_LBL[sp.db.t]||sp.db.t}!`,'d'); floatDmg('-'+d,'#f87171','hero'); updateHHp(); break; }
+      case 'power':{ const d=Math.max(5,Math.floor(atkTotal*sp.pm+rng(-15,15))-defTot); h.hp=Math.max(0,h.hp-d); log(`${sp.e} ${e.name} [${sp.name}] → ${d}! 💥`,'d'); floatDmg('-'+d+'💥','#fb923c','hero'); updateHHp(); break; }
+      case 'double':{ let t=0; for(let j=0;j<2;j++){ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-8,8))-defTot); t+=d; h.hp=Math.max(0,h.hp-d); } log(`${sp.e} ${e.name} [${sp.name}] → 2 ครั้ง รวม ${t}!`,'d'); floatDmg('-'+t,'#f87171','hero'); updateHHp(); break; }
+      case 'triple':{ let t=0; for(let j=0;j<3;j++){ const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-8,8))-defTot); t+=d; h.hp=Math.max(0,h.hp-d); } log(`${sp.e} ${e.name} [${sp.name}] → 3 ครั้ง รวม ${t}!`,'d'); floatDmg('-'+t,'#f87171','hero'); updateHHp(); break; }
+      case 'selfheal':{ const ha=Math.floor(e.maxHp*sp.hp); e.curHp=Math.min(e.maxHp,e.curHp+ha); log(`${sp.e} ${e.name} [${sp.name}] → ฟื้น +${ha}!`,'d'); updateEHp(); floatDmg('+'+ha,'#6ee7b7','enemy'); const d=Math.max(3,Math.floor(atkTotal*0.5+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); floatDmg('-'+d,'#f87171','hero'); updateHHp(); break; }
+      case 'selfbuff':{ e.atkBuff=(sp.ab||0); e.atkBuffTurns=(sp.bt||2); log(`${sp.e} ${e.name} [${sp.name}] → ATK+${sp.ab} (${sp.bt}T)!`,'d'); const d=Math.max(3,Math.floor(atkTotal*sp.pm+rng(-5,5))-defTot); h.hp=Math.max(0,h.hp-d); floatDmg('-'+d,'#f87171','hero'); updateHHp(); break; }
     }
   }
 
@@ -1154,7 +1155,14 @@ const G = (() => {
     const zone=document.getElementById('enemyZone');
     const d=document.createElement('div'); d.className='dmg-float'; d.textContent=txt;
     d.style.color=color; d.style.textShadow=`0 0 16px ${color},0 2px 4px rgba(0,0,0,0.8)`;
-    if(txt.startsWith('+') && side!=='enemy'){
+    if(side==='hero'){
+      const sp=document.getElementById('ahSprite');
+      if(sp){
+        const zr=zone.getBoundingClientRect(), sr=sp.getBoundingClientRect();
+        d.style.left=((sr.left+sr.right)/2-zr.left)/zr.width*100+'%';
+        d.style.top=((sr.top+sr.bottom)/2-zr.top)/zr.height*100+'%';
+      } else { d.style.left='13%'; d.style.top='50%'; }
+    } else if(txt.startsWith('+') && side!=='enemy'){
       d.style.left='25%'; d.style.top='50%';
     } else {
       const sp=document.getElementById('eSprite');
