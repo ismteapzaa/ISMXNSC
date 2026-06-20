@@ -711,10 +711,10 @@ const SEASONS = [
 const SKILLS = [
   { name:"เซลล์ตรวจจับ",    emoji:"🔬", mp:0,  type:"scan",    mult:1.0, color:"#10b981",
     desc:"ฟรี • โจมตี+เปิดจุดอ่อน", style:"background:linear-gradient(145deg,#022c22,#065f46)" },
-  { name:"ดาบแอนติบอดี",    emoji:"⚔️", mp:30, type:"pierce",  mult:2.2, color:"#3b82f6",
-    desc:"30MP • ×2.2 ทะลุเกราะ 60%", style:"background:linear-gradient(145deg,#0c1a4a,#1e40af)" },
-  { name:"ผ้าคลุมเม็ดเลือด", emoji:"🌀", mp:55, type:"drain",   mult:3.0, color:"#8b5cf6",
-    desc:"55MP • ×3 ATK+ดูด HP 25%", style:"background:linear-gradient(145deg,#1e0a40,#5b21b6)" },
+  { name:"ดาบแอนติบอดี",    emoji:"⚔️", mp:30, type:"pierce",  mult:1.6, color:"#3b82f6",
+    desc:"30MP • ×1.6 ทะลุเกราะ 60%", style:"background:linear-gradient(145deg,#0c1a4a,#1e40af)" },
+  { name:"ผ้าคลุมเม็ดเลือด", emoji:"🌀", mp:55, type:"drain",   mult:2.2, color:"#8b5cf6",
+    desc:"55MP • ×2.2 ATK+ดูด HP 25%", style:"background:linear-gradient(145deg,#1e0a40,#5b21b6)" },
   { name:"บาเรียภูมิคุ้มกัน",emoji:"🛡️", mp:40, type:"barrier", heal:150, color:"#6366f1",
     desc:"40MP • ฟื้น 150+DEF+40(4T)", style:"background:linear-gradient(145deg,#0c1255,#1e3a8a)" },
 ];
@@ -731,7 +731,7 @@ const ITEMS = [
 
 /* ══════════════ GAME ══════════════ */
 const G = (() => {
-  const BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, baseAtk:120, atk:120, def:10 };
+  const BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, baseAtk:65, atk:65, def:10 };
 
   let hero, season, eIdx, enemy, unlocked, cleared, defeated,
       resAction, busy, totalKills, startTime, inventory, itemsUsed, heroDebuffs;
@@ -1071,7 +1071,7 @@ const G = (() => {
       const heal=Math.floor(hero.maxHp*0.08);
       hero.hp=Math.min(hero.maxHp,hero.hp+heal);
       log(`✅ ${enemy.name} พ่ายแพ้! ฟื้น HP+${heal}`,'h'); updateHHp();
-      setTimeout(()=>{ spawnEnemy(eIdx+1); renderBattle(); },1400);
+      setTimeout(()=>{ spawnEnemy(eIdx+1); renderBattle(); unlockSkills(); },1400);
     }
   }
   function onHeroDead() {
