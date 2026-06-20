@@ -253,6 +253,37 @@
             box-shadow:0 4px 24px rgba(245,166,35,0.3);
         }
 
+        /* === LOOT / EXP / UPGRADE === */
+        #lootBox { position:absolute; left:72%; top:52%; transform:translate(-50%,-50%); z-index:20; display:none; flex-direction:column; align-items:center; gap:5px; cursor:pointer; animation:chestBounce 0.7s ease-in-out infinite alternate; }
+        @keyframes chestBounce { from{transform:translate(-50%,-60%)} to{transform:translate(-50%,-44%)} }
+        .chest-emoji { font-size:48px; filter:drop-shadow(0 0 14px rgba(255,215,0,0.85)); }
+        .chest-label { font-size:11px; color:#fde68a; font-weight:700; text-shadow:0 1px 6px rgba(0,0,0,0.9); background:rgba(0,0,0,0.5); padding:2px 9px; border-radius:12px; }
+        #lootModal,#upgradeModal { position:absolute; inset:0; z-index:30; display:none; align-items:flex-end; background:rgba(0,0,0,0.55); backdrop-filter:blur(2px); }
+        #lootModal.open,#upgradeModal.open { display:flex; }
+        .loot-box,.upgrade-box { width:100%; background:linear-gradient(180deg,#1e1b4b 0%,#0f172a 100%); border-top:2px solid rgba(255,215,0,0.35); border-radius:18px 18px 0 0; padding:16px 14px 20px; animation:slideUp 0.22s ease; }
+        .upgrade-box { border-top-color:rgba(99,102,241,0.5); }
+        .loot-title,.upgrade-title { text-align:center; font-size:15px; font-weight:800; color:#fde68a; margin-bottom:14px; }
+        .upgrade-title { color:#c7d2fe; margin-bottom:4px; }
+        .loot-rows { display:flex; flex-direction:column; gap:7px; margin-bottom:14px; }
+        .loot-row { display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:10px; font-size:13px; color:#e2e8f0; }
+        .lr-emoji { font-size:20px; flex-shrink:0; }
+        .lr-name { flex:1; }
+        .lr-val { color:#fde68a; font-weight:700; }
+        .exp-bar-wrap { display:flex; align-items:center; gap:4px; margin-top:3px; }
+        .lv-badge { font-size:9px; color:#fde68a; font-weight:800; white-space:nowrap; flex-shrink:0; }
+        .exp-bar { flex:1; height:3px; background:rgba(255,255,255,0.12); border-radius:2px; overflow:hidden; }
+        .exp-bar-fill { height:100%; background:linear-gradient(90deg,#f59e0b,#fde68a); border-radius:2px; transition:width 0.4s ease; }
+        .upgrade-sp { text-align:center; font-size:12px; color:#fde68a; margin-bottom:12px; }
+        .upgrade-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .upgrade-card { padding:12px 8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; text-align:center; cursor:pointer; transition:background .15s; -webkit-tap-highlight-color:transparent; }
+        .upgrade-card:hover { background:rgba(255,255,255,0.12); }
+        .uc-emoji { font-size:22px; }
+        .uc-name { font-size:11px; color:#94a3b8; margin-top:2px; }
+        .uc-val { font-size:13px; color:#fde68a; font-weight:700; margin-top:2px; }
+        #upgradeBtn { display:none; flex-direction:column; align-items:center; justify-content:center; width:48px; height:48px; border-radius:50%; border:2px solid #f59e0b; background:rgba(245,158,11,0.18); cursor:pointer; font-size:20px; position:relative; flex-shrink:0; transition:background .15s; }
+        #upgradeBtn:hover { background:rgba(245,158,11,0.32); }
+        .sp-badge { position:absolute; top:-5px; right:-5px; background:#f59e0b; color:#000; font-size:9px; font-weight:900; width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+
         /* Battle log */
         .blog {
             background:transparent;
@@ -577,6 +608,11 @@
                         <div class="stat-pill">⚔️ <span id="hAtk"></span></div>
                         <div class="stat-pill">🛡️ <span id="hDef"></span></div>
                     </div>
+                    <div class="exp-bar-wrap">
+                        <div class="lv-badge" id="heroLv">Lv.1</div>
+                        <div class="exp-bar"><div class="exp-bar-fill" id="heroExpBar" style="width:0%"></div></div>
+                        <div class="lv-badge" id="heroExpTxt">0/100</div>
+                    </div>
                 </div>
                 <div class="fi-enemy">
                     <div id="bossTag"></div>
@@ -615,6 +651,33 @@
                 <div class="bdr" id="buffRow"></div>
                 <div class="bdr" id="debuffRow"></div>
             </div>
+            <!-- Loot chest (shown after enemy dies) -->
+            <div id="lootBox" onclick="G.openChest()">
+                <div class="chest-emoji">📦</div>
+                <div class="chest-label">แตะเพื่อเปิด!</div>
+            </div>
+            <!-- Loot popup -->
+            <div id="lootModal">
+                <div class="loot-box">
+                    <div class="loot-title">🎁 ของดรอป</div>
+                    <div class="loot-rows" id="lootRows"></div>
+                    <button class="btn btn-gold" style="width:100%" onclick="G.collectLoot()">✅ รับของ</button>
+                </div>
+            </div>
+            <!-- Upgrade modal -->
+            <div id="upgradeModal">
+                <div class="upgrade-box">
+                    <div class="upgrade-title">⬆️ อัพเกรดสถานะ</div>
+                    <div class="upgrade-sp" id="upgradeSP">SP คงเหลือ: 0</div>
+                    <div class="upgrade-grid">
+                        <div class="upgrade-card" onclick="G.spendSP('hp')"><div class="uc-emoji">❤️</div><div class="uc-name">HP สูงสุด</div><div class="uc-val">+100</div></div>
+                        <div class="upgrade-card" onclick="G.spendSP('atk')"><div class="uc-emoji">⚔️</div><div class="uc-name">พลังโจมตี</div><div class="uc-val">+8</div></div>
+                        <div class="upgrade-card" onclick="G.spendSP('def')"><div class="uc-emoji">🛡️</div><div class="uc-name">ป้องกัน</div><div class="uc-val">+5</div></div>
+                        <div class="upgrade-card" onclick="G.spendSP('mp')"><div class="uc-emoji">💧</div><div class="uc-name">MP สูงสุด</div><div class="uc-val">+30</div></div>
+                    </div>
+                    <button class="btn btn-gray" style="width:100%;margin-top:12px" onclick="G.hideUpgradeModal()">ปิด</button>
+                </div>
+            </div>
         </div>
         <!-- SKILL BAR at very bottom edge -->
         <div class="skill-bar">
@@ -623,6 +686,7 @@
                 <span style="font-size:20px;line-height:1">🎒</span>
                 <span class="icb-count" id="itemCount">0</span>
             </button>
+            <button id="upgradeBtn" onclick="G.showUpgradeModal()" title="ใช้ Stat Point">⬆️<div class="sp-badge" id="spBadge">0</div></button>
         </div>
     </div>
 
@@ -794,7 +858,7 @@ const ITEMS = [
 
 /* ══════════════ GAME ══════════════ */
 const G = (() => {
-  const BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, baseAtk:65, atk:65, def:10 };
+  const BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, baseAtk:65, atk:65, def:10, exp:0, level:1, expToNext:100, sp:0 };
 
   let hero, season, eIdx, enemy, unlocked, cleared, defeated,
       resAction, busy, totalKills, startTime, inventory, itemsUsed, heroDebuffs, mpRegenTimer;
@@ -948,6 +1012,12 @@ const G = (() => {
     document.getElementById('hMpBar').style.width = Math.max(0,h.mp/h.maxMp*100)+'%';
     document.getElementById('hAtk').textContent = h.atk;
     document.getElementById('hDef').textContent = h.def;
+    const expPct = h.expToNext>0 ? Math.min(100,h.exp/h.expToNext*100) : 100;
+    const lvEl=document.getElementById('heroLv'); if(lvEl) lvEl.textContent=`Lv.${h.level}`;
+    const ebEl=document.getElementById('heroExpBar'); if(ebEl) ebEl.style.width=expPct+'%';
+    const etEl=document.getElementById('heroExpTxt'); if(etEl) etEl.textContent=`${h.exp}/${h.expToNext}`;
+    const ubtn=document.getElementById('upgradeBtn');
+    if(ubtn){ ubtn.style.display=h.sp>0?'flex':'none'; const sb=document.getElementById('spBadge'); if(sb) sb.textContent=h.sp; }
   }
 
   const BUFF_CSS = { atkMult:'c-atk', defBonus:'c-def', dmgMult:'c-dmg', stunImmune:'c-imm' };
@@ -1126,46 +1196,91 @@ const G = (() => {
   }
 
   /* ─── Death ─── */
+  let pendingLoot=null;
   function onEnemyDead() {
     const s=SEASONS[season], isLast=eIdx>=s.enemies.length-1;
     totalKills++; defeated[season]++;
     hero.mp=Math.min(hero.maxMp,hero.mp+35);
-    rollDrops(enemy);
-    if(isLast){
-      cleared[season]=true; if(season<2) unlocked[season+1]=true;
-      if(season===2) setTimeout(showClear,800);
-      else { const ns=SEASONS[season+1]; setTimeout(()=>showResult('🎉',`${s.emoji} ${s.name} ผ่านแล้ว!`,`ปราบ ${s.name}สำเร็จ!\n${ns.emoji} ${ns.name} ถูกปลดล็อคแล้ว`,'➡️ ฤดูถัดไป','nextSeason'),900); }
-    } else {
-      const heal=Math.floor(hero.maxHp*0.08);
-      hero.hp=Math.min(hero.maxHp,hero.hp+heal);
-      log(`✅ ${enemy.name} พ่ายแพ้! ฟื้น HP+${heal}`,'h'); updateHHp();
-      setTimeout(()=>{ spawnEnemy(eIdx+1); renderBattle(); unlockSkills(); },1400);
-    }
+    const drops=calcDrops(enemy);
+    const expGain=enemy.isBoss?120:40;
+    const snap={name:enemy.name, isLast, s};
+    pendingLoot={drops, expGain, snap};
+    setTimeout(()=>{ document.getElementById('lootBox').style.display='flex'; },600);
   }
   function onHeroDead() {
     showResult('💀','คุณพ่ายแพ้...',`${enemy.name} เอาชนะคุณได้\nลองใหม่ตั้งแต่ต้นฤดูกาลนี้`,'🔄 ลองใหม่','retry');
   }
 
-  /* ─── Items ─── */
-  function rollDrops(e) {
+  function calcDrops(e) {
     const sid=season, drops=[];
     ITEMS.forEach(item=>{
       if(item.bossOnly&&!e.isBoss) return;
       if(item.id==='healPotion'&&sid!==0) return;
       if(item.id==='ironShield'&&sid!==2) return;
-      if(Math.random()<item.dropRate){
-        if(item.type==='equip'){ hero.atk+=15; updateHHp(); drops.push(`${item.emoji} ${item.name}(ATK+15!)`); }
-        else { inventory[item.id]=(inventory[item.id]||0)+1; drops.push(`${item.emoji} ${item.name}`); }
-      }
+      if(Math.random()<item.dropRate) drops.push(item);
     });
-    if(drops.length) showDropToast(drops);
+    return drops;
   }
-  function showDropToast(drops) {
-    const el=document.getElementById('dropToast');
-    el.innerHTML='🎁 ดรอป: '+drops.join(' • ');
-    el.style.display='block';
-    setTimeout(()=>{ el.style.display='none'; },3000);
+
+  function openChest() {
+    document.getElementById('lootBox').style.display='none';
+    const {drops, expGain} = pendingLoot;
+    let html=`<div class="loot-row"><div class="lr-emoji">✨</div><div class="lr-name">ประสบการณ์</div><div class="lr-val">+${expGain} EXP</div></div>`;
+    drops.forEach(item=>{ html+=`<div class="loot-row"><div class="lr-emoji">${item.emoji}</div><div class="lr-name">${item.name}</div><div class="lr-val">${item.desc}</div></div>`; });
+    document.getElementById('lootRows').innerHTML=html;
+    document.getElementById('lootModal').classList.add('open');
   }
+
+  function collectLoot() {
+    document.getElementById('lootModal').classList.remove('open');
+    if(!pendingLoot) return;
+    const {drops, expGain, snap} = pendingLoot;
+    pendingLoot=null;
+
+    drops.forEach(item=>{
+      if(item.type==='equip'){ hero.atk+=15; hero.baseAtk+=15; floatDmg('⚔️ATK+15','#fde68a'); }
+      else { inventory[item.id]=(inventory[item.id]||0)+1; }
+    });
+
+    hero.exp+=expGain;
+    let leveled=false;
+    while(hero.exp>=hero.expToNext){
+      hero.exp-=hero.expToNext; hero.level++; hero.expToNext=hero.level*100; hero.sp++; leveled=true;
+    }
+    if(leveled){ floatDmg(`⬆️ Lv.${hero.level}!`,'#fde68a'); log(`🌟 LEVEL UP! Lv.${hero.level} — ได้ 1 Stat Point`,'h'); }
+    updateHHp();
+
+    if(snap.isLast){
+      cleared[season]=true; if(season<2) unlocked[season+1]=true;
+      saveGameData();
+      if(season===2) setTimeout(showClear,600);
+      else { const ns=SEASONS[season+1]; setTimeout(()=>showResult('🎉',`${snap.s.emoji} ${snap.s.name} ผ่านแล้ว!`,`ปราบ ${snap.s.name}สำเร็จ!\n${ns.emoji} ${ns.name} ถูกปลดล็อคแล้ว`,'➡️ ฤดูถัดไป','nextSeason'),700); }
+    } else {
+      const heal=Math.floor(hero.maxHp*0.08);
+      hero.hp=Math.min(hero.maxHp,hero.hp+heal);
+      log(`✅ ${snap.name} พ่ายแพ้! ฟื้น HP+${heal}`,'h'); updateHHp();
+      setTimeout(()=>{ spawnEnemy(eIdx+1); renderBattle(); unlockSkills(); },800);
+    }
+  }
+
+  /* ─── Upgrade ─── */
+  function showUpgradeModal() { document.getElementById('upgradeSP').textContent=`SP คงเหลือ: ${hero.sp}`; document.getElementById('upgradeModal').classList.add('open'); }
+  function hideUpgradeModal() { document.getElementById('upgradeModal').classList.remove('open'); }
+  function spendSP(stat) {
+    if(!hero.sp) return;
+    hero.sp--;
+    switch(stat){
+      case 'hp': hero.maxHp+=100; hero.hp=Math.min(hero.maxHp,hero.hp+50); floatDmg('❤️ HP+100','#4ade80'); break;
+      case 'atk': hero.atk+=8; hero.baseAtk+=8; floatDmg('⚔️ ATK+8','#fde68a'); break;
+      case 'def': hero.def+=5; floatDmg('🛡️ DEF+5','#93c5fd'); break;
+      case 'mp': hero.maxMp+=30; hero.mp=Math.min(hero.maxMp,hero.mp+15); floatDmg('💧 MP+30','#67e8f9'); break;
+    }
+    log(`⬆️ อัพ ${stat.toUpperCase()}!`,'h'); updateHHp(); saveGameData();
+    if(!hero.sp) hideUpgradeModal();
+    else document.getElementById('upgradeSP').textContent=`SP คงเหลือ: ${hero.sp}`;
+  }
+
+  /* ─── Items ─── */
   function showItems() { if(busy)return; renderItemList(); document.getElementById('itemModal').classList.add('open'); }
   function hideItems() { document.getElementById('itemModal').classList.remove('open'); }
   function renderItemList() {
@@ -1213,7 +1328,7 @@ const G = (() => {
       <div>⚔️ ศัตรูกำจัด: <strong style="color:var(--gold)">${totalKills} / 15</strong></div>
       <div>🕐 เวลา: <strong style="color:var(--gold)">${mm}:${ss}</strong></div>
       <div>❤️ HP เหลือ: <strong style="color:#4ade80">${Math.max(0,hero.hp)} / ${hero.maxHp}</strong></div>
-      <div>🏺 เกราะโบราณ: <strong style="color:#c084fc">ATK +${hero.atk-BASE.baseAtk}</strong></div>
+      <div>⭐ ระดับ: <strong style="color:#fde68a">Lv.${hero.level}</strong></div>
       <div>🎒 ไอเทมใช้ไป: <strong style="color:var(--gold)">${itemsUsed} ชิ้น</strong></div>`;
     show('clearScreen');
   }
@@ -1319,8 +1434,10 @@ const G = (() => {
     const db=getUsers();
     if(!db[u]) return;
     db[u].save={ unlocked:[...unlocked], cleared:[...cleared], defeated:[...defeated],
-      totalKills, heroAtkBonus: hero ? hero.atk - hero.baseAtk : 0,
-      inventory:{...inventory}, itemsUsed };
+      totalKills, inventory:{...inventory}, itemsUsed,
+      heroStats: hero ? { atk:hero.atk, baseAtk:hero.baseAtk, def:hero.def,
+        maxHp:hero.maxHp, maxMp:hero.maxMp, level:hero.level, exp:hero.exp,
+        expToNext:hero.expToNext, sp:hero.sp } : null };
     saveUsersDB(db);
   }
 
@@ -1334,7 +1451,7 @@ const G = (() => {
     if(sv.totalKills!=null) totalKills=sv.totalKills;
     if(sv.inventory) inventory=sv.inventory;
     if(sv.itemsUsed!=null) itemsUsed=sv.itemsUsed;
-    if(sv.heroAtkBonus && hero){ hero.atk=hero.baseAtk+(sv.heroAtkBonus||0); }
+    if(sv.heroStats && hero) Object.assign(hero, sv.heroStats);
   }
 
   function updateAccountDisplay(){
@@ -1426,7 +1543,7 @@ const G = (() => {
   if(getSession()) loadGameData();
   updateAccountDisplay();
   show('titleScreen');
-  return { goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout };
+  return { goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout, openChest, collectLoot, showUpgradeModal, hideUpgradeModal, spendSP };
 })();
 </script>
 </body>
