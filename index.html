@@ -734,7 +734,7 @@ const G = (() => {
   const BASE = { maxHp:1500, hp:1500, maxMp:200, mp:200, baseAtk:65, atk:65, def:10 };
 
   let hero, season, eIdx, enemy, unlocked, cleared, defeated,
-      resAction, busy, totalKills, startTime, inventory, itemsUsed, heroDebuffs;
+      resAction, busy, totalKills, startTime, inventory, itemsUsed, heroDebuffs, mpRegenTimer;
 
   function init() {
     hero = { ...BASE, buffs:[] };
@@ -750,7 +750,7 @@ const G = (() => {
   }
 
   /* ─── Season Select ─── */
-  function goSeasons() { renderSeasonCards(); renderHeroStatus(); show('seasonScreen'); }
+  function goSeasons() { clearInterval(mpRegenTimer); renderSeasonCards(); renderHeroStatus(); show('seasonScreen'); }
 
   function renderSeasonCards() {
     const el = document.getElementById('seasonCards');
@@ -812,6 +812,10 @@ const G = (() => {
     if(cleared[idx]) { hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; defeated[idx]=0; }
     else { hero.hp=hero.maxHp; hero.mp=hero.maxMp; }
     eIdx=0; spawnEnemy(0); show('battleScreen'); renderBattle();
+    clearInterval(mpRegenTimer);
+    mpRegenTimer = setInterval(()=>{
+      if(hero && hero.hp>0){ hero.mp=Math.min(hero.maxMp,hero.mp+10); updateHHp(); }
+    },1000);
   }
 
   function spawnEnemy(idx) {
@@ -1131,13 +1135,14 @@ const G = (() => {
     document.getElementById('resTitle').textContent=title;
     document.getElementById('resSub').innerHTML=sub.replace('\n','<br>');
     document.getElementById('resBtn').textContent=btnTxt;
-    resAction=action; show('resultScreen');
+    resAction=action; clearInterval(mpRegenTimer); show('resultScreen');
   }
   function doResult(){
     if(resAction==='retry'){ hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; defeated[season]=0; spawnEnemy(0); show('battleScreen'); renderBattle(); }
     else if(resAction==='nextSeason'){ hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; goSeasons(); }
   }
   function showClear(){
+    clearInterval(mpRegenTimer);
     const secs=Math.floor((Date.now()-startTime)/1000);
     const mm=String(Math.floor(secs/60)).padStart(2,'0'), ss=String(secs%60).padStart(2,'0');
     document.getElementById('clearStats').innerHTML=`
