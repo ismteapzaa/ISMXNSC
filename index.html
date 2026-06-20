@@ -340,6 +340,10 @@
         .setting-input { width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:#e2e8f0; font-size:15px; outline:none; box-sizing:border-box; margin-top:8px; }
         .setting-input:focus { border-color:#6366f1; }
         .setting-section { padding:0 4px; }
+        .acct-tabs { display:flex; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:16px; }
+        .acct-tab { flex:1; padding:10px; text-align:center; font-size:13px; color:#64748b; cursor:pointer; border-bottom:2px solid transparent; border-top:none; border-left:none; border-right:none; background:none; transition:all .2s; }
+        .acct-tab.active { color:#6366f1; border-bottom-color:#6366f1; font-weight:700; }
+        .acct-error { color:#f87171; font-size:12px; margin-top:8px; min-height:18px; text-align:center; }
         .modal-box {
             background:#0e0e2a; border-top:1px solid rgba(245,166,35,0.2);
             border-radius:22px 22px 0 0; max-height:75vh; display:flex;
@@ -526,6 +530,11 @@
         <button class="ts-hitbox" style="left:2%;top:87%;width:13%;height:11%" onclick="G.showRegister()" aria-label="ลงทะเบียน"></button>
         <!-- Cover watermark bottom-right -->
         <div style="position:absolute;right:0;bottom:0;width:10%;height:8%;background:linear-gradient(135deg,transparent 30%,#1a0a2e 70%);z-index:1;pointer-events:none"></div>
+        <!-- Account display -->
+        <div id="accountDisplay" style="position:absolute;top:6px;right:8px;z-index:2;font-size:11px;color:rgba(255,255,255,0.75);background:rgba(0,0,0,0.35);padding:4px 10px;border-radius:20px;backdrop-filter:blur(4px);display:none;align-items:center;gap:8px">
+            <span id="acctName"></span>
+            <button onclick="G.doLogout()" style="background:rgba(255,255,255,0.12);border:none;color:#e2e8f0;font-size:10px;padding:2px 8px;border-radius:12px;cursor:pointer">ออกจากระบบ</button>
+        </div>
     </div>
 
     <!-- SEASON SELECT -->
@@ -702,19 +711,14 @@
         </div>
     </div>
 
-    <!-- REGISTER MODAL -->
+    <!-- ACCOUNT MODAL -->
     <div id="registerModal" onclick="G.hideRegister()">
         <div class="modal-box" onclick="event.stopPropagation()">
             <div class="modal-head">
-                <div class="modal-title">👤 ลงทะเบียน</div>
+                <div class="modal-title">👤 บัญชีผู้ใช้</div>
                 <button class="modal-close" onclick="G.hideRegister()">✕</button>
             </div>
-            <div class="item-list setting-section" style="padding-bottom:24px">
-                <div style="font-size:13px;color:#94a3b8;margin-bottom:4px">ตั้งชื่อตัวละครของคุณ</div>
-                <input id="playerNameInput" class="setting-input" type="text" maxlength="20" placeholder="กรอกชื่อ..." />
-                <div style="font-size:11px;color:#475569;margin-top:6px">ชื่อจะแสดงในหน้าสรุปผล (บันทึกในเครื่อง)</div>
-                <button class="btn btn-gold" style="width:100%;margin-top:16px;font-size:15px" onclick="G.saveRegister()">✅ บันทึก</button>
-            </div>
+            <div id="acctModalBody" style="padding-bottom:8px"></div>
         </div>
     </div>
 
@@ -824,8 +828,8 @@ const G = (() => {
   }
 
   /* ─── Season Select ─── */
-  function goTitle() { clearInterval(mpRegenTimer); show('titleScreen'); }
-  function goSeasons() { clearInterval(mpRegenTimer); renderSeasonCards(); renderHeroStatus(); show('seasonScreen'); }
+  function goTitle() { clearInterval(mpRegenTimer); saveGameData(); show('titleScreen'); }
+  function goSeasons() { clearInterval(mpRegenTimer); saveGameData(); renderSeasonCards(); renderHeroStatus(); show('seasonScreen'); }
 
   function renderSeasonCards() {
     const el = document.getElementById('seasonCards');
@@ -1210,14 +1214,14 @@ const G = (() => {
     document.getElementById('resTitle').textContent=title;
     document.getElementById('resSub').innerHTML=sub.replace('\n','<br>');
     document.getElementById('resBtn').textContent=btnTxt;
-    resAction=action; clearInterval(mpRegenTimer); show('resultScreen');
+    resAction=action; clearInterval(mpRegenTimer); saveGameData(); show('resultScreen');
   }
   function doResult(){
     if(resAction==='retry'){ hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; defeated[season]=0; spawnEnemy(0); show('battleScreen'); renderBattle(); }
     else if(resAction==='nextSeason'){ hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; goSeasons(); }
   }
   function showClear(){
-    clearInterval(mpRegenTimer);
+    clearInterval(mpRegenTimer); saveGameData();
     const secs=Math.floor((Date.now()-startTime)/1000);
     const mm=String(Math.floor(secs/60)).padStart(2,'0'), ss=String(secs%60).padStart(2,'0');
     document.getElementById('clearStats').innerHTML=`
@@ -1316,22 +1320,126 @@ const G = (() => {
     hideSettings(); init(); show('titleScreen');
   }
 
-  /* ─── Register ─── */
-  function showRegister(){
-    const name=localStorage.getItem('imm_player')||'';
-    document.getElementById('playerNameInput').value=name;
-    document.getElementById('registerModal').classList.add('open');
+  /* ─── Account System ─── */
+  const USERS_KEY='imm_users', SESSION_KEY='imm_session';
+  function getUsers(){ try{ return JSON.parse(localStorage.getItem(USERS_KEY)||'{}'); }catch(e){ return {}; } }
+  function saveUsersDB(db){ localStorage.setItem(USERS_KEY,JSON.stringify(db)); }
+  function getSession(){ return localStorage.getItem(SESSION_KEY)||''; }
+  function setSession(u){ if(u) localStorage.setItem(SESSION_KEY,u); else localStorage.removeItem(SESSION_KEY); }
+
+  function saveGameData(){
+    const u=getSession(); if(!u) return;
+    const db=getUsers();
+    if(!db[u]) return;
+    db[u].save={ unlocked:[...unlocked], cleared:[...cleared], defeated:[...defeated],
+      totalKills, heroAtkBonus: hero ? hero.atk - hero.baseAtk : 0,
+      inventory:{...inventory}, itemsUsed };
+    saveUsersDB(db);
   }
-  function hideRegister(){ document.getElementById('registerModal').classList.remove('open'); }
-  function saveRegister(){
-    const name=document.getElementById('playerNameInput').value.trim();
-    if(name) localStorage.setItem('imm_player',name);
+
+  function loadGameData(){
+    const u=getSession(); if(!u) return;
+    const db=getUsers(); if(!db[u]||!db[u].save) return;
+    const sv=db[u].save;
+    if(sv.unlocked) unlocked=sv.unlocked;
+    if(sv.cleared) cleared=sv.cleared;
+    if(sv.defeated) defeated=sv.defeated;
+    if(sv.totalKills!=null) totalKills=sv.totalKills;
+    if(sv.inventory) inventory=sv.inventory;
+    if(sv.itemsUsed!=null) itemsUsed=sv.itemsUsed;
+    if(sv.heroAtkBonus && hero){ hero.atk=hero.baseAtk+(sv.heroAtkBonus||0); }
+  }
+
+  function updateAccountDisplay(){
+    const u=getSession();
+    const el=document.getElementById('accountDisplay');
+    if(el){
+      if(u){ el.style.display='flex'; document.getElementById('acctName').textContent='👤 '+u; }
+      else { el.style.display='none'; }
+    }
+  }
+
+  let _acctTab='login';
+  function renderAccountModal(tab){
+    _acctTab=tab||_acctTab;
+    const u=getSession();
+    const body=document.getElementById('acctModalBody');
+    if(u){
+      body.innerHTML=`
+        <div style="text-align:center;padding:16px 0 8px">
+          <div style="font-size:28px;margin-bottom:6px">👤</div>
+          <div style="font-size:15px;font-weight:700;color:#e2e8f0">${u}</div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px">กำลังเล่นอยู่</div>
+        </div>
+        <div style="padding:0 0 12px">
+          <button class="btn btn-gray" style="width:100%;margin-top:8px" onclick="G.doLogout()">🚪 ออกจากระบบ</button>
+        </div>`;
+      return;
+    }
+    body.innerHTML=`
+      <div class="acct-tabs">
+        <button class="acct-tab${_acctTab==='login'?' active':''}" onclick="G.switchAccountTab('login')">เข้าสู่ระบบ</button>
+        <button class="acct-tab${_acctTab==='register'?' active':''}" onclick="G.switchAccountTab('register')">สมัครสมาชิก</button>
+      </div>
+      ${_acctTab==='login'?`
+        <div style="padding:0 4px 12px">
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">ชื่อผู้ใช้</div>
+          <input id="acctUser" class="setting-input" type="text" maxlength="20" placeholder="username..." autocomplete="username"/>
+          <div style="font-size:12px;color:#94a3b8;margin:10px 0 4px">รหัสผ่าน</div>
+          <input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="current-password"/>
+          <div id="acctErr" class="acct-error"></div>
+          <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="G.doLoginAction()">✅ เข้าสู่ระบบ</button>
+        </div>`:`
+        <div style="padding:0 4px 12px">
+          <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">ชื่อผู้ใช้ (3–20 ตัวอักษร)</div>
+          <input id="acctUser" class="setting-input" type="text" maxlength="20" placeholder="username..." autocomplete="username"/>
+          <div style="font-size:12px;color:#94a3b8;margin:10px 0 4px">รหัสผ่าน (อย่างน้อย 4 ตัว)</div>
+          <input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="new-password"/>
+          <div id="acctErr" class="acct-error"></div>
+          <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="G.doRegisterAction()">📝 สมัครสมาชิก</button>
+        </div>`}`;
+  }
+
+  function switchAccountTab(tab){ renderAccountModal(tab); }
+
+  function doLoginAction(){
+    const u=(document.getElementById('acctUser').value||'').trim();
+    const p=document.getElementById('acctPass').value||'';
+    const err=document.getElementById('acctErr');
+    if(!u||!p){ err.textContent='กรุณากรอกข้อมูลให้ครบ'; return; }
+    const db=getUsers();
+    if(!db[u]){ err.textContent='ไม่พบชื่อผู้ใช้นี้'; return; }
+    if(db[u].password!==p){ err.textContent='รหัสผ่านไม่ถูกต้อง'; return; }
+    setSession(u); init(); loadGameData(); updateAccountDisplay();
     hideRegister();
   }
 
+  function doRegisterAction(){
+    const u=(document.getElementById('acctUser').value||'').trim();
+    const p=document.getElementById('acctPass').value||'';
+    const err=document.getElementById('acctErr');
+    if(u.length<3){ err.textContent='ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร'; return; }
+    if(p.length<4){ err.textContent='รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; return; }
+    const db=getUsers();
+    if(db[u]){ err.textContent='ชื่อผู้ใช้นี้มีอยู่แล้ว'; return; }
+    db[u]={ password:p, save:null };
+    saveUsersDB(db); setSession(u); init(); updateAccountDisplay();
+    hideRegister();
+  }
+
+  function doLogout(){
+    saveGameData(); setSession(''); init(); updateAccountDisplay();
+    show('titleScreen');
+  }
+
+  function showRegister(){ renderAccountModal(); document.getElementById('registerModal').classList.add('open'); }
+  function hideRegister(){ document.getElementById('registerModal').classList.remove('open'); }
+
   init();
+  if(getSession()) loadGameData();
+  updateAccountDisplay();
   show('titleScreen');
-  return { goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, saveRegister };
+  return { goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout };
 })();
 </script>
 </body>
