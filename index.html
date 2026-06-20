@@ -121,6 +121,13 @@
         }
         .season-badge { font-size:12px; font-weight:700; padding:5px 14px; border-radius:20px; }
         .prog-text { font-size:12px; color:var(--muted); }
+        .back-btn {
+            display:inline-flex; align-items:center; gap:5px; padding:6px 13px;
+            border-radius:20px; border:1px solid rgba(255,255,255,0.15);
+            background:rgba(255,255,255,0.08); color:#e2e8f0; font-size:12px;
+            cursor:pointer; transition:background .15s; flex-shrink:0;
+        }
+        .back-btn:hover { background:rgba(255,255,255,0.18); }
 
         /* ── Battle: full-screen hex arena + skill bar at bottom ── */
         .battle-arena {
@@ -524,6 +531,7 @@
     <!-- SEASON SELECT -->
     <div id="seasonScreen" class="screen">
         <div class="season-inner">
+            <button class="back-btn" onclick="G.goTitle()" style="margin-bottom:12px">◀ หน้าหลัก</button>
             <div class="page-title">🗺️ เลือกฤดูกาล</div>
             <div id="seasonCards"></div>
             <div class="hero-status-box">
@@ -536,6 +544,7 @@
     <!-- BATTLE -->
     <div id="battleScreen" class="screen">
         <div class="bh">
+            <button class="back-btn" onclick="if(confirm('ออกไปหน้าแผนที่?\nความคืบหน้าในฤดูนี้จะหายไป'))G.goSeasons()">◀</button>
             <div id="bSeasonBadge" class="season-badge"></div>
             <div id="bProgress" class="prog-text"></div>
         </div>
@@ -628,6 +637,7 @@
             <div class="clear-sub">อัศวินสีขาวพิทักษ์ร่างกายจากเชื้อโรคสำเร็จแล้ว!<br>ระบบภูมิคุ้มกันแข็งแกร่งกว่าเดิม</div>
             <div id="clearStats" class="clear-stats"></div>
             <button class="btn btn-gold" onclick="G.restart()">🔄 เล่นใหม่</button>
+            <button class="btn btn-gray" style="margin-top:10px" onclick="G.goTitle()">◀ หน้าหลัก</button>
         </div>
     </div>
 
@@ -814,6 +824,7 @@ const G = (() => {
   }
 
   /* ─── Season Select ─── */
+  function goTitle() { clearInterval(mpRegenTimer); show('titleScreen'); }
   function goSeasons() { clearInterval(mpRegenTimer); renderSeasonCards(); renderHeroStatus(); show('seasonScreen'); }
 
   function renderSeasonCards() {
@@ -1320,7 +1331,7 @@ const G = (() => {
 
   init();
   show('titleScreen');
-  return { goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, saveRegister };
+  return { goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, saveRegister };
 })();
 </script>
 </body>
