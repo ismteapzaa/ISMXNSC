@@ -1014,6 +1014,7 @@ const G = (() => {
     else { hero.hp=hero.maxHp; hero.mp=hero.maxMp; }
     eIdx=0; spawnEnemy(0); show('battleScreen'); renderBattle();
     clearInterval(mpRegenTimer); mpRegenTimer = null;
+  }
 
   function spawnEnemy(idx) {
     const raw = SEASONS[season].enemies[idx];
