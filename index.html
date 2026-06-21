@@ -1674,6 +1674,7 @@ const G = (() => {
   if(getSession()) loadGameData();
   updateAccountDisplay();
   show('titleScreen');
+  if(!getSession()){ renderAccountModal(); document.getElementById('registerModal').classList.add('open'); }
   return { goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout, openChest, collectLoot, showUpgradeModal, hideUpgradeModal, spendSP, closeFact, answerQuiz, nextQuizQ };
 })();
 </script>
