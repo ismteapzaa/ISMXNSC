@@ -1023,11 +1023,7 @@ const G = (() => {
     if(cleared[idx]) { hero.hp=hero.maxHp; hero.mp=hero.maxMp; hero.buffs=[]; heroDebuffs=[]; defeated[idx]=0; }
     else { hero.hp=hero.maxHp; hero.mp=hero.maxMp; }
     eIdx=0; spawnEnemy(0); show('battleScreen'); renderBattle();
-    clearInterval(mpRegenTimer);
-    mpRegenTimer = setInterval(()=>{
-      if(hero && hero.hp>0){ hero.mp=Math.min(hero.maxMp,hero.mp+10); updateHHp(); }
-    },1000);
-  }
+    clearInterval(mpRegenTimer); mpRegenTimer = null;
 
   function spawnEnemy(idx) {
     const raw = SEASONS[season].enemies[idx];
@@ -1150,7 +1146,7 @@ const G = (() => {
   }
 
   function lockSkills()   { busy=true;  renderSkills(false); renderBuffs(); }
-  function unlockSkills() { busy=false; renderSkills(true);  renderBuffs(); }
+  function unlockSkills() { busy=false; hero.mp=Math.min(hero.maxMp,hero.mp+10); updateHHp(); renderSkills(true);  renderBuffs(); }
 
   /* ─── Buff helpers ─── */
   function getAtkMult()  { return (hero.buffs||[]).filter(b=>b.type==='atkMult').reduce((a,b)=>a*b.value,1); }
@@ -1199,7 +1195,7 @@ const G = (() => {
     if(isHeroStunned()){
       heroDebuffs=heroDebuffs.filter(d=>d.t!=='stun');
       log('💫 คุณถูก Stun! ข้ามเทิร์น','d');
-      renderDebuffs(); h.mp=Math.min(h.maxMp,h.mp+18);
+      renderDebuffs(); h.mp=Math.min(h.maxMp,h.mp+10);
       setTimeout(enemyTurn,800); return;
     }
     h.mp -= sk.mp;
@@ -1247,7 +1243,7 @@ const G = (() => {
       e.stunned=false; document.getElementById('stunIndicator').style.display='none';
       log(`⭐ ${e.name} ถูก Stun! ข้ามเทิร์น`,'s');
       tickEnemyWeak(); tickBuffs(); tickDebuffs();
-      h.mp=Math.min(h.maxMp,h.mp+18);
+      h.mp=Math.min(h.maxMp,h.mp+10);
       setTimeout(unlockSkills,400); return;
     }
     const sp=e.sp, useSpecial=sp&&Math.random()<sp.ch;
@@ -1264,7 +1260,7 @@ const G = (() => {
     }
     if(e.atkBuffTurns>0){ e.atkBuffTurns--; if(e.atkBuffTurns<=0) e.atkBuff=0; }
     tickEnemyWeak(); tickBuffs(); tickDebuffs();
-    h.mp=Math.min(h.maxMp,h.mp+18); renderBuffs();
+    h.mp=Math.min(h.maxMp,h.mp+10); renderBuffs();
     if(h.hp<=0){ setTimeout(onHeroDead,750); return; }
     setTimeout(unlockSkills,550);
   }
