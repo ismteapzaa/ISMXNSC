@@ -1296,6 +1296,7 @@ const G = (() => {
   }
 
   function openChest() {
+    if(!pendingLoot) return;
     document.getElementById('lootBox').style.display='none';
     const {drops, expGain} = pendingLoot;
     let html=`<div class="loot-row"><div class="lr-emoji">✨</div><div class="lr-name">ประสบการณ์</div><div class="lr-val">+${expGain} EXP</div></div>`;
