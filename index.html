@@ -1683,9 +1683,9 @@ const G = (() => {
       ${_acctTab==='login'?`
         <div style="padding:0 4px 12px">
           <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">ชื่อผู้ใช้</div>
-          <input id="acctUser" class="setting-input" type="text" maxlength="20" placeholder="username..." autocomplete="username"/>
+          <input id="acctUser" class="setting-input" type="text" maxlength="20" placeholder="username..." autocomplete="username" value="${(()=>{const r=localStorage.getItem('imm_remember')||'';return r;})()}"/>
           <div style="font-size:12px;color:#94a3b8;margin:10px 0 4px">รหัสผ่าน</div>
-          <input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="current-password"/>
+          <input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="current-password" value="${(()=>{const r=localStorage.getItem('imm_remember')||'';const db=getUsers();return (r&&db[r])?db[r].password:'';})()}"/>
           <div id="acctErr" class="acct-error"></div>
           <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="G.doLoginAction()">✅ เข้าสู่ระบบ</button>
         </div>`:`
@@ -1709,6 +1709,7 @@ const G = (() => {
     const db=getUsers();
     if(!db[u]){ err.textContent='ไม่พบชื่อผู้ใช้นี้'; return; }
     if(db[u].password!==p){ err.textContent='รหัสผ่านไม่ถูกต้อง'; return; }
+    localStorage.setItem('imm_remember', u);
     setSession(u); init(); loadGameData(); updateAccountDisplay();
     hideRegister();
   }
@@ -1722,7 +1723,7 @@ const G = (() => {
     const db=getUsers();
     if(Object.prototype.hasOwnProperty.call(db,u)){ err.textContent='ชื่อผู้ใช้นี้มีอยู่แล้ว'; return; }
     db[u]={ password:p, save:null };
-    saveUsersDB(db); setSession(u); init(); updateAccountDisplay();
+    saveUsersDB(db); localStorage.setItem('imm_remember', u); setSession(u); init(); updateAccountDisplay();
     hideRegister();
   }
 
