@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ศึกสามฤดู ⚔️</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -1161,7 +1162,7 @@ const G = (() => {
   }
 
   function lockSkills()   { busy=true;  renderSkills(false); renderBuffs(); }
-  function unlockSkills() { busy=false; hero.mp=Math.min(hero.maxMp,hero.mp+10); updateHHp(); renderSkills(true);  renderBuffs(); }
+  function unlockSkills() { busy=false; updateHHp(); renderSkills(true); renderBuffs(); }
 
   /* ─── Buff helpers ─── */
   function getAtkMult()  { return (hero.buffs||[]).filter(b=>b.type==='atkMult').reduce((a,b)=>a*b.value,1); }
@@ -1686,10 +1687,10 @@ const G = (() => {
     const u=(document.getElementById('acctUser').value||'').trim();
     const p=document.getElementById('acctPass').value||'';
     const err=document.getElementById('acctErr');
-    if(u.length<3){ err.textContent='ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร'; return; }
+    if(!/^[A-Za-z0-9_ก-๙]{3,20}$/.test(u)){ err.textContent='ชื่อผู้ใช้ใช้ได้เฉพาะ a-z A-Z 0-9 _ ภาษาไทย (3–20 ตัว)'; return; }
     if(p.length<4){ err.textContent='รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; return; }
     const db=getUsers();
-    if(db[u]){ err.textContent='ชื่อผู้ใช้นี้มีอยู่แล้ว'; return; }
+    if(Object.prototype.hasOwnProperty.call(db,u)){ err.textContent='ชื่อผู้ใช้นี้มีอยู่แล้ว'; return; }
     db[u]={ password:p, save:null };
     saveUsersDB(db); setSession(u); init(); updateAccountDisplay();
     hideRegister();
@@ -1698,6 +1699,7 @@ const G = (() => {
   function doLogout(){
     saveGameData(); setSession(''); init(); updateAccountDisplay();
     show('titleScreen');
+    renderAccountModal(); document.getElementById('registerModal').classList.add('open');
   }
 
   function showRegister(){ renderAccountModal(); document.getElementById('registerModal').classList.add('open'); }
