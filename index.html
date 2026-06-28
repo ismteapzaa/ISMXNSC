@@ -414,7 +414,8 @@
             background:var(--card); color:var(--muted); font-size:14px; cursor:pointer;
             display:flex; align-items:center; justify-content:center;
         }
-        #settingsModal, #registerModal { justify-content:center; align-items:center; padding:12px; }
+        /* Auth + settings are orientation-agnostic: keep them above the portrait rotate-overlay (z:99999) so login is reachable on a phone held upright */
+        #settingsModal, #registerModal { justify-content:center; align-items:center; padding:12px; z-index:100000; }
         #settingsModal .modal-box, #registerModal .modal-box {
             border-radius:22px; border:1px solid rgba(245,166,35,0.25);
             animation:modalPop 0.25s ease; max-height:min(85vh,85dvh); overflow-y:auto;
@@ -1175,7 +1176,9 @@ const G = (() => {
     hero.buffs = (hero.buffs||[]).map(b=>({...b,turns:b.turns-1})).filter(b=>b.turns>0);
   }
   function tickDebuffs() {
-    heroDebuffs = heroDebuffs.map(d=>d.n>0?{...d,n:d.n-1}:d).filter(d=>d.n>0);
+    // A debuff applied this same enemy turn is tagged fresh; clear the tag now but don't
+    // consume a turn, so durations (and the n:1 stun) survive to the hero's next turn.
+    heroDebuffs = heroDebuffs.map(d=>d.fresh?{...d,fresh:false}:(d.n>0?{...d,n:d.n-1}:d)).filter(d=>d.n>0);
     renderDebuffs();
   }
   function applyDoT() {
@@ -1188,8 +1191,8 @@ const G = (() => {
     if(db.t==='stun' && hasStunImmune()){ log('🛡️ วัคซีนกัน Stun!','h'); return; }
     if(db.t==='mp_drain'){ hero.mp=Math.max(0,hero.mp-db.v); log(`🌑 ดูดพลัง → MP -${db.v}`,'d'); updateHHp(); return; }
     const ex = heroDebuffs.find(d=>d.t===db.t);
-    if(ex){ ex.n=Math.max(ex.n,db.n); ex.v=Math.max(ex.v,db.v); }
-    else heroDebuffs.push({...db});
+    if(ex){ ex.n=Math.max(ex.n,db.n); ex.v=Math.max(ex.v,db.v); ex.fresh=true; }
+    else heroDebuffs.push({...db, fresh:true});
     renderDebuffs();
   }
 
@@ -1365,6 +1368,7 @@ const G = (() => {
       log(`✅ ${snap.name} พ่ายแพ้! ฟื้น HP+${heal}`,'h'); updateHHp();
       setTimeout(()=>{ spawnEnemy(eIdx+1); renderBattle(); unlockSkills(); },800);
     }
+    saveGameData(); // persist EXP/level-ups/items/unlocks right after each kill
   }
 
   /* ─── Upgrade ─── */
