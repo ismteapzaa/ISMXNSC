@@ -418,6 +418,9 @@
         .toggle-btn.on::after { left:25px; }
         .toggle-btn.off::after { left:3px; }
         .setting-input { width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:#e2e8f0; font-size:15px; outline:none; box-sizing:border-box; margin-top:8px; }
+        .pass-wrap { position:relative; }
+        .pass-wrap .setting-input { padding-right:42px; }
+        .pass-eye { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:18px; color:#94a3b8; padding:4px; line-height:1; user-select:none; }
         .setting-input:focus { border-color:#6366f1; }
         .setting-section { padding:0 4px; }
         .acct-tabs { display:flex; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:16px; }
@@ -1685,7 +1688,7 @@ const G = (() => {
           <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">ชื่อผู้ใช้</div>
           <input id="acctUser" class="setting-input" type="text" maxlength="20" placeholder="username..." autocomplete="username" value="${(()=>{const r=localStorage.getItem('imm_remember')||'';return r;})()}"/>
           <div style="font-size:12px;color:#94a3b8;margin:10px 0 4px">รหัสผ่าน</div>
-          <input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="current-password" value="${(()=>{const r=localStorage.getItem('imm_remember')||'';const db=getUsers();return (r&&db[r])?db[r].password:'';})()}"/>
+          <div class="pass-wrap"><input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="current-password" value="${(()=>{const r=localStorage.getItem('imm_remember')||'';const db=getUsers();return (r&&db[r])?db[r].password:'';})()}"/><button type="button" class="pass-eye" onclick="G.togglePassEye('acctPass',this)" tabindex="-1" aria-label="แสดง/ซ่อนรหัสผ่าน">👁</button></div>
           <div id="acctErr" class="acct-error"></div>
           <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="G.doLoginAction()">✅ เข้าสู่ระบบ</button>
         </div>`:`
@@ -1693,7 +1696,7 @@ const G = (() => {
           <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">ชื่อผู้ใช้ (3–20 ตัวอักษร)</div>
           <input id="acctUser" class="setting-input" type="text" maxlength="20" placeholder="username..." autocomplete="username"/>
           <div style="font-size:12px;color:#94a3b8;margin:10px 0 4px">รหัสผ่าน (อย่างน้อย 4 ตัว)</div>
-          <input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="new-password"/>
+          <div class="pass-wrap"><input id="acctPass" class="setting-input" type="password" maxlength="40" placeholder="password..." autocomplete="new-password"/><button type="button" class="pass-eye" onclick="G.togglePassEye('acctPass',this)" tabindex="-1" aria-label="แสดง/ซ่อนรหัสผ่าน">👁</button></div>
           <div id="acctErr" class="acct-error"></div>
           <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="G.doRegisterAction()">📝 สมัครสมาชิก</button>
         </div>`}`;
@@ -1734,6 +1737,15 @@ const G = (() => {
   }
 
 
+  function togglePassEye(id, btn){
+      var inp = document.getElementById(id);
+      if(!inp) return;
+      var show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      btn.textContent = show ? '🙈' : '👁';
+  }
+
+
   function introSkipFn(){
       var vid = document.getElementById('introVideo');
       var fade = document.getElementById('introFade');
@@ -1762,7 +1774,7 @@ const G = (() => {
       vid.play().catch(function(){ introSkipFn(); });
       vid.addEventListener('ended', introSkipFn);
   })();
-  return { introSkipFn, goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout, openChest, collectLoot, showUpgradeModal, hideUpgradeModal, spendSP, closeFact, answerQuiz, nextQuizQ };
+  return { introSkipFn, togglePassEye, goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout, openChest, collectLoot, showUpgradeModal, hideUpgradeModal, spendSP, closeFact, answerQuiz, nextQuizQ };
 })();
 </script>
 </body>
