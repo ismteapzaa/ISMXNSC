@@ -17,7 +17,7 @@
         .screen { display:none; width:100%; min-height:100vh; flex-direction:column; }
         .screen.active { display:flex; }
 
-        /* ══ BARS ══ */
+        /* ----- BARS ----- */
         .bar-wrap { background:rgba(0,0,0,0.5); border-radius:10px; height:14px; overflow:hidden; position:relative; }
         .bar-fill  { height:100%; border-radius:10px; transition:width 0.4s ease; position:relative; }
         .bar-fill::after { content:''; position:absolute; top:0; left:0; right:0; height:40%; background:rgba(255,255,255,0.15); border-radius:10px; }
@@ -38,7 +38,7 @@
         .btn-gray { background:rgba(255,255,255,0.08); border:1px solid var(--border); }
         .btn-gray:hover { background:rgba(255,255,255,0.12); }
 
-        /* ══ INTRO ══ */
+        /* ----- INTRO ----- */
         #introScreen {
             position:fixed; inset:0; background:#000; display:none;
             justify-content:center; align-items:center; z-index:100002;
@@ -72,7 +72,7 @@
         #titleScreen .ts-hitbox, #titleScreen > div { z-index:1; }
 
 
-        /* ══ TITLE ══ */
+        /* ----- TITLE ----- */
         #titleScreen {
             padding:0; overflow:hidden; position:relative; height:100vh;
             background:#000;
@@ -107,7 +107,7 @@
             .rotate-overlay { display:flex; }
         }
 
-        /* ══ SEASON SELECT ══ */
+        /* ----- SEASON SELECT ----- */
         #seasonScreen { background:radial-gradient(ellipse at top, #0d0a2e 0%, var(--dark) 65%); }
         .season-inner { max-width:1100px; margin:0 auto; padding:24px; flex:1; overflow-y:auto; width:100%; }
         .page-title {
@@ -139,7 +139,7 @@
         .hs-title { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:12px; letter-spacing:1px; }
         .bar-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px; }
 
-        /* ══ BATTLE BG VIDEO ══ */
+        /* ----- BATTLE BG VIDEO ----- */
         .battle-arena > *:not(#bgVideo):not(.season-tint-layer) { position:relative; z-index:2; }
 
         #bgVideo {
@@ -155,7 +155,7 @@
             transition:background 0.5s;
         }
 
-        /* ══ BATTLE ══ */
+        /* ----- BATTLE ----- */
         #battleScreen { padding:0; overflow:hidden; height:100vh; position:relative; }
         .bh {
             padding:10px 16px; display:flex; justify-content:space-between; align-items:center;
@@ -172,7 +172,7 @@
         }
         .back-btn:hover { background:rgba(255,255,255,0.18); }
 
-        /* ── Battle: full-screen hex arena + skill bar at bottom ── */
+        /* Battle: full-screen hex arena + skill bar at bottom */
         .battle-arena {
             flex:1; position:relative; display:flex; flex-direction:column; overflow:hidden;
             transition:background 0.5s;
@@ -260,7 +260,7 @@
             position:absolute; bottom:0; left:0; right:0; z-index:2;
         }
 
-        /* ── Skill bar — fixed at very bottom ── */
+        /* Skill bar — fixed at very bottom */
         .skill-bar {
             position:absolute; bottom:16px; left:16px; z-index:10;
             display:flex; align-items:center; gap:8px;
@@ -377,7 +377,7 @@
         .c-stun { background:rgba(217,119,6,0.15);  color:#fde68a; border:1px solid rgba(217,119,6,0.4); }
         .c-mp   { background:rgba(99,102,241,0.15); color:#a5b4fc; border:1px solid rgba(99,102,241,0.4); }
 
-        /* ── Skill circles (inside skill-bar) ── */
+        /* Skill circles (inside skill-bar) */
         .skill-grid {
             display:flex; flex-direction:row; align-items:flex-start;
             gap:12px;
@@ -416,7 +416,7 @@
         .sk-desc { display:none; }
 
 
-        /* ══ ITEM MODAL ══ */
+        /* ----- ITEM MODAL ----- */
         #itemModal, #heroModal, #encyclopediaModal, #settingsModal, #registerModal {
             display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.75);
             justify-content:flex-end; align-items:stretch; flex-direction:column;
@@ -503,7 +503,7 @@
         .use-btn:active { transform:scale(0.93); }
         .empty-bag { text-align:center; padding:36px 0; color:var(--muted); font-size:14px; }
 
-        /* ══ RESULT ══ */
+        /* ----- RESULT ----- */
         #resultScreen {
             justify-content:center; align-items:center; text-align:center; padding:32px 24px;
             background:radial-gradient(ellipse at center, #1a0a4e 0%, var(--dark) 70%);
@@ -513,7 +513,7 @@
         .res-title { font-size:clamp(26px,5vw,36px); font-weight:900; margin-bottom:8px; }
         .res-sub   { font-size:clamp(13px,2vw,16px); color:var(--muted); margin-bottom:36px; line-height:1.8; }
 
-        /* ══ CLEAR ══ */
+        /* ----- CLEAR ----- */
         #clearScreen {
             justify-content:center; align-items:center; text-align:center; padding:32px 24px;
             background:radial-gradient(ellipse at center, #1a0a4e 0%, var(--dark) 70%);
@@ -544,7 +544,7 @@
         .blog::-webkit-scrollbar-track,.item-list::-webkit-scrollbar-track { background:transparent; }
         .blog::-webkit-scrollbar-thumb,.item-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:4px; }
 
-        /* ══ TABLET 768px+ ══ */
+        /* ----- TABLET 768px+ ----- */
         @media(min-width:768px) {
             #seasonCards { grid-template-columns:repeat(3,1fr); }
             .e-sprite { font-size:clamp(100px,13vw,170px) !important; }
@@ -562,7 +562,7 @@
             .field-top { padding:10px 14px 6px; gap:10px; }
         }
 
-        /* ══ DESKTOP 1200px+ ══ */
+        /* ----- DESKTOP 1200px+ ----- */
         @media(min-width:1200px) {
             .sk-btn { width:78px; height:78px; }
             .sk-icon { font-size:32px; }
@@ -573,7 +573,7 @@
             .blog { height:100px; font-size:12.5px; }
         }
 
-        /* ══ SMALL PHONE ══ */
+        /* ----- SMALL PHONE ----- */
         @media(max-width:360px) {
             .sk-btn { width:52px; height:52px; }
             .sk-icon { font-size:22px; }
@@ -585,7 +585,7 @@
             .e-sprite { font-size:66px !important; }
         }
 
-        /* ══ LANDSCAPE PHONE ══ */
+        /* ----- LANDSCAPE PHONE ----- */
         @media (orientation:landscape) and (max-height:500px) {
             body { overflow:hidden; }
             #app { height:100dvh; overflow:hidden; }
