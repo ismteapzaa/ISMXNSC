@@ -78,6 +78,10 @@
             content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
             background:rgba(255,255,255,0.06);
         }
+        #titleBgVideo {
+            position:absolute; inset:0; width:100%; height:100%;
+            object-fit:cover; z-index:0; pointer-events:none;
+        }
         .ts-hitbox { z-index:1; }
         /* Transparent hit-box buttons over the background image */
         .ts-hitbox {
