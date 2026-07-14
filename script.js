@@ -350,7 +350,6 @@ const G = (() => {
     document.getElementById('stunIndicator').style.display='none';
     document.getElementById('weakIndicator').style.display='none';
     updateEHp(); updateHHp(); renderBuffs(); renderDebuffs(); renderSkills(true);
-    const hv=document.getElementById('heroIdleVid'); if(hv) hv.play().catch(()=>{});
     document.getElementById('blog').innerHTML='';
     log(`${e.isBoss?'⭐ BOSS':'👾'} ${e.name} ปรากฏตัว!`+(e.sp?` — สกิลพิเศษ: ${e.sp.e}${e.sp.name}`:''),'s');
     busy=false;
@@ -904,13 +903,6 @@ const G = (() => {
     sp.style.animation='none'; void sp.offsetWidth;
     sp.style.animation='heroAttack 0.48s ease-out';
     setTimeout(()=>sp.style.animation='floatAnim 3s ease-in-out infinite',580);
-    // swap idle → attack clip for a moment
-    const iv=document.getElementById('heroIdleVid'), av=document.getElementById('heroAtkVid');
-    if(iv&&av){
-      iv.style.display='none'; av.style.display='block';
-      av.currentTime=0; av.play().catch(()=>{});
-      setTimeout(()=>{ av.pause(); av.style.display='none'; iv.style.display='block'; iv.play().catch(()=>{}); },1200);
-    }
   }
   function enemyAttackAnim(){ const sp=document.getElementById('eSprite'); if(!sp) return; sp.style.animation='none'; void sp.offsetWidth; sp.style.animation='enemyAttack 0.48s ease-out'; setTimeout(()=>sp.style.animation='floatAnim 2.5s ease-in-out infinite',580); }
   function rng(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
