@@ -82,6 +82,12 @@
             position:absolute; inset:0; width:100%; height:100%;
             object-fit:fill; z-index:0; pointer-events:none;
         }
+        /* ซ่อนปุ่มเล่นของเบราว์เซอร์ที่ขึ้นทับวีดีโอตอน autoplay ไม่ติด */
+        #titleBgVideo::-webkit-media-controls,
+        #titleBgVideo::-webkit-media-controls-start-playback-button,
+        #titleBgVideo::-webkit-media-controls-overlay-play-button {
+            display:none !important; -webkit-appearance:none; opacity:0 !important;
+        }
         .ts-hitbox { z-index:1; }
         /* Transparent hit-box buttons over the background image */
         .ts-hitbox {

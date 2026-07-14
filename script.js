@@ -38,6 +38,9 @@
     _audioReady=true;
     document.removeEventListener('pointerdown', once);
     if(_curMusic) playMusic(_curMusic, _curMusic==='title'||_curMusic==='battle');
+    // เผื่อวีดีโอหน้าปก autoplay ไม่ติด (เช่น iPhone โหมดประหยัดแบต) ให้ลองเล่นอีกครั้ง
+    var tv=document.getElementById('titleBgVideo');
+    if(tv && tv.paused){ tv.muted=true; tv.play().catch(function(){}); }
   });
 
   const SEASON_BG_VIDS={
