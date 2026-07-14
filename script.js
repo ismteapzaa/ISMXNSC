@@ -12,8 +12,18 @@
     if(!_tracks[n]){ _tracks[n]=new Audio(MUSIC_SRC[n]); _tracks[n].preload='auto'; }
     return _tracks[n];
   }
+  // อ่านค่าตั้งค่าจาก localStorage (true = เปิด)
+  function musicSettingOn(key){
+    try {
+      var s = JSON.parse(localStorage.getItem('imm_settings')) || {};
+      return s[key] !== false;
+    } catch(e) { return true; }
+  }
   function playMusic(n, loop){
     if(!_audioReady) { _curMusic=n; return; }
+    // เพลงลูป = bgm / เสียงสั้นชนะแพ้ = sfx — ปิดในตั้งค่าแล้วจะไม่เล่น
+    if(loop && !musicSettingOn('bgm')){ _curMusic=n; return; }
+    if(!loop && !musicSettingOn('sfx')){ return; }
     stopMusic();
     const t=_getTrack(n);
     t.loop=!!loop; t.volume=0.5; t.currentTime=0;
@@ -259,6 +269,11 @@ const G = (() => {
 
   function spawnEnemy(idx) {
     const raw = SEASONS[season].enemies[idx];
+    // คืนร่างมอนเตอร์ให้มองเห็น (หลังตัวที่แล้วกลายเป็นกล่อง)
+    const spEl=document.getElementById('eSprite');
+    if(spEl) spEl.style.visibility='visible';
+    const haloEl=document.getElementById('eHalo');
+    if(haloEl) haloEl.style.visibility='visible';
     // ก็อปข้อมูลศัตรูจากตาราง แล้วเพิ่มค่าสถานะเริ่มต้น
     enemy = {};
     for (var key in raw) { enemy[key] = raw[key]; }
@@ -608,6 +623,7 @@ const G = (() => {
       const dmg=Math.max(5,atkTotal+rng(-vari,vari)-defTot);
       h.hp=Math.max(0,h.hp-dmg);
       log(`${e.emoji} ${e.name} โจมตี → ${dmg}${getDefBonus()>0?' 🛡️':''}`, 'e');
+      vibrate(70);
       floatDmg('-'+dmg,'#fca5a5','hero');
       setTimeout(shakeHero,250); updateHHp();
     }
@@ -619,6 +635,7 @@ const G = (() => {
   }
 
   function doEnemySpecial(sp) {
+    vibrate(120);
     const h=hero, e=enemy;
     const atkTotal=e.atk+(e.atkBuff||0), defTot=Math.max(0,h.def+getDefBonus()-getDefDown());
     switch(sp.type){
@@ -645,6 +662,12 @@ const G = (() => {
     const expGain=enemy.isBoss?120:40;
     const snap={name:enemy.name, isLast, s};
     pendingLoot={drops, expGain, snap};
+    // เอามอนเตอร์ออกจากจอ แล้ววางกล่องสมบัติแทนที่
+    const sp=document.getElementById('eSprite');
+    const mv=sp.querySelector('video'); if(mv) mv.pause();
+    sp.style.visibility='hidden';
+    document.getElementById('eHalo').style.visibility='hidden';
+    document.getElementById('bossTag').innerHTML='';
     setTimeout(()=>{ document.getElementById('lootBox').style.display='flex'; },600);
   }
   function onHeroDead() {
@@ -840,6 +863,12 @@ const G = (() => {
   }
 
   // ===== ฟังก์ชันช่วยทั่วไป =====
+  // สั่นเครื่อง (มือถือ) ถ้าเปิดไว้ในตั้งค่า
+  function vibrate(ms){
+    const s=loadSettings();
+    if(s.vib!==false && navigator.vibrate) navigator.vibrate(ms);
+  }
+
   // เพิ่มข้อความลงในกล่อง log การต่อสู้
   function log(txt,cls){ const el=document.getElementById('blog'); const d=document.createElement('div'); d.className='log-'+cls; d.textContent=txt; el.appendChild(d); el.scrollTop=el.scrollHeight; }
   function floatDmg(txt,color,side){
@@ -929,9 +958,16 @@ const G = (() => {
     document.getElementById('settingsModal').classList.add('open');
   }
   function hideSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
+  function showAbout(){ document.getElementById('aboutModal').classList.add('open'); }
+  function hideAbout(){ document.getElementById('aboutModal').classList.remove('open'); }
   function toggleSetting(key,btn){
     const s=loadSettings(); s[key]=!( s[key]!==false );
     saveSettingsData(s); btn.className='toggle-btn '+(s[key]?'on':'off');
+    // ปิดเพลง = หยุดทันที / เปิดกลับ = เล่นเพลงของหน้าปัจจุบันต่อ
+    if(key==='bgm'){
+      if(!s[key]) stopMusic();
+      else if(_curMusic) playMusic(_curMusic, true);
+    }
   }
   function resetProgress(){
     if(!confirm('รีเซตความคืบหน้าทั้งหมด?\nระดับ ไอเทม และ เส้นทางจะหายหมด')) return;
@@ -1138,5 +1174,5 @@ const G = (() => {
           skip.classList.add('visible');
       });
   })();
-  return { introSkipFn, togglePassEye, goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout, openChest, collectLoot, showUpgradeModal, hideUpgradeModal, spendSP, closeFact, answerQuiz, nextQuizQ };
+  return { introSkipFn, togglePassEye, showAbout, hideAbout, goTitle, goSeasons, doResult, restart, showItems, hideItems, useItem, showHeroLab, hideHeroLab, showEncyclopedia, hideEncyclopedia, showSettings, hideSettings, toggleSetting, resetProgress, showRegister, hideRegister, switchAccountTab, doLoginAction, doRegisterAction, doLogout, openChest, collectLoot, showUpgradeModal, hideUpgradeModal, spendSP, closeFact, answerQuiz, nextQuizQ };
 })();
