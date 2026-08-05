@@ -68,10 +68,21 @@
             <div id="heroStatusEl"></div>
         </div>
     </div>
+    <!-- STAGE SELECT: เลือกด่านภายในฤดู ทับพื้นหลังวีดีโอของฤดูนั้น -->
+    <div id="stageScreen" class="screen">
+        <video id="stageBgVideo" loop muted playsinline preload="auto"></video>
+        <div class="stage-tint-layer" id="stageTintLayer"></div>
+        <div class="stage-top">
+            <button class="back-btn" onclick="G.goSeasons()">◀ แผนที่</button>
+            <div class="stage-title" id="stageTitle"></div>
+        </div>
+        <div class="stage-path" id="stagePath"></div>
+    </div>
+
     <!-- BATTLE -->
     <div id="battleScreen" class="screen">
         <div class="bh">
-            <button class="back-btn" onclick="if(confirm('ออกไปหน้าแผนที่?\nความคืบหน้าในฤดูนี้จะหายไป'))G.goSeasons()">◀</button>
+            <button class="back-btn" onclick="if(confirm('ออกจากด่าน?\nความคืบหน้าในด่านนี้จะหายไป'))G.showStageSelect()">◀</button>
             <div id="bSeasonBadge" class="season-badge"></div>
             <div id="bProgress" class="prog-text"></div>
         </div>
