@@ -480,6 +480,39 @@
             font-size:8px; font-weight:800; padding:2px 5px; border-radius:10px;
             border:1px solid rgba(255,255,255,0.15); pointer-events:none; white-space:nowrap;
         }
+        /* ปุ่มโจมตีแบบกางเมนู: กดปุ่มหลักแล้วตัวเลือก 4 ชนิดโผล่ขึ้นแนวตั้งด้านบน */
+        .at-fab-wrap { position:relative; display:flex; flex-direction:column; align-items:center; }
+        .at-fab-arrow {
+            position:absolute; bottom:-3px; right:-3px; width:16px; height:16px;
+            background:rgba(0,0,0,0.65); border:1px solid rgba(255,255,255,0.25); border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:9px; line-height:1; transition:transform .2s ease;
+        }
+        #atFabTrigger.open .at-fab-arrow { transform:rotate(180deg); }
+        .at-fab-menu {
+            position:absolute; bottom:100%; left:50%; margin-bottom:12px; z-index:20;
+            display:flex; flex-direction:column; gap:8px;
+            opacity:0; pointer-events:none; transform:translate(-50%,8px);
+            transition:opacity .2s ease, transform .2s ease;
+        }
+        .at-fab-menu.open { opacity:1; pointer-events:auto; transform:translate(-50%,0); }
+        .at-fab-item {
+            display:flex; align-items:center; gap:8px; white-space:nowrap;
+            background:radial-gradient(circle at 30% 30%, rgba(20,20,55,0.98), rgba(6,6,26,0.99));
+            border:2px solid var(--at-color, rgba(255,255,255,0.25));
+            border-radius:26px; padding:5px 16px 5px 5px; cursor:pointer; font-family:inherit;
+            box-shadow:0 4px 16px rgba(0,0,0,0.5), 0 0 10px var(--at-color,rgba(255,255,255,0.08));
+            transition:transform .12s ease;
+        }
+        .at-fab-item:hover:not(:disabled) { transform:scale(1.04); }
+        .at-fab-item:active:not(:disabled) { transform:scale(0.94); }
+        .at-fab-item:disabled { opacity:0.3; cursor:not-allowed; }
+        .at-fab-item .at-icon {
+            font-size:20px; width:34px; height:34px; border-radius:50%; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center;
+            background:rgba(255,255,255,0.06);
+        }
+        .at-fab-item-lbl { font-size:12px; font-weight:800; color:#fff; }
         .at-lbl {
             font-size:9px; font-weight:800; color:rgba(255,255,255,0.72);
             text-align:center; max-width:66px; line-height:1.2;
