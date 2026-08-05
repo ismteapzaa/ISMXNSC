@@ -314,7 +314,6 @@
 
         .ah-sprite {
             font-size:clamp(170px,23vw,230px); line-height:1;
-            animation:floatAnim 3s ease-in-out infinite;
             filter:drop-shadow(0 0 20px rgba(99,102,241,0.6));
         }
         .ah-halo {
@@ -713,6 +712,17 @@
             .at-btn { width:52px; height:52px; }
             .at-icon { font-size:22px; }
             .at-lbl { font-size:8px; max-width:56px; }
+        }
+
+        /* ----- ล็อกไม่ให้หน้าจอเลื่อน/สะบัดตอนอยู่แนวนอน (ทุกขนาดจอ) ----- */
+        @media (orientation:landscape) {
+            html { overflow:hidden; height:100%; }
+            body {
+                overflow:hidden; height:100%; width:100%;
+                position:fixed; inset:0; overscroll-behavior:none;
+            }
+            #app { height:100%; overflow:hidden; }
+            .screen { min-height:0; height:100%; }
         }
 
         /* ----- LANDSCAPE PHONE ----- */
