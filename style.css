@@ -404,11 +404,6 @@
         #upgradeBtn:hover { background:rgba(245,158,11,0.32); }
         .sp-badge { position:absolute; top:-5px; right:-5px; background:#f59e0b; color:#000; font-size:9px; font-weight:900; width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
         /* Fact modal */
-        #factModal { position:absolute; inset:0; z-index:30; display:none; align-items:flex-end; background:rgba(0,0,0,0.55); backdrop-filter:blur(2px); }
-        #factModal.open { display:flex; }
-        .fact-box { width:100%; background:linear-gradient(180deg,#052e16,#0f172a); border-top:2px solid rgba(16,185,129,0.5); border-radius:18px 18px 0 0; padding:16px 14px 20px; animation:slideUp 0.22s ease; }
-        .fact-title { font-size:13px; font-weight:800; color:#6ee7b7; margin-bottom:10px; }
-        .fact-body { font-size:13px; color:#e2e8f0; line-height:1.6; margin-bottom:14px; }
         /* Quiz screen */
         #quizScreen { background:linear-gradient(180deg,#0a0a1a,#1e1b4b); display:flex; flex-direction:column; align-items:stretch; padding:0; }
         .quiz-wrap { flex:1; display:flex; flex-direction:column; padding:20px 16px 16px; overflow-y:auto; }
