@@ -451,18 +451,33 @@
         .c-stun { background:rgba(217,119,6,0.15);  color:#fde68a; border:1px solid rgba(217,119,6,0.4); }
         .c-mp   { background:rgba(99,102,241,0.15); color:#a5b4fc; border:1px solid rgba(99,102,241,0.4); }
 
-        /* Skill circles (inside skill-bar) */
-        /* แตะตัวมอนเตอร์เพื่อโจมตี — แทนที่ปุ่มสกิลทั้งหมด */
-        .arena-right { cursor:pointer; -webkit-tap-highlight-color:transparent; transition:filter .15s; }
-        .arena-right:hover { filter:brightness(1.12); }
-        .arena-right.busy { cursor:not-allowed; pointer-events:none; }
-        .attack-hint {
-            font-size:clamp(11px,1.8vw,13px); font-weight:800; color:var(--gold);
-            text-align:center; margin-top:6px; letter-spacing:0.5px;
-            text-shadow:0 2px 8px rgba(0,0,0,0.8);
-            animation:pulse 1.4s ease-in-out infinite;
+        /* ปุ่มเลือกชนิดยาโจมตี (4 แบบ) — เลือกถูกชนิดของเชื้อก่อโรคถึงจะโดนดาเมจ */
+        .skill-grid {
+            display:flex; flex-direction:row; align-items:flex-start;
+            gap:12px;
         }
-        .arena-right.busy .attack-hint { display:none; }
+        .at-wrap { display:flex; flex-direction:column; align-items:center; gap:5px; }
+        .at-btn {
+            width:62px; height:62px; border-radius:50%; flex-shrink:0;
+            border:2px solid var(--at-color, rgba(255,255,255,0.25));
+            background:radial-gradient(circle at 40% 35%, rgba(20,20,55,0.96), rgba(6,6,26,0.98));
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; position:relative; padding:0; font-family:inherit;
+            box-shadow:0 0 14px var(--at-color,rgba(255,255,255,0.06)), inset 0 1px 0 rgba(255,255,255,0.07);
+            transition:transform .15s, box-shadow .2s, border-color .15s;
+        }
+        .at-btn:hover:not(:disabled) {
+            transform:scale(1.12);
+            box-shadow:0 0 24px var(--at-color,rgba(255,255,255,0.2));
+            border-color:var(--at-color,rgba(255,255,255,0.6));
+        }
+        .at-btn:active:not(:disabled) { transform:scale(0.88); }
+        .at-btn:disabled { opacity:0.3; cursor:not-allowed; }
+        .at-icon { font-size:26px; display:block; line-height:1; }
+        .at-lbl {
+            font-size:9px; font-weight:800; color:rgba(255,255,255,0.72);
+            text-align:center; max-width:66px; line-height:1.2;
+        }
 
 
         /* ----- ITEM MODAL ----- */
@@ -632,6 +647,10 @@
             .skill-bar { gap:8px; }
             .item-circle-btn { width:64px; height:64px; }
             .field-top { padding:10px 14px 6px; gap:10px; }
+            .skill-grid { gap:20px; }
+            .at-btn { width:72px; height:72px; }
+            .at-icon { font-size:30px; }
+            .at-lbl { font-size:10px; max-width:76px; }
         }
 
         /* ----- DESKTOP 1200px+ ----- */
@@ -639,6 +658,10 @@
             .skill-bar { gap:10px; }
             .item-circle-btn { width:70px; height:70px; }
             .blog { height:100px; font-size:12.5px; }
+            .skill-grid { gap:24px; }
+            .at-btn { width:78px; height:78px; }
+            .at-icon { font-size:32px; }
+            .at-lbl { font-size:11px; max-width:82px; }
         }
 
         /* ----- SMALL PHONE ----- */
@@ -647,6 +670,10 @@
             .item-circle-btn { width:50px; height:50px; }
             .ah-sprite { font-size:70px !important; }
             .e-sprite { font-size:66px !important; }
+            .skill-grid { gap:8px; }
+            .at-btn { width:52px; height:52px; }
+            .at-icon { font-size:22px; }
+            .at-lbl { font-size:8px; max-width:56px; }
         }
 
         /* ----- LANDSCAPE PHONE ----- */
@@ -689,4 +716,7 @@
             .skill-grid { gap:8px; }
             .item-circle-btn { width:44px !important; height:44px !important; }
             .skill-bar-sep { height:38px; }
+            .at-btn { width:44px !important; height:44px !important; }
+            .at-icon { font-size:18px !important; }
+            .at-lbl { font-size:7.5px; max-width:48px; }
         }
