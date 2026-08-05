@@ -252,6 +252,21 @@
             display:flex; gap:6px; padding:8px 10px 4px;
             position:relative; z-index:1; flex-shrink:0;
         }
+
+        /* แบนเนอร์เกร็ดความรู้ตอนมอนใหม่ปรากฏตัว: ไม่ใช่ modal ไม่บล็อกอินพุต เลื่อนเข้า-ออกเอง */
+        .fact-banner {
+            position:absolute; top:clamp(96px,15vh,150px); left:50%; z-index:12;
+            width:min(88%,440px); pointer-events:none;
+            background:rgba(8,8,20,0.82); backdrop-filter:blur(6px);
+            border:1px solid rgba(245,166,35,0.3); border-radius:14px;
+            padding:10px 16px; text-align:center;
+            box-shadow:0 8px 24px rgba(0,0,0,0.5);
+            opacity:0; transform:translate(-50%,-10px);
+            transition:opacity 0.4s ease, transform 0.4s ease;
+        }
+        .fact-banner.show { opacity:1; transform:translate(-50%,0); }
+        .fb-label { font-size:11px; font-weight:800; color:var(--gold); letter-spacing:0.5px; margin-bottom:3px; }
+        .fb-text  { font-size:clamp(11px,1.8vw,13px); color:#e2e8f0; line-height:1.5; }
         .fi-hero {
             flex:1; background:rgba(0,0,0,0.5); border:1px solid rgba(99,102,241,0.25);
             border-radius:10px; padding:6px 9px; backdrop-filter:blur(8px);
